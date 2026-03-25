@@ -24,3 +24,14 @@ npm.cmd run check
 ```powershell
 npm.cmd run build
 ```
+
+Конфигурация клиента:
+
+```ts
+import { MaxBotApiClient } from "@max/client";
+
+const client = new MaxBotApiClient({
+  baseUrl: "https://api.max.ru",
+  accessToken: process.env.MAX_BOT_TOKEN,
+});
+```

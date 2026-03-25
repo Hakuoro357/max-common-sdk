@@ -29,13 +29,14 @@ class TypeScriptRendererTests(unittest.TestCase):
 
         output = module.render_typescript_client(ir)
 
+        self.assertIn("import { BaseApiClient, type ClientConfig, type RequestOptions }", output)
         self.assertIn("export interface HealthResponse", output)
         self.assertIn("export type UploadType =", output)
-        self.assertIn("export class MaxBotApiClient", output)
+        self.assertIn("export class MaxBotApiClient extends BaseApiClient", output)
         self.assertIn("async getHealth", output)
-        self.assertIn("const url = new URL(`/health`, this.baseUrl);", output)
+        self.assertIn("return this.request<HealthResponse>({", output)
         self.assertIn("export interface SendMessageParams", output)
-        self.assertIn("url.searchParams.set('chat_id'", output)
+        self.assertIn("query: { chat_id: request.query.chat_id", output)
         self.assertIn("request.path.message_id", output)
 
 

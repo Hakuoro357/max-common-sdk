@@ -12,6 +12,7 @@
   },
   "include": [
     "index.ts",
-    "generated/**/*.ts"
+    "generated/**/*.ts",
+    "runtime/**/*.ts"
   ]
 }
