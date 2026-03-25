@@ -1,51 +1,27 @@
 version: 1
 updated_at: 2026-03-25
+project_scope:
+  freeze_new_languages: true
+  active_languages:
+    - typescript
+    - python
+    - csharp
 languages:
   - language: typescript
     client: true
-    bot_sdk: true
-    status: stable
-    priority: high
-    owner: tbd
-  - language: go
-    client: true
-    bot_sdk: partial
+    bot_sdk: false
     status: beta
     priority: high
-    owner: tbd
-  - language: java
-    client: true
-    bot_sdk: true
-    status: beta
-    priority: medium
     owner: tbd
   - language: python
     client: true
-    bot_sdk: partial
-    status: experimental
+    bot_sdk: false
+    status: beta
     priority: high
     owner: tbd
   - language: csharp
-    client: false
     bot_sdk: false
-    status: planned
-    priority: highest
-    owner: tbd
-  - language: php
-    client: false
-    bot_sdk: false
-    status: planned
+    client: true
+    status: experimental
     priority: high
-    owner: tbd
-  - language: kotlin
-    client: false
-    bot_sdk: false
-    status: planned
-    priority: high
-    owner: tbd
-  - language: rust
-    client: false
-    bot_sdk: false
-    status: planned
-    priority: medium
     owner: tbd
