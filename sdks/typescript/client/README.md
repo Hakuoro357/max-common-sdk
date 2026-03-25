@@ -1,0 +1,13 @@
+# TypeScript Client
+
+Generated thin client for MAX Bot API.
+
+Текущий generated entrypoint:
+
+- [generated/index.ts](C:\pro\max\sdks\typescript\client\generated\index.ts)
+
+Генерация:
+
+```powershell
+python tools/codegen/render_typescript_client.py --input tools/codegen/out/max-bot-api.ir.json --output sdks/typescript/client/generated/index.ts
+```
