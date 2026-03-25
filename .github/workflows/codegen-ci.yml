@@ -1,0 +1,40 @@
+name: Codegen CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: sdks/typescript/client/package-lock.json
+
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pip && pip install -r tools/codegen/requirements.txt
+
+      - name: Install TypeScript client dependencies
+        working-directory: sdks/typescript/client
+        run: npm ci
+
+      - name: Run unified pipeline
+        run: python tools/codegen/run_pipeline.py --verify
+
+      - name: Check generated files are committed
+        run: git diff --exit-code
