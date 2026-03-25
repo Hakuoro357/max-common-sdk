@@ -26,6 +26,12 @@ export interface EditMyInfoRequest {
   name?: string | null;
 }
 
+export interface ErrorResponse {
+  code: string;
+  details?: string | null;
+  message: string;
+}
+
 export interface GetUpdatesResponse {
   marker: number;
   updates: Update[];

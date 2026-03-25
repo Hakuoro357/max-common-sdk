@@ -61,6 +61,18 @@ public sealed class EditMyInfoRequest
     public string? Name { get; init; }
 }
 
+public sealed class ErrorResponse
+{
+    [JsonPropertyName("code")]
+    public string Code { get; init; }
+
+    [JsonPropertyName("details")]
+    public string? Details { get; init; }
+
+    [JsonPropertyName("message")]
+    public string Message { get; init; }
+}
+
 public sealed class GetUpdatesResponse
 {
     [JsonPropertyName("marker")]

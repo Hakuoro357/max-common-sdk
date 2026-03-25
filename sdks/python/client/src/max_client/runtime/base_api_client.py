@@ -5,7 +5,7 @@ from typing import Any, TypedDict
 from urllib.parse import urlencode, urljoin
 from urllib.request import Request, urlopen
 
-from .api_error import MaxApiError
+from .api_error import MaxApiError, parse_error_payload
 
 
 class ClientConfig(TypedDict, total=False):
@@ -66,7 +66,8 @@ class BaseApiClient:
             body_text = ""
             if hasattr(exc, "read"):
                 body_text = exc.read().decode("utf-8")
-            raise MaxApiError(method=method, path=path, status=status, body_text=body_text) from exc
+            payload = parse_error_payload(body_text)
+            raise MaxApiError(method=method, path=path, status=status, body_text=body_text, payload=payload) from exc
 
 
 def build_query_string(query: dict[str, Any] | None) -> str:

@@ -1,4 +1,4 @@
-import { MaxApiError } from "./api-error.js";
+import { MaxApiError, parseMaxErrorPayload } from "./api-error.js";
 
 export interface ClientConfig {
   baseUrl?: string;
@@ -68,11 +68,13 @@ export class BaseApiClient {
 
     if (!response.ok) {
       const bodyText = await response.text();
+      const payload = parseMaxErrorPayload(bodyText);
       throw new MaxApiError({
         method: request.method,
         path: request.path,
         status: response.status,
         bodyText,
+        payload,
       });
     }
 

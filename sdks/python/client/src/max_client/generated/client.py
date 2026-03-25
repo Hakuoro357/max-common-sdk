@@ -28,6 +28,11 @@ class EditMyInfoRequest(TypedDict, total=False):
     description: NotRequired[str | None]
     name: NotRequired[str | None]
 
+class ErrorResponse(TypedDict, total=False):
+    code: str
+    details: NotRequired[str | None]
+    message: str
+
 class GetUpdatesResponse(TypedDict, total=False):
     marker: int
     updates: list[Update]

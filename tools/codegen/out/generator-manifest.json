@@ -1,7 +1,7 @@
 {
   "manifest_version": "1.0.0",
   "ir_version": "1.0.0",
-  "api_version": "0.2.0-draft",
+  "api_version": "0.3.0-draft",
   "languages": [
     {
       "language": "typescript",

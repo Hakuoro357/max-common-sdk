@@ -2,7 +2,7 @@
   "ir_version": "1.0.0",
   "api": {
     "title": "MAX Bot API",
-    "version": "0.2.0-draft",
+    "version": "0.3.0-draft",
     "description": "Draft OpenAPI entrypoint for the future MAX common SDK platform.\nThe initial operation set is aligned with public methods from the official\nmax-messenger TypeScript client.\n",
     "servers": [
       "https://api.max.ru"
@@ -66,6 +66,17 @@
               "schema_type": null
             }
           ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
+              "schema_type": null
+            }
+          ]
         }
       ]
     },
@@ -89,6 +100,17 @@
             {
               "content_type": "application/json",
               "schema_ref": "#/components/schemas/BotInfo",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
               "schema_type": null
             }
           ]
@@ -124,6 +146,17 @@
             {
               "content_type": "application/json",
               "schema_ref": "#/components/schemas/BotInfo",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
               "schema_type": null
             }
           ]
@@ -196,6 +229,17 @@
               "schema_type": null
             }
           ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
+              "schema_type": null
+            }
+          ]
         }
       ]
     },
@@ -231,6 +275,17 @@
             {
               "content_type": "application/json",
               "schema_ref": "#/components/schemas/Message",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
               "schema_type": null
             }
           ]
@@ -305,6 +360,17 @@
               "schema_type": null
             }
           ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
+              "schema_type": null
+            }
+          ]
         }
       ]
     },
@@ -340,6 +406,17 @@
             {
               "content_type": "application/json",
               "schema_ref": "#/components/schemas/GetUploadUrlResponse",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
               "schema_type": null
             }
           ]
@@ -530,6 +607,50 @@
           "items_ref": null,
           "nullable": true,
           "required": false
+        }
+      ]
+    },
+    {
+      "name": "ErrorResponse",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": [
+        {
+          "name": "code",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "details",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
         }
       ]
     },
@@ -873,6 +994,6 @@
   "stats": {
     "service_count": 5,
     "operation_count": 7,
-    "schema_count": 13
+    "schema_count": 14
   }
 }

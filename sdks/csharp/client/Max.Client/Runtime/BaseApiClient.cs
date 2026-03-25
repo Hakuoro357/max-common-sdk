@@ -65,7 +65,8 @@ public abstract class BaseApiClient
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new MaxApiException(request.Method.Method, request.Path, (int)response.StatusCode, payload);
+            var errorPayload = TryParseErrorPayload(payload);
+            throw new MaxApiException(request.Method.Method, request.Path, (int)response.StatusCode, payload, errorPayload);
         }
 
         if (string.IsNullOrWhiteSpace(payload))
@@ -140,5 +141,22 @@ public abstract class BaseApiClient
         }
 
         return value.ToString() ?? string.Empty;
+    }
+
+    private static MaxErrorPayload? TryParseErrorPayload(string payload)
+    {
+        if (string.IsNullOrWhiteSpace(payload))
+        {
+            return null;
+        }
+
+        try
+        {
+            return JsonSerializer.Deserialize<MaxErrorPayload>(payload);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 }

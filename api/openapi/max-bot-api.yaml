@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: MAX Bot API
-  version: 0.2.0-draft
+  version: 0.3.0-draft
   description: |
     Draft OpenAPI entrypoint for the future MAX common SDK platform.
     The initial operation set is aligned with public methods from the official
@@ -33,6 +33,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HealthResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /me:
     get:
@@ -46,6 +52,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BotInfo'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     patch:
       tags: [bots]
       summary: Edit current bot info
@@ -63,6 +75,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BotInfo'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /updates:
     get:
@@ -97,6 +115,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetUpdatesResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /uploads:
     post:
@@ -116,6 +140,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetUploadUrlResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /messages:
     post:
@@ -151,6 +181,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SendMessageResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /messages/{message_id}:
     get:
@@ -170,9 +206,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: string
+          nullable: true
+
     HealthResponse:
       type: object
       required: [status]

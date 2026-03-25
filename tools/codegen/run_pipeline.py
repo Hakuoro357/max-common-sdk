@@ -82,7 +82,7 @@ def run_verification(root: Path = ROOT) -> None:
 
     commands = [
         (
-            [python_exe, "-m", "unittest", "tests.codegen.test_bootstrap_ir", "tests.codegen.test_typescript_renderer", "tests.codegen.test_python_renderer", "tests.codegen.test_csharp_renderer", "tests.codegen.test_multilang_contract", "tests.codegen.test_generator_manifest", "tests.codegen.test_pipeline"],
+            [python_exe, "-m", "unittest", "tests.codegen.test_bootstrap_ir", "tests.codegen.test_typescript_renderer", "tests.codegen.test_python_renderer", "tests.codegen.test_csharp_renderer", "tests.codegen.test_multilang_contract", "tests.codegen.test_generator_manifest", "tests.codegen.test_pipeline", "tests.runtime.test_python_api_error"],
             root,
         ),
         ([python_exe, "-m", "compileall", str(root / "sdks" / "python" / "client" / "src")], root),
