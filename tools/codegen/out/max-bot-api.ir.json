@@ -1515,11 +1515,77 @@
       ]
     },
     {
-      "name": "AttachmentRequest",
+      "name": "Attachment",
       "type": "object",
       "enum": null,
       "required": [],
       "properties": [
+        {
+          "name": "description",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "filename",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "height",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "image_url",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
         {
           "name": "payload",
           "type": "object",
@@ -1532,8 +1598,170 @@
           "required": false
         },
         {
+          "name": "size",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
           "name": "type",
           "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "width",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "AttachmentRequest",
+      "type": "object",
+      "enum": null,
+      "required": [],
+      "properties": [
+        {
+          "name": "description",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "filename",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "height",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "image_url",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "payload",
+          "type": "object",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "width",
+          "type": "integer",
           "format": null,
           "ref": null,
           "enum": null,
@@ -1685,6 +1913,62 @@
           "items_ref": null,
           "nullable": true,
           "required": false
+        }
+      ]
+    },
+    {
+      "name": "CallbackInfo",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "callback_id",
+        "timestamp",
+        "user"
+      ],
+      "properties": [
+        {
+          "name": "callback_id",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "user",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/User",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
         }
       ]
     },
@@ -2501,6 +2785,128 @@
       ]
     },
     {
+      "name": "LinkedMessage",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "message",
+        "type"
+      ],
+      "properties": [
+        {
+          "name": "chat_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "message",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/MessageBody",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "sender",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/User",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/MessageLinkType",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "MarkupElement",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "from",
+        "length",
+        "type"
+      ],
+      "properties": [
+        {
+          "name": "from",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "length",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "user_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "user_link",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "Message",
       "type": "object",
       "enum": null,
@@ -2522,6 +2928,28 @@
           "required": true
         },
         {
+          "name": "constructor",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/User",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "link",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/LinkedMessage",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
           "name": "recipient",
           "type": null,
           "format": null,
@@ -2531,6 +2959,28 @@
           "items_ref": null,
           "nullable": false,
           "required": true
+        },
+        {
+          "name": "sender",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/User",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "stat",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/MessageStat",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
         },
         {
           "name": "timestamp",
@@ -2572,7 +3022,18 @@
           "ref": null,
           "enum": null,
           "items_type": null,
-          "items_ref": "#/components/schemas/AttachmentRequest",
+          "items_ref": "#/components/schemas/Attachment",
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "markup",
+          "type": "array",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": "#/components/schemas/MarkupElement",
           "nullable": true,
           "required": false
         },
@@ -2676,6 +3137,27 @@
         {
           "name": "chat_type",
           "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "MessageStat",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "views"
+      ],
+      "properties": [
+        {
+          "name": "views",
+          "type": "integer",
           "format": null,
           "ref": null,
           "enum": null,
@@ -2909,6 +3391,72 @@
       ],
       "properties": [
         {
+          "name": "callback",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/CallbackInfo",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "chat",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/Chat",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "chat_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "input",
+          "type": "object",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "is_channel",
+          "type": "boolean",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
           "name": "message",
           "type": null,
           "format": null,
@@ -2917,6 +3465,50 @@
           "items_type": null,
           "items_ref": null,
           "nullable": false,
+          "required": false
+        },
+        {
+          "name": "message_id",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "session_id",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "start_payload",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
           "required": false
         },
         {
@@ -2931,6 +3523,17 @@
           "required": true
         },
         {
+          "name": "title",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
           "name": "update_type",
           "type": "string",
           "format": null,
@@ -2940,6 +3543,28 @@
           "items_ref": null,
           "nullable": false,
           "required": true
+        },
+        {
+          "name": "user",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/User",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "user_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
         }
       ]
     },
@@ -2954,11 +3579,112 @@
       ],
       "required": [],
       "properties": []
+    },
+    {
+      "name": "User",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "is_bot",
+        "last_activity_time",
+        "name",
+        "user_id"
+      ],
+      "properties": [
+        {
+          "name": "avatar_url",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "full_avatar_url",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "is_bot",
+          "type": "boolean",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "last_activity_time",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "user_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        }
+      ]
     }
   ],
   "stats": {
     "service_count": 6,
     "operation_count": 24,
-    "schema_count": 38
+    "schema_count": 44
   }
 }

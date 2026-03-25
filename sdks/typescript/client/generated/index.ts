@@ -17,9 +17,32 @@ export interface AnswerOnCallbackRequest {
   notification?: string | null;
 }
 
-export interface AttachmentRequest {
+export interface Attachment {
+  description?: string | null;
+  filename?: string;
+  height?: number;
+  image_url?: string | null;
+  latitude?: number;
+  longitude?: number;
   payload?: unknown;
+  size?: number;
+  title?: string | null;
   type?: string;
+  width?: number;
+}
+
+export interface AttachmentRequest {
+  description?: string | null;
+  filename?: string;
+  height?: number;
+  image_url?: string | null;
+  latitude?: number;
+  longitude?: number;
+  payload?: unknown;
+  size?: number;
+  title?: string | null;
+  type?: string;
+  width?: number;
 }
 
 export interface BotCommand {
@@ -37,6 +60,13 @@ export interface BotInfo {
   name: string;
   user_id: number;
   username?: string | null;
+}
+
+export interface CallbackInfo {
+  callback_id: string;
+  payload?: string | null;
+  timestamp: number;
+  user: User;
 }
 
 export interface Chat {
@@ -146,15 +176,35 @@ export interface HealthResponse {
   status: string;
 }
 
+export interface LinkedMessage {
+  chat_id?: number;
+  message: MessageBody;
+  sender?: User;
+  type: MessageLinkType;
+}
+
+export interface MarkupElement {
+  from: number;
+  length: number;
+  type: string;
+  user_id?: number | null;
+  user_link?: string | null;
+}
+
 export interface Message {
   body: MessageBody;
+  constructor?: User;
+  link?: LinkedMessage;
   recipient: MessageRecipient;
+  sender?: User;
+  stat?: MessageStat;
   timestamp: number;
   url?: string | null;
 }
 
 export interface MessageBody {
-  attachments?: AttachmentRequest[];
+  attachments?: Attachment[];
+  markup?: MarkupElement[];
   mid: string;
   seq: number;
   text?: string | null;
@@ -170,6 +220,10 @@ export type MessageLinkType = 'forward' | 'reply';
 export interface MessageRecipient {
   chat_id?: number | null;
   chat_type: string;
+}
+
+export interface MessageStat {
+  views: number;
 }
 
 export interface PhotoAttachmentRequestPayload {
@@ -206,12 +260,36 @@ export interface SendMessageResponse {
 export type SenderAction = 'typing_on' | 'sending_photo' | 'sending_video' | 'sending_audio' | 'sending_file' | 'mark_seen';
 
 export interface Update {
+  callback?: CallbackInfo;
+  chat?: Chat;
+  chat_id?: number;
+  data?: string | null;
+  input?: unknown;
+  is_channel?: boolean;
   message?: Message;
+  message_id?: string;
+  payload?: string | null;
+  session_id?: string;
+  start_payload?: string | null;
   timestamp: number;
+  title?: string;
   update_type: string;
+  user?: User;
+  user_id?: number;
 }
 
 export type UploadType = 'image' | 'video' | 'audio' | 'file';
+
+export interface User {
+  avatar_url?: string;
+  description?: string | null;
+  full_avatar_url?: string;
+  is_bot: boolean;
+  last_activity_time: number;
+  name: string;
+  user_id: number;
+  username?: string | null;
+}
 
 export interface AnswerOnCallbackParams {
   query: {

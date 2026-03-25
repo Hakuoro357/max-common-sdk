@@ -768,6 +768,29 @@ components:
             $ref: '#/components/schemas/BotCommand'
           nullable: true
 
+    User:
+      type: object
+      required: [user_id, name, is_bot, last_activity_time]
+      properties:
+        user_id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+          nullable: true
+        is_bot:
+          type: boolean
+        last_activity_time:
+          type: integer
+        description:
+          type: string
+          nullable: true
+        avatar_url:
+          type: string
+        full_avatar_url:
+          type: string
+
     ChatType:
       type: string
       enum: [dialog, chat, channel]
@@ -1000,10 +1023,77 @@ components:
           type: string
         payload:
           type: object
+        latitude:
+          type: number
+        longitude:
+          type: number
+        title:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        image_url:
+          type: string
+          nullable: true
+        width:
+          type: integer
+        height:
+          type: integer
+        filename:
+          type: string
+        size:
+          type: integer
+
+    Attachment:
+      type: object
+      properties:
+        type:
+          type: string
+        payload:
+          type: object
+        latitude:
+          type: number
+        longitude:
+          type: number
+        title:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        image_url:
+          type: string
+          nullable: true
+        width:
+          type: integer
+        height:
+          type: integer
+        filename:
+          type: string
+        size:
+          type: integer
 
     MessageLinkType:
       type: string
       enum: [forward, reply]
+
+    MarkupElement:
+      type: object
+      required: [type, from, length]
+      properties:
+        type:
+          type: string
+        from:
+          type: integer
+        length:
+          type: integer
+        user_link:
+          type: string
+          nullable: true
+        user_id:
+          type: integer
+          nullable: true
 
     MessageLinkReference:
       type: object
@@ -1013,6 +1103,40 @@ components:
           $ref: '#/components/schemas/MessageLinkType'
         mid:
           type: string
+
+    LinkedMessage:
+      type: object
+      required: [type, message]
+      properties:
+        type:
+          $ref: '#/components/schemas/MessageLinkType'
+        sender:
+          $ref: '#/components/schemas/User'
+        chat_id:
+          type: integer
+        message:
+          $ref: '#/components/schemas/MessageBody'
+
+    MessageStat:
+      type: object
+      required: [views]
+      properties:
+        views:
+          type: integer
+
+    CallbackInfo:
+      type: object
+      required: [timestamp, callback_id, user]
+      properties:
+        timestamp:
+          type: integer
+        callback_id:
+          type: string
+        payload:
+          type: string
+          nullable: true
+        user:
+          $ref: '#/components/schemas/User'
 
     MessageBody:
       type: object
@@ -1028,22 +1152,35 @@ components:
         attachments:
           type: array
           items:
-            $ref: '#/components/schemas/AttachmentRequest'
+            $ref: '#/components/schemas/Attachment'
+          nullable: true
+        markup:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarkupElement'
           nullable: true
 
     Message:
       type: object
       required: [recipient, timestamp, body]
       properties:
+        sender:
+          $ref: '#/components/schemas/User'
         recipient:
           $ref: '#/components/schemas/MessageRecipient'
         timestamp:
           type: integer
+        link:
+          $ref: '#/components/schemas/LinkedMessage'
         body:
           $ref: '#/components/schemas/MessageBody'
+        stat:
+          $ref: '#/components/schemas/MessageStat'
         url:
           type: string
           nullable: true
+        constructor:
+          $ref: '#/components/schemas/User'
 
     SendMessageRequest:
       type: object
@@ -1116,8 +1253,37 @@ components:
           type: string
         timestamp:
           type: integer
+        callback:
+          $ref: '#/components/schemas/CallbackInfo'
         message:
           $ref: '#/components/schemas/Message'
+        message_id:
+          type: string
+        chat_id:
+          type: integer
+        user_id:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+        is_channel:
+          type: boolean
+        payload:
+          type: string
+          nullable: true
+        title:
+          type: string
+        session_id:
+          type: string
+        data:
+          type: string
+          nullable: true
+        input:
+          type: object
+        chat:
+          $ref: '#/components/schemas/Chat'
+        start_payload:
+          type: string
+          nullable: true
 
     GetUpdatesResponse:
       type: object

@@ -34,13 +34,76 @@ public sealed class AnswerOnCallbackRequest
     public string? Notification { get; init; }
 }
 
-public sealed class AttachmentRequest
+public sealed class Attachment
 {
+    [JsonPropertyName("description")]
+    public string? Description { get; init; }
+
+    [JsonPropertyName("filename")]
+    public string? Filename { get; init; }
+
+    [JsonPropertyName("height")]
+    public int? Height { get; init; }
+
+    [JsonPropertyName("image_url")]
+    public string? ImageUrl { get; init; }
+
+    [JsonPropertyName("latitude")]
+    public double? Latitude { get; init; }
+
+    [JsonPropertyName("longitude")]
+    public double? Longitude { get; init; }
+
     [JsonPropertyName("payload")]
     public object? Payload { get; init; }
 
+    [JsonPropertyName("size")]
+    public int? Size { get; init; }
+
+    [JsonPropertyName("title")]
+    public string? Title { get; init; }
+
     [JsonPropertyName("type")]
     public string? Type { get; init; }
+
+    [JsonPropertyName("width")]
+    public int? Width { get; init; }
+}
+
+public sealed class AttachmentRequest
+{
+    [JsonPropertyName("description")]
+    public string? Description { get; init; }
+
+    [JsonPropertyName("filename")]
+    public string? Filename { get; init; }
+
+    [JsonPropertyName("height")]
+    public int? Height { get; init; }
+
+    [JsonPropertyName("image_url")]
+    public string? ImageUrl { get; init; }
+
+    [JsonPropertyName("latitude")]
+    public double? Latitude { get; init; }
+
+    [JsonPropertyName("longitude")]
+    public double? Longitude { get; init; }
+
+    [JsonPropertyName("payload")]
+    public object? Payload { get; init; }
+
+    [JsonPropertyName("size")]
+    public int? Size { get; init; }
+
+    [JsonPropertyName("title")]
+    public string? Title { get; init; }
+
+    [JsonPropertyName("type")]
+    public string? Type { get; init; }
+
+    [JsonPropertyName("width")]
+    public int? Width { get; init; }
 }
 
 public sealed class BotCommand
@@ -80,6 +143,21 @@ public sealed class BotInfo
 
     [JsonPropertyName("username")]
     public string? Username { get; init; }
+}
+
+public sealed class CallbackInfo
+{
+    [JsonPropertyName("callback_id")]
+    public string CallbackId { get; init; }
+
+    [JsonPropertyName("payload")]
+    public string? Payload { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("user")]
+    public User User { get; init; }
 }
 
 public sealed class Chat
@@ -321,13 +399,58 @@ public sealed class HealthResponse
     public string Status { get; init; }
 }
 
+public sealed class LinkedMessage
+{
+    [JsonPropertyName("chat_id")]
+    public int? ChatId { get; init; }
+
+    [JsonPropertyName("message")]
+    public MessageBody Message { get; init; }
+
+    [JsonPropertyName("sender")]
+    public User? Sender { get; init; }
+
+    [JsonPropertyName("type")]
+    public MessageLinkType Type { get; init; }
+}
+
+public sealed class MarkupElement
+{
+    [JsonPropertyName("from")]
+    public int From { get; init; }
+
+    [JsonPropertyName("length")]
+    public int Length { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+
+    [JsonPropertyName("user_id")]
+    public int? UserId { get; init; }
+
+    [JsonPropertyName("user_link")]
+    public string? UserLink { get; init; }
+}
+
 public sealed class Message
 {
     [JsonPropertyName("body")]
     public MessageBody Body { get; init; }
 
+    [JsonPropertyName("constructor")]
+    public User? Constructor { get; init; }
+
+    [JsonPropertyName("link")]
+    public LinkedMessage? Link { get; init; }
+
     [JsonPropertyName("recipient")]
     public MessageRecipient Recipient { get; init; }
+
+    [JsonPropertyName("sender")]
+    public User? Sender { get; init; }
+
+    [JsonPropertyName("stat")]
+    public MessageStat? Stat { get; init; }
 
     [JsonPropertyName("timestamp")]
     public int Timestamp { get; init; }
@@ -339,7 +462,10 @@ public sealed class Message
 public sealed class MessageBody
 {
     [JsonPropertyName("attachments")]
-    public List<AttachmentRequest>? Attachments { get; init; }
+    public List<Attachment>? Attachments { get; init; }
+
+    [JsonPropertyName("markup")]
+    public List<MarkupElement>? Markup { get; init; }
 
     [JsonPropertyName("mid")]
     public string Mid { get; init; }
@@ -373,6 +499,12 @@ public sealed class MessageRecipient
 
     [JsonPropertyName("chat_type")]
     public string ChatType { get; init; }
+}
+
+public sealed class MessageStat
+{
+    [JsonPropertyName("views")]
+    public int Views { get; init; }
 }
 
 public sealed class PhotoAttachmentRequestPayload
@@ -444,14 +576,53 @@ public enum SenderAction
 
 public sealed class Update
 {
+    [JsonPropertyName("callback")]
+    public CallbackInfo? Callback { get; init; }
+
+    [JsonPropertyName("chat")]
+    public Chat? Chat { get; init; }
+
+    [JsonPropertyName("chat_id")]
+    public int? ChatId { get; init; }
+
+    [JsonPropertyName("data")]
+    public string? Data { get; init; }
+
+    [JsonPropertyName("input")]
+    public object? Input { get; init; }
+
+    [JsonPropertyName("is_channel")]
+    public bool? IsChannel { get; init; }
+
     [JsonPropertyName("message")]
     public Message? Message { get; init; }
+
+    [JsonPropertyName("message_id")]
+    public string? MessageId { get; init; }
+
+    [JsonPropertyName("payload")]
+    public string? Payload { get; init; }
+
+    [JsonPropertyName("session_id")]
+    public string? SessionId { get; init; }
+
+    [JsonPropertyName("start_payload")]
+    public string? StartPayload { get; init; }
 
     [JsonPropertyName("timestamp")]
     public int Timestamp { get; init; }
 
+    [JsonPropertyName("title")]
+    public string? Title { get; init; }
+
     [JsonPropertyName("update_type")]
     public string UpdateType { get; init; }
+
+    [JsonPropertyName("user")]
+    public User? User { get; init; }
+
+    [JsonPropertyName("user_id")]
+    public int? UserId { get; init; }
 }
 
 public enum UploadType
@@ -460,6 +631,33 @@ public enum UploadType
     Video,
     Audio,
     File,
+}
+
+public sealed class User
+{
+    [JsonPropertyName("avatar_url")]
+    public string? AvatarUrl { get; init; }
+
+    [JsonPropertyName("description")]
+    public string? Description { get; init; }
+
+    [JsonPropertyName("full_avatar_url")]
+    public string? FullAvatarUrl { get; init; }
+
+    [JsonPropertyName("is_bot")]
+    public bool IsBot { get; init; }
+
+    [JsonPropertyName("last_activity_time")]
+    public int LastActivityTime { get; init; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; init; }
+
+    [JsonPropertyName("user_id")]
+    public int UserId { get; init; }
+
+    [JsonPropertyName("username")]
+    public string? Username { get; init; }
 }
 
 public sealed class AnswerOnCallbackParamsQuery
