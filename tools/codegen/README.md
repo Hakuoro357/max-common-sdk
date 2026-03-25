@@ -16,6 +16,10 @@
 ## Быстрый старт
 
 ```powershell
+python tools/codegen/run_pipeline.py
+python tools/codegen/run_pipeline.py --verify
+
+# or step by step
 python tools/codegen/bootstrap_ir.py --input api/openapi/max-bot-api.yaml --output tools/codegen/out/max-bot-api.ir.json
 python tools/codegen/render_typescript_client.py --input tools/codegen/out/max-bot-api.ir.json --output sdks/typescript/client/generated/index.ts
 python tools/codegen/render_python_client.py --input tools/codegen/out/max-bot-api.ir.json --output sdks/python/client/src/max_client/generated/client.py
@@ -33,6 +37,7 @@ python tools/codegen/build_generator_manifest.py --input tools/codegen/out/max-b
 ## Ключевые файлы
 
 - [bootstrap_ir.py](C:\pro\max\tools\codegen\bootstrap_ir.py)
+- [run_pipeline.py](C:\pro\max\tools\codegen\run_pipeline.py)
 - [render_typescript_client.py](C:\pro\max\tools\codegen\render_typescript_client.py)
 - [render_python_client.py](C:\pro\max\tools\codegen\render_python_client.py)
 - [build_generator_manifest.py](C:\pro\max\tools\codegen\build_generator_manifest.py)
