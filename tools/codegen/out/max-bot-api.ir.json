@@ -1,0 +1,50 @@
+{
+  "api": {
+    "title": "MAX Bot API",
+    "version": "0.1.0-draft",
+    "servers": [
+      "https://api.max.ru"
+    ]
+  },
+  "operations": [
+    {
+      "operation_id": "getHealth",
+      "method": "get",
+      "path": "/health",
+      "summary": "Health check",
+      "tags": [
+        "health"
+      ],
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "OK",
+          "content_types": [
+            "application/json"
+          ],
+          "schema_ref": "#/components/schemas/HealthResponse"
+        }
+      ]
+    }
+  ],
+  "schemas": [
+    {
+      "name": "HealthResponse",
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "format": null,
+          "ref": null
+        }
+      }
+    }
+  ],
+  "stats": {
+    "operation_count": 1,
+    "schema_count": 1
+  }
+}
