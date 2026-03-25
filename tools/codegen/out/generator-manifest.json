@@ -17,10 +17,17 @@
         "sdks/typescript/client/runtime/index.ts"
       ],
       "supported_operations": [
+        "addChatMembers",
+        "answerOnCallback",
         "deleteMessage",
+        "editChatInfo",
+        "editMessage",
         "editMyInfo",
         "getAllChats",
+        "getChatAdmins",
         "getChatById",
+        "getChatMembers",
+        "getChatMembership",
         "getHealth",
         "getMessageById",
         "getMessages",
@@ -28,10 +35,14 @@
         "getPinnedMessage",
         "getUpdates",
         "getUploadUrl",
+        "leaveChat",
+        "pinMessage",
+        "removeChatMember",
         "sendAction",
-        "sendMessage"
+        "sendMessage",
+        "unpinMessage"
       ],
-      "operation_count": 13,
+      "operation_count": 24,
       "coverage_complete": true
     },
     {
@@ -49,10 +60,17 @@
         "sdks/python/client/src/max_client/runtime/base_api_client.py"
       ],
       "supported_operations": [
+        "addChatMembers",
+        "answerOnCallback",
         "deleteMessage",
+        "editChatInfo",
+        "editMessage",
         "editMyInfo",
         "getAllChats",
+        "getChatAdmins",
         "getChatById",
+        "getChatMembers",
+        "getChatMembership",
         "getHealth",
         "getMessageById",
         "getMessages",
@@ -60,10 +78,14 @@
         "getPinnedMessage",
         "getUpdates",
         "getUploadUrl",
+        "leaveChat",
+        "pinMessage",
+        "removeChatMember",
         "sendAction",
-        "sendMessage"
+        "sendMessage",
+        "unpinMessage"
       ],
-      "operation_count": 13,
+      "operation_count": 24,
       "coverage_complete": true
     },
     {
@@ -82,10 +104,17 @@
         "sdks/csharp/client/Max.Client/Runtime/RequestOptions.cs"
       ],
       "supported_operations": [
+        "addChatMembers",
+        "answerOnCallback",
         "deleteMessage",
+        "editChatInfo",
+        "editMessage",
         "editMyInfo",
         "getAllChats",
+        "getChatAdmins",
         "getChatById",
+        "getChatMembers",
+        "getChatMembership",
         "getHealth",
         "getMessageById",
         "getMessages",
@@ -93,10 +122,14 @@
         "getPinnedMessage",
         "getUpdates",
         "getUploadUrl",
+        "leaveChat",
+        "pinMessage",
+        "removeChatMember",
         "sendAction",
-        "sendMessage"
+        "sendMessage",
+        "unpinMessage"
       ],
-      "operation_count": 13,
+      "operation_count": 24,
       "coverage_complete": true
     }
   ]

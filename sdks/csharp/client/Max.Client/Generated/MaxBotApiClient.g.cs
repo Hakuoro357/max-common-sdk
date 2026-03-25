@@ -19,6 +19,30 @@ public sealed class ActionResponse
     public bool Success { get; init; }
 }
 
+public sealed class AddChatMembersRequest
+{
+    [JsonPropertyName("user_ids")]
+    public List<int> UserIds { get; init; }
+}
+
+public sealed class AnswerOnCallbackRequest
+{
+    [JsonPropertyName("message")]
+    public SendMessageRequest? Message { get; init; }
+
+    [JsonPropertyName("notification")]
+    public string? Notification { get; init; }
+}
+
+public sealed class AttachmentRequest
+{
+    [JsonPropertyName("payload")]
+    public object? Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string? Type { get; init; }
+}
+
 public sealed class BotCommand
 {
     [JsonPropertyName("description")]
@@ -106,6 +130,58 @@ public sealed class ChatIcon
     public string Url { get; init; }
 }
 
+public sealed class ChatMember
+{
+    [JsonPropertyName("avatar_url")]
+    public string? AvatarUrl { get; init; }
+
+    [JsonPropertyName("description")]
+    public string? Description { get; init; }
+
+    [JsonPropertyName("full_avatar_url")]
+    public string? FullAvatarUrl { get; init; }
+
+    [JsonPropertyName("is_admin")]
+    public bool IsAdmin { get; init; }
+
+    [JsonPropertyName("is_bot")]
+    public bool IsBot { get; init; }
+
+    [JsonPropertyName("is_owner")]
+    public bool IsOwner { get; init; }
+
+    [JsonPropertyName("join_time")]
+    public int JoinTime { get; init; }
+
+    [JsonPropertyName("last_access_time")]
+    public int LastAccessTime { get; init; }
+
+    [JsonPropertyName("last_activity_time")]
+    public int LastActivityTime { get; init; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; init; }
+
+    [JsonPropertyName("permissions")]
+    public List<ChatPermissions>? Permissions { get; init; }
+
+    [JsonPropertyName("user_id")]
+    public int UserId { get; init; }
+
+    [JsonPropertyName("username")]
+    public string? Username { get; init; }
+}
+
+public enum ChatPermissions
+{
+    ReadAllMessages,
+    AddRemoveMembers,
+    AddAdmins,
+    ChangeChatInfo,
+    PinMessage,
+    Write,
+}
+
 public enum ChatStatus
 {
     Active,
@@ -122,6 +198,39 @@ public enum ChatType
     Channel,
 }
 
+public sealed class EditChatInfoRequest
+{
+    [JsonPropertyName("icon")]
+    public PhotoAttachmentRequestPayload? Icon { get; init; }
+
+    [JsonPropertyName("notify")]
+    public bool? Notify { get; init; }
+
+    [JsonPropertyName("pin")]
+    public string? Pin { get; init; }
+
+    [JsonPropertyName("title")]
+    public string? Title { get; init; }
+}
+
+public sealed class EditMessageRequest
+{
+    [JsonPropertyName("attachments")]
+    public List<AttachmentRequest>? Attachments { get; init; }
+
+    [JsonPropertyName("format")]
+    public string? Format { get; init; }
+
+    [JsonPropertyName("link")]
+    public MessageLinkReference? Link { get; init; }
+
+    [JsonPropertyName("notify")]
+    public bool? Notify { get; init; }
+
+    [JsonPropertyName("text")]
+    public string? Text { get; init; }
+}
+
 public sealed class EditMyInfoRequest
 {
     [JsonPropertyName("commands")]
@@ -132,6 +241,9 @@ public sealed class EditMyInfoRequest
 
     [JsonPropertyName("name")]
     public string? Name { get; init; }
+
+    [JsonPropertyName("photo")]
+    public PhotoAttachmentRequestPayload? Photo { get; init; }
 }
 
 public sealed class ErrorResponse
@@ -153,6 +265,24 @@ public sealed class GetAllChatsResponse
 
     [JsonPropertyName("marker")]
     public int? Marker { get; init; }
+}
+
+public sealed class GetChatAdminsResponse
+{
+    [JsonPropertyName("marker")]
+    public int? Marker { get; init; }
+
+    [JsonPropertyName("members")]
+    public List<ChatMember> Members { get; init; }
+}
+
+public sealed class GetChatMembersResponse
+{
+    [JsonPropertyName("marker")]
+    public int? Marker { get; init; }
+
+    [JsonPropertyName("members")]
+    public List<ChatMember> Members { get; init; }
 }
 
 public sealed class GetMessagesResponse
@@ -208,6 +338,9 @@ public sealed class Message
 
 public sealed class MessageBody
 {
+    [JsonPropertyName("attachments")]
+    public List<AttachmentRequest>? Attachments { get; init; }
+
     [JsonPropertyName("mid")]
     public string Mid { get; init; }
 
@@ -216,6 +349,21 @@ public sealed class MessageBody
 
     [JsonPropertyName("text")]
     public string? Text { get; init; }
+}
+
+public sealed class MessageLinkReference
+{
+    [JsonPropertyName("mid")]
+    public string Mid { get; init; }
+
+    [JsonPropertyName("type")]
+    public MessageLinkType Type { get; init; }
+}
+
+public enum MessageLinkType
+{
+    Forward,
+    Reply,
 }
 
 public sealed class MessageRecipient
@@ -227,6 +375,33 @@ public sealed class MessageRecipient
     public string ChatType { get; init; }
 }
 
+public sealed class PhotoAttachmentRequestPayload
+{
+    [JsonPropertyName("token")]
+    public string? Token { get; init; }
+
+    [JsonPropertyName("url")]
+    public string? Url { get; init; }
+}
+
+public sealed class PinMessageRequest
+{
+    [JsonPropertyName("message_id")]
+    public string MessageId { get; init; }
+
+    [JsonPropertyName("notify")]
+    public bool? Notify { get; init; }
+}
+
+public sealed class RemoveChatMemberRequest
+{
+    [JsonPropertyName("block")]
+    public bool? Block { get; init; }
+
+    [JsonPropertyName("user_id")]
+    public int UserId { get; init; }
+}
+
 public sealed class SendActionRequest
 {
     [JsonPropertyName("action")]
@@ -235,8 +410,14 @@ public sealed class SendActionRequest
 
 public sealed class SendMessageRequest
 {
+    [JsonPropertyName("attachments")]
+    public List<AttachmentRequest>? Attachments { get; init; }
+
     [JsonPropertyName("format")]
     public string? Format { get; init; }
+
+    [JsonPropertyName("link")]
+    public MessageLinkReference? Link { get; init; }
 
     [JsonPropertyName("notify")]
     public bool? Notify { get; init; }
@@ -281,6 +462,17 @@ public enum UploadType
     File,
 }
 
+public sealed class AnswerOnCallbackParamsQuery
+{
+    public string CallbackId { get; init; }
+}
+
+public sealed class AnswerOnCallbackParams
+{
+    public AnswerOnCallbackParamsQuery Query { get; init; } = new();
+    public AnswerOnCallbackRequest Body { get; init; } = new();
+}
+
 public sealed class GetAllChatsParamsQuery
 {
     public int? Count { get; init; }
@@ -303,6 +495,17 @@ public sealed class GetChatByIdParams
     public GetChatByIdParamsPath Path { get; init; } = new();
 }
 
+public sealed class EditChatInfoParamsPath
+{
+    public int ChatId { get; init; }
+}
+
+public sealed class EditChatInfoParams
+{
+    public EditChatInfoParamsPath Path { get; init; } = new();
+    public EditChatInfoRequest Body { get; init; } = new();
+}
+
 public sealed class SendActionParamsPath
 {
     public int ChatId { get; init; }
@@ -314,6 +517,78 @@ public sealed class SendActionParams
     public SendActionRequest Body { get; init; } = new();
 }
 
+public sealed class GetChatMembersParamsPath
+{
+    public int ChatId { get; init; }
+}
+
+public sealed class GetChatMembersParamsQuery
+{
+    public int? Count { get; init; }
+
+    public int? Marker { get; init; }
+
+    public List<int> UserIds { get; init; }
+}
+
+public sealed class GetChatMembersParams
+{
+    public GetChatMembersParamsPath Path { get; init; } = new();
+    public GetChatMembersParamsQuery Query { get; init; } = new();
+}
+
+public sealed class AddChatMembersParamsPath
+{
+    public int ChatId { get; init; }
+}
+
+public sealed class AddChatMembersParams
+{
+    public AddChatMembersParamsPath Path { get; init; } = new();
+    public AddChatMembersRequest Body { get; init; } = new();
+}
+
+public sealed class RemoveChatMemberParamsPath
+{
+    public int ChatId { get; init; }
+}
+
+public sealed class RemoveChatMemberParams
+{
+    public RemoveChatMemberParamsPath Path { get; init; } = new();
+    public RemoveChatMemberRequest Body { get; init; } = new();
+}
+
+public sealed class GetChatAdminsParamsPath
+{
+    public int ChatId { get; init; }
+}
+
+public sealed class GetChatAdminsParams
+{
+    public GetChatAdminsParamsPath Path { get; init; } = new();
+}
+
+public sealed class GetChatMembershipParamsPath
+{
+    public int ChatId { get; init; }
+}
+
+public sealed class GetChatMembershipParams
+{
+    public GetChatMembershipParamsPath Path { get; init; } = new();
+}
+
+public sealed class LeaveChatParamsPath
+{
+    public int ChatId { get; init; }
+}
+
+public sealed class LeaveChatParams
+{
+    public LeaveChatParamsPath Path { get; init; } = new();
+}
+
 public sealed class GetPinnedMessageParamsPath
 {
     public int ChatId { get; init; }
@@ -322,6 +597,27 @@ public sealed class GetPinnedMessageParamsPath
 public sealed class GetPinnedMessageParams
 {
     public GetPinnedMessageParamsPath Path { get; init; } = new();
+}
+
+public sealed class PinMessageParamsPath
+{
+    public int ChatId { get; init; }
+}
+
+public sealed class PinMessageParams
+{
+    public PinMessageParamsPath Path { get; init; } = new();
+    public PinMessageRequest Body { get; init; } = new();
+}
+
+public sealed class UnpinMessageParamsPath
+{
+    public int ChatId { get; init; }
+}
+
+public sealed class UnpinMessageParams
+{
+    public UnpinMessageParamsPath Path { get; init; } = new();
 }
 
 public sealed class EditMyInfoParams
@@ -360,6 +656,17 @@ public sealed class SendMessageParams
 {
     public SendMessageParamsQuery Query { get; init; } = new();
     public SendMessageRequest Body { get; init; } = new();
+}
+
+public sealed class EditMessageParamsQuery
+{
+    public string MessageId { get; init; }
+}
+
+public sealed class EditMessageParams
+{
+    public EditMessageParamsQuery Query { get; init; } = new();
+    public EditMessageRequest Body { get; init; } = new();
 }
 
 public sealed class DeleteMessageParamsQuery
@@ -415,6 +722,21 @@ public sealed class MaxBotApiClient : BaseApiClient
     {
     }
 
+    public Task<ActionResponse?> AnswerOnCallbackAsync(AnswerOnCallbackParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ActionResponse>(new ApiRequest
+        {
+            Method = HttpMethod.Post,
+            Path = "/answers",
+            Query = new Dictionary<string, object?>
+            {
+                ["callback_id"] = request.Query.CallbackId,
+            },
+            Body = request.Body,
+            Options = options,
+        }, cancellationToken);
+    }
+
     public Task<GetAllChatsResponse?> GetAllChatsAsync(GetAllChatsParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
     {
         return SendAsync<GetAllChatsResponse>(new ApiRequest
@@ -440,6 +762,17 @@ public sealed class MaxBotApiClient : BaseApiClient
         }, cancellationToken);
     }
 
+    public Task<Chat?> EditChatInfoAsync(EditChatInfoParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<Chat>(new ApiRequest
+        {
+            Method = HttpMethod.Patch,
+            Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatId.ToString())}",
+            Body = request.Body,
+            Options = options,
+        }, cancellationToken);
+    }
+
     public Task<ActionResponse?> SendActionAsync(SendActionParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
     {
         return SendAsync<ActionResponse>(new ApiRequest
@@ -451,11 +784,100 @@ public sealed class MaxBotApiClient : BaseApiClient
         }, cancellationToken);
     }
 
+    public Task<GetChatMembersResponse?> GetChatMembersAsync(GetChatMembersParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetChatMembersResponse>(new ApiRequest
+        {
+            Method = HttpMethod.Get,
+            Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatId.ToString())}/members",
+            Query = new Dictionary<string, object?>
+            {
+                ["count"] = request.Query.Count,
+                ["marker"] = request.Query.Marker,
+                ["user_ids"] = request.Query.UserIds,
+            },
+            Options = options,
+        }, cancellationToken);
+    }
+
+    public Task<ActionResponse?> AddChatMembersAsync(AddChatMembersParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ActionResponse>(new ApiRequest
+        {
+            Method = HttpMethod.Post,
+            Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatId.ToString())}/members",
+            Body = request.Body,
+            Options = options,
+        }, cancellationToken);
+    }
+
+    public Task<ActionResponse?> RemoveChatMemberAsync(RemoveChatMemberParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ActionResponse>(new ApiRequest
+        {
+            Method = HttpMethod.Delete,
+            Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatId.ToString())}/members",
+            Body = request.Body,
+            Options = options,
+        }, cancellationToken);
+    }
+
+    public Task<GetChatAdminsResponse?> GetChatAdminsAsync(GetChatAdminsParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<GetChatAdminsResponse>(new ApiRequest
+        {
+            Method = HttpMethod.Get,
+            Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatId.ToString())}/members/admins",
+            Options = options,
+        }, cancellationToken);
+    }
+
+    public Task<ChatMember?> GetChatMembershipAsync(GetChatMembershipParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ChatMember>(new ApiRequest
+        {
+            Method = HttpMethod.Get,
+            Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatId.ToString())}/members/me",
+            Options = options,
+        }, cancellationToken);
+    }
+
+    public Task<ActionResponse?> LeaveChatAsync(LeaveChatParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ActionResponse>(new ApiRequest
+        {
+            Method = HttpMethod.Delete,
+            Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatId.ToString())}/members/me",
+            Options = options,
+        }, cancellationToken);
+    }
+
     public Task<GetPinnedMessageResponse?> GetPinnedMessageAsync(GetPinnedMessageParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
     {
         return SendAsync<GetPinnedMessageResponse>(new ApiRequest
         {
             Method = HttpMethod.Get,
+            Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatId.ToString())}/pin",
+            Options = options,
+        }, cancellationToken);
+    }
+
+    public Task<ActionResponse?> PinMessageAsync(PinMessageParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ActionResponse>(new ApiRequest
+        {
+            Method = HttpMethod.Put,
+            Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatId.ToString())}/pin",
+            Body = request.Body,
+            Options = options,
+        }, cancellationToken);
+    }
+
+    public Task<ActionResponse?> UnpinMessageAsync(UnpinMessageParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ActionResponse>(new ApiRequest
+        {
+            Method = HttpMethod.Delete,
             Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatId.ToString())}/pin",
             Options = options,
         }, cancellationToken);
@@ -521,6 +943,21 @@ public sealed class MaxBotApiClient : BaseApiClient
                 ["chat_id"] = request.Query.ChatId,
                 ["disable_link_preview"] = request.Query.DisableLinkPreview,
                 ["user_id"] = request.Query.UserId,
+            },
+            Body = request.Body,
+            Options = options,
+        }, cancellationToken);
+    }
+
+    public Task<ActionResponse?> EditMessageAsync(EditMessageParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<ActionResponse>(new ApiRequest
+        {
+            Method = HttpMethod.Put,
+            Path = "/messages",
+            Query = new Dictionary<string, object?>
+            {
+                ["message_id"] = request.Query.MessageId,
             },
             Body = request.Body,
             Options = options,

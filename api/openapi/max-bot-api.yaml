@@ -203,6 +203,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      tags: [chats]
+      summary: Edit chat info
+      operationId: editChatInfo
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditChatInfoRequest'
+      responses:
+        '200':
+          description: Updated chat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /chats/{chat_id}/actions:
     post:
@@ -253,6 +282,231 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetPinnedMessageResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [chats]
+      summary: Pin message
+      operationId: pinMessage
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PinMessageRequest'
+      responses:
+        '200':
+          description: Pin result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [chats]
+      summary: Unpin message
+      operationId: unpinMessage
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Unpin result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chats/{chat_id}/members/me:
+    get:
+      tags: [chats]
+      summary: Get current bot membership in chat
+      operationId: getChatMembership
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Membership
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMember'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [chats]
+      summary: Leave chat
+      operationId: leaveChat
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Leave result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chats/{chat_id}/members/admins:
+    get:
+      tags: [chats]
+      summary: Get chat admins
+      operationId: getChatAdmins
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chat admins
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChatAdminsResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chats/{chat_id}/members:
+    get:
+      tags: [chats]
+      summary: Get chat members
+      operationId: getChatMembers
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: user_ids
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: marker
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: count
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chat members
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChatMembersResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [chats]
+      summary: Add chat members
+      operationId: addChatMembers
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddChatMembersRequest'
+      responses:
+        '200':
+          description: Add members result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [chats]
+      summary: Remove chat member
+      operationId: removeChatMember
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveChatMemberRequest'
+      responses:
+        '200':
+          description: Remove member result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponse'
         default:
           description: API error
           content:
@@ -368,6 +622,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [messages]
+      summary: Edit message
+      operationId: editMessage
+      parameters:
+        - name: message_id
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditMessageRequest'
+      responses:
+        '200':
+          description: Edit result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /messages/{message_id}:
     get:
@@ -387,6 +670,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /answers:
+    post:
+      tags: [messages]
+      summary: Answer on callback
+      operationId: answerOnCallback
+      parameters:
+        - name: callback_id
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerOnCallbackRequest'
+      responses:
+        '200':
+          description: Callback answer result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponse'
         default:
           description: API error
           content:
@@ -473,6 +787,16 @@ components:
         url:
           type: string
 
+    PhotoAttachmentRequestPayload:
+      type: object
+      properties:
+        url:
+          type: string
+          nullable: true
+        token:
+          type: string
+          nullable: true
+
     Chat:
       type: object
       required: [chat_id, type, status, last_event_time, participants_count, is_public]
@@ -510,6 +834,46 @@ components:
           type: string
           nullable: true
 
+    ChatPermissions:
+      type: string
+      enum: [read_all_messages, add_remove_members, add_admins, change_chat_info, pin_message, write]
+
+    ChatMember:
+      type: object
+      required: [user_id, name, is_bot, last_activity_time, last_access_time, is_owner, is_admin, join_time]
+      properties:
+        user_id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+          nullable: true
+        is_bot:
+          type: boolean
+        last_activity_time:
+          type: integer
+        description:
+          type: string
+          nullable: true
+        avatar_url:
+          type: string
+        full_avatar_url:
+          type: string
+        last_access_time:
+          type: integer
+        is_owner:
+          type: boolean
+        is_admin:
+          type: boolean
+        join_time:
+          type: integer
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatPermissions'
+          nullable: true
+
     GetAllChatsResponse:
       type: object
       required: [chats]
@@ -536,6 +900,8 @@ components:
           items:
             $ref: '#/components/schemas/BotCommand'
           nullable: true
+        photo:
+          $ref: '#/components/schemas/PhotoAttachmentRequestPayload'
 
     UploadType:
       type: string
@@ -560,6 +926,63 @@ components:
           type: string
           nullable: true
 
+    GetChatAdminsResponse:
+      type: object
+      required: [members]
+      properties:
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMember'
+        marker:
+          type: integer
+          nullable: true
+
+    GetChatMembersResponse:
+      type: object
+      required: [members]
+      properties:
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMember'
+        marker:
+          type: integer
+          nullable: true
+
+    AddChatMembersRequest:
+      type: object
+      required: [user_ids]
+      properties:
+        user_ids:
+          type: array
+          items:
+            type: integer
+
+    RemoveChatMemberRequest:
+      type: object
+      required: [user_id]
+      properties:
+        user_id:
+          type: integer
+        block:
+          type: boolean
+
+    EditChatInfoRequest:
+      type: object
+      properties:
+        icon:
+          $ref: '#/components/schemas/PhotoAttachmentRequestPayload'
+        title:
+          type: string
+          nullable: true
+        pin:
+          type: string
+          nullable: true
+        notify:
+          type: boolean
+          nullable: true
+
     MessageRecipient:
       type: object
       required: [chat_type]
@@ -568,6 +991,27 @@ components:
           type: integer
           nullable: true
         chat_type:
+          type: string
+
+    AttachmentRequest:
+      type: object
+      properties:
+        type:
+          type: string
+        payload:
+          type: object
+
+    MessageLinkType:
+      type: string
+      enum: [forward, reply]
+
+    MessageLinkReference:
+      type: object
+      required: [type, mid]
+      properties:
+        type:
+          $ref: '#/components/schemas/MessageLinkType'
+        mid:
           type: string
 
     MessageBody:
@@ -580,6 +1024,11 @@ components:
           type: integer
         text:
           type: string
+          nullable: true
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttachmentRequest'
           nullable: true
 
     Message:
@@ -602,9 +1051,44 @@ components:
         text:
           type: string
           nullable: true
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttachmentRequest'
+          nullable: true
+        link:
+          $ref: '#/components/schemas/MessageLinkReference'
         notify:
           type: boolean
         format:
+          type: string
+          nullable: true
+
+    EditMessageRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          nullable: true
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttachmentRequest'
+          nullable: true
+        link:
+          $ref: '#/components/schemas/MessageLinkReference'
+        notify:
+          type: boolean
+        format:
+          type: string
+          nullable: true
+
+    AnswerOnCallbackRequest:
+      type: object
+      properties:
+        message:
+          $ref: '#/components/schemas/SendMessageRequest'
+        notification:
           type: string
           nullable: true
 
@@ -659,3 +1143,13 @@ components:
       properties:
         message:
           $ref: '#/components/schemas/Message'
+
+    PinMessageRequest:
+      type: object
+      required: [message_id]
+      properties:
+        message_id:
+          type: string
+        notify:
+          type: boolean
+          nullable: true

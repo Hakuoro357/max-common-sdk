@@ -12,6 +12,17 @@ class ActionResponse(TypedDict, total=False):
     message: NotRequired[str | None]
     success: bool
 
+class AddChatMembersRequest(TypedDict, total=False):
+    user_ids: list[int]
+
+class AnswerOnCallbackRequest(TypedDict, total=False):
+    message: NotRequired[SendMessageRequest]
+    notification: NotRequired[str | None]
+
+class AttachmentRequest(TypedDict, total=False):
+    payload: NotRequired[Any]
+    type: NotRequired[str]
+
 class BotCommand(TypedDict, total=False):
     description: NotRequired[str | None]
     name: str
@@ -45,14 +56,45 @@ class Chat(TypedDict, total=False):
 class ChatIcon(TypedDict, total=False):
     url: str
 
+class ChatMember(TypedDict, total=False):
+    avatar_url: NotRequired[str]
+    description: NotRequired[str | None]
+    full_avatar_url: NotRequired[str]
+    is_admin: bool
+    is_bot: bool
+    is_owner: bool
+    join_time: int
+    last_access_time: int
+    last_activity_time: int
+    name: str
+    permissions: NotRequired[list[ChatPermissions]]
+    user_id: int
+    username: NotRequired[str | None]
+
+ChatPermissions: TypeAlias = Literal['read_all_messages', 'add_remove_members', 'add_admins', 'change_chat_info', 'pin_message', 'write']
+
 ChatStatus: TypeAlias = Literal['active', 'removed', 'left', 'closed', 'suspended']
 
 ChatType: TypeAlias = Literal['dialog', 'chat', 'channel']
+
+class EditChatInfoRequest(TypedDict, total=False):
+    icon: NotRequired[PhotoAttachmentRequestPayload]
+    notify: NotRequired[bool | None]
+    pin: NotRequired[str | None]
+    title: NotRequired[str | None]
+
+class EditMessageRequest(TypedDict, total=False):
+    attachments: NotRequired[list[AttachmentRequest]]
+    format: NotRequired[str | None]
+    link: NotRequired[MessageLinkReference]
+    notify: NotRequired[bool]
+    text: NotRequired[str | None]
 
 class EditMyInfoRequest(TypedDict, total=False):
     commands: NotRequired[list[BotCommand]]
     description: NotRequired[str | None]
     name: NotRequired[str | None]
+    photo: NotRequired[PhotoAttachmentRequestPayload]
 
 class ErrorResponse(TypedDict, total=False):
     code: str
@@ -62,6 +104,14 @@ class ErrorResponse(TypedDict, total=False):
 class GetAllChatsResponse(TypedDict, total=False):
     chats: list[Chat]
     marker: NotRequired[int | None]
+
+class GetChatAdminsResponse(TypedDict, total=False):
+    marker: NotRequired[int | None]
+    members: list[ChatMember]
+
+class GetChatMembersResponse(TypedDict, total=False):
+    marker: NotRequired[int | None]
+    members: list[ChatMember]
 
 class GetMessagesResponse(TypedDict, total=False):
     messages: list[Message]
@@ -87,19 +137,40 @@ class Message(TypedDict, total=False):
     url: NotRequired[str | None]
 
 class MessageBody(TypedDict, total=False):
+    attachments: NotRequired[list[AttachmentRequest]]
     mid: str
     seq: int
     text: NotRequired[str | None]
+
+class MessageLinkReference(TypedDict, total=False):
+    mid: str
+    type: MessageLinkType
+
+MessageLinkType: TypeAlias = Literal['forward', 'reply']
 
 class MessageRecipient(TypedDict, total=False):
     chat_id: NotRequired[int | None]
     chat_type: str
 
+class PhotoAttachmentRequestPayload(TypedDict, total=False):
+    token: NotRequired[str | None]
+    url: NotRequired[str | None]
+
+class PinMessageRequest(TypedDict, total=False):
+    message_id: str
+    notify: NotRequired[bool | None]
+
+class RemoveChatMemberRequest(TypedDict, total=False):
+    block: NotRequired[bool]
+    user_id: int
+
 class SendActionRequest(TypedDict, total=False):
     action: SenderAction
 
 class SendMessageRequest(TypedDict, total=False):
+    attachments: NotRequired[list[AttachmentRequest]]
     format: NotRequired[str | None]
+    link: NotRequired[MessageLinkReference]
     notify: NotRequired[bool]
     text: NotRequired[str | None]
 
@@ -115,6 +186,13 @@ class Update(TypedDict, total=False):
 
 UploadType: TypeAlias = Literal['image', 'video', 'audio', 'file']
 
+class AnswerOnCallbackParamsQuery(TypedDict, total=False):
+    callback_id: str
+
+class AnswerOnCallbackParams(TypedDict, total=False):
+    query: AnswerOnCallbackParamsQuery
+    body: AnswerOnCallbackRequest
+
 class GetAllChatsParamsQuery(TypedDict, total=False):
     count: int
     marker: int
@@ -128,6 +206,13 @@ class GetChatByIdParamsPath(TypedDict):
 class GetChatByIdParams(TypedDict, total=False):
     path: GetChatByIdParamsPath
 
+class EditChatInfoParamsPath(TypedDict):
+    chat_id: int
+
+class EditChatInfoParams(TypedDict, total=False):
+    path: EditChatInfoParamsPath
+    body: EditChatInfoRequest
+
 class SendActionParamsPath(TypedDict):
     chat_id: int
 
@@ -135,11 +220,68 @@ class SendActionParams(TypedDict, total=False):
     path: SendActionParamsPath
     body: SendActionRequest
 
+class GetChatMembersParamsPath(TypedDict):
+    chat_id: int
+
+class GetChatMembersParamsQuery(TypedDict, total=False):
+    count: int
+    marker: int
+    user_ids: list[int]
+
+class GetChatMembersParams(TypedDict, total=False):
+    path: GetChatMembersParamsPath
+    query: GetChatMembersParamsQuery
+
+class AddChatMembersParamsPath(TypedDict):
+    chat_id: int
+
+class AddChatMembersParams(TypedDict, total=False):
+    path: AddChatMembersParamsPath
+    body: AddChatMembersRequest
+
+class RemoveChatMemberParamsPath(TypedDict):
+    chat_id: int
+
+class RemoveChatMemberParams(TypedDict, total=False):
+    path: RemoveChatMemberParamsPath
+    body: RemoveChatMemberRequest
+
+class GetChatAdminsParamsPath(TypedDict):
+    chat_id: int
+
+class GetChatAdminsParams(TypedDict, total=False):
+    path: GetChatAdminsParamsPath
+
+class GetChatMembershipParamsPath(TypedDict):
+    chat_id: int
+
+class GetChatMembershipParams(TypedDict, total=False):
+    path: GetChatMembershipParamsPath
+
+class LeaveChatParamsPath(TypedDict):
+    chat_id: int
+
+class LeaveChatParams(TypedDict, total=False):
+    path: LeaveChatParamsPath
+
 class GetPinnedMessageParamsPath(TypedDict):
     chat_id: int
 
 class GetPinnedMessageParams(TypedDict, total=False):
     path: GetPinnedMessageParamsPath
+
+class PinMessageParamsPath(TypedDict):
+    chat_id: int
+
+class PinMessageParams(TypedDict, total=False):
+    path: PinMessageParamsPath
+    body: PinMessageRequest
+
+class UnpinMessageParamsPath(TypedDict):
+    chat_id: int
+
+class UnpinMessageParams(TypedDict, total=False):
+    path: UnpinMessageParamsPath
 
 class EditMyInfoParams(TypedDict, total=False):
     body: EditMyInfoRequest
@@ -162,6 +304,13 @@ class SendMessageParamsQuery(TypedDict, total=False):
 class SendMessageParams(TypedDict, total=False):
     query: SendMessageParamsQuery
     body: SendMessageRequest
+
+class EditMessageParamsQuery(TypedDict, total=False):
+    message_id: str
+
+class EditMessageParams(TypedDict, total=False):
+    query: EditMessageParamsQuery
+    body: EditMessageRequest
 
 class DeleteMessageParamsQuery(TypedDict, total=False):
     message_id: str
@@ -194,6 +343,15 @@ class MaxBotApiClient(BaseApiClient):
     def __init__(self, config: ClientConfig | None = None) -> None:
         super().__init__(config=config)
 
+    def answerOnCallback(self, request: AnswerOnCallbackParams, options: RequestOptions | None = None) -> ActionResponse:
+        return self.request(
+            method='POST',
+            path='/answers',
+            query={ 'callback_id': request['query'].get('callback_id') },
+            body=request['body'],
+            options=options,
+        )
+
     def getAllChats(self, request: GetAllChatsParams, options: RequestOptions | None = None) -> GetAllChatsResponse:
         return self.request(
             method='GET',
@@ -209,6 +367,14 @@ class MaxBotApiClient(BaseApiClient):
             options=options,
         )
 
+    def editChatInfo(self, request: EditChatInfoParams, options: RequestOptions | None = None) -> Chat:
+        return self.request(
+            method='PATCH',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}',
+            body=request['body'],
+            options=options,
+        )
+
     def sendAction(self, request: SendActionParams, options: RequestOptions | None = None) -> ActionResponse:
         return self.request(
             method='POST',
@@ -217,9 +383,69 @@ class MaxBotApiClient(BaseApiClient):
             options=options,
         )
 
+    def getChatMembers(self, request: GetChatMembersParams, options: RequestOptions | None = None) -> GetChatMembersResponse:
+        return self.request(
+            method='GET',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/members',
+            query={ 'count': request['query'].get('count'), 'marker': request['query'].get('marker'), 'user_ids': request['query'].get('user_ids') },
+            options=options,
+        )
+
+    def addChatMembers(self, request: AddChatMembersParams, options: RequestOptions | None = None) -> ActionResponse:
+        return self.request(
+            method='POST',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/members',
+            body=request['body'],
+            options=options,
+        )
+
+    def removeChatMember(self, request: RemoveChatMemberParams, options: RequestOptions | None = None) -> ActionResponse:
+        return self.request(
+            method='DELETE',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/members',
+            body=request['body'],
+            options=options,
+        )
+
+    def getChatAdmins(self, request: GetChatAdminsParams, options: RequestOptions | None = None) -> GetChatAdminsResponse:
+        return self.request(
+            method='GET',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/members/admins',
+            options=options,
+        )
+
+    def getChatMembership(self, request: GetChatMembershipParams, options: RequestOptions | None = None) -> ChatMember:
+        return self.request(
+            method='GET',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/members/me',
+            options=options,
+        )
+
+    def leaveChat(self, request: LeaveChatParams, options: RequestOptions | None = None) -> ActionResponse:
+        return self.request(
+            method='DELETE',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/members/me',
+            options=options,
+        )
+
     def getPinnedMessage(self, request: GetPinnedMessageParams, options: RequestOptions | None = None) -> GetPinnedMessageResponse:
         return self.request(
             method='GET',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/pin',
+            options=options,
+        )
+
+    def pinMessage(self, request: PinMessageParams, options: RequestOptions | None = None) -> ActionResponse:
+        return self.request(
+            method='PUT',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/pin',
+            body=request['body'],
+            options=options,
+        )
+
+    def unpinMessage(self, request: UnpinMessageParams, options: RequestOptions | None = None) -> ActionResponse:
+        return self.request(
+            method='DELETE',
             path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/pin',
             options=options,
         )
@@ -259,6 +485,15 @@ class MaxBotApiClient(BaseApiClient):
             method='POST',
             path='/messages',
             query={ 'chat_id': request['query'].get('chat_id'), 'disable_link_preview': request['query'].get('disable_link_preview'), 'user_id': request['query'].get('user_id') },
+            body=request['body'],
+            options=options,
+        )
+
+    def editMessage(self, request: EditMessageParams, options: RequestOptions | None = None) -> ActionResponse:
+        return self.request(
+            method='PUT',
+            path='/messages',
+            query={ 'message_id': request['query'].get('message_id') },
             body=request['body'],
             options=options,
         )

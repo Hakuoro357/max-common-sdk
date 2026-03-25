@@ -8,6 +8,20 @@ export interface ActionResponse {
   success: boolean;
 }
 
+export interface AddChatMembersRequest {
+  user_ids: number[];
+}
+
+export interface AnswerOnCallbackRequest {
+  message?: SendMessageRequest;
+  notification?: string | null;
+}
+
+export interface AttachmentRequest {
+  payload?: unknown;
+  type?: string;
+}
+
 export interface BotCommand {
   description?: string | null;
   name: string;
@@ -45,14 +59,48 @@ export interface ChatIcon {
   url: string;
 }
 
+export interface ChatMember {
+  avatar_url?: string;
+  description?: string | null;
+  full_avatar_url?: string;
+  is_admin: boolean;
+  is_bot: boolean;
+  is_owner: boolean;
+  join_time: number;
+  last_access_time: number;
+  last_activity_time: number;
+  name: string;
+  permissions?: ChatPermissions[];
+  user_id: number;
+  username?: string | null;
+}
+
+export type ChatPermissions = 'read_all_messages' | 'add_remove_members' | 'add_admins' | 'change_chat_info' | 'pin_message' | 'write';
+
 export type ChatStatus = 'active' | 'removed' | 'left' | 'closed' | 'suspended';
 
 export type ChatType = 'dialog' | 'chat' | 'channel';
+
+export interface EditChatInfoRequest {
+  icon?: PhotoAttachmentRequestPayload;
+  notify?: boolean | null;
+  pin?: string | null;
+  title?: string | null;
+}
+
+export interface EditMessageRequest {
+  attachments?: AttachmentRequest[];
+  format?: string | null;
+  link?: MessageLinkReference;
+  notify?: boolean;
+  text?: string | null;
+}
 
 export interface EditMyInfoRequest {
   commands?: BotCommand[];
   description?: string | null;
   name?: string | null;
+  photo?: PhotoAttachmentRequestPayload;
 }
 
 export interface ErrorResponse {
@@ -64,6 +112,16 @@ export interface ErrorResponse {
 export interface GetAllChatsResponse {
   chats: Chat[];
   marker?: number | null;
+}
+
+export interface GetChatAdminsResponse {
+  marker?: number | null;
+  members: ChatMember[];
+}
+
+export interface GetChatMembersResponse {
+  marker?: number | null;
+  members: ChatMember[];
 }
 
 export interface GetMessagesResponse {
@@ -96,14 +154,37 @@ export interface Message {
 }
 
 export interface MessageBody {
+  attachments?: AttachmentRequest[];
   mid: string;
   seq: number;
   text?: string | null;
 }
 
+export interface MessageLinkReference {
+  mid: string;
+  type: MessageLinkType;
+}
+
+export type MessageLinkType = 'forward' | 'reply';
+
 export interface MessageRecipient {
   chat_id?: number | null;
   chat_type: string;
+}
+
+export interface PhotoAttachmentRequestPayload {
+  token?: string | null;
+  url?: string | null;
+}
+
+export interface PinMessageRequest {
+  message_id: string;
+  notify?: boolean | null;
+}
+
+export interface RemoveChatMemberRequest {
+  block?: boolean;
+  user_id: number;
 }
 
 export interface SendActionRequest {
@@ -111,7 +192,9 @@ export interface SendActionRequest {
 }
 
 export interface SendMessageRequest {
+  attachments?: AttachmentRequest[];
   format?: string | null;
+  link?: MessageLinkReference;
   notify?: boolean;
   text?: string | null;
 }
@@ -130,6 +213,13 @@ export interface Update {
 
 export type UploadType = 'image' | 'video' | 'audio' | 'file';
 
+export interface AnswerOnCallbackParams {
+  query: {
+    callback_id: string;
+  };
+  body: AnswerOnCallbackRequest;
+}
+
 export interface GetAllChatsParams {
   query: {
     count?: number;
@@ -143,6 +233,13 @@ export interface GetChatByIdParams {
   };
 }
 
+export interface EditChatInfoParams {
+  path: {
+    chat_id: number;
+  };
+  body: EditChatInfoRequest;
+}
+
 export interface SendActionParams {
   path: {
     chat_id: number;
@@ -150,7 +247,63 @@ export interface SendActionParams {
   body: SendActionRequest;
 }
 
+export interface GetChatMembersParams {
+  path: {
+    chat_id: number;
+  };
+  query: {
+    count?: number;
+    marker?: number;
+    user_ids?: number[];
+  };
+}
+
+export interface AddChatMembersParams {
+  path: {
+    chat_id: number;
+  };
+  body: AddChatMembersRequest;
+}
+
+export interface RemoveChatMemberParams {
+  path: {
+    chat_id: number;
+  };
+  body: RemoveChatMemberRequest;
+}
+
+export interface GetChatAdminsParams {
+  path: {
+    chat_id: number;
+  };
+}
+
+export interface GetChatMembershipParams {
+  path: {
+    chat_id: number;
+  };
+}
+
+export interface LeaveChatParams {
+  path: {
+    chat_id: number;
+  };
+}
+
 export interface GetPinnedMessageParams {
+  path: {
+    chat_id: number;
+  };
+}
+
+export interface PinMessageParams {
+  path: {
+    chat_id: number;
+  };
+  body: PinMessageRequest;
+}
+
+export interface UnpinMessageParams {
   path: {
     chat_id: number;
   };
@@ -177,6 +330,13 @@ export interface SendMessageParams {
     user_id?: number;
   };
   body: SendMessageRequest;
+}
+
+export interface EditMessageParams {
+  query: {
+    message_id: string;
+  };
+  body: EditMessageRequest;
 }
 
 export interface DeleteMessageParams {
@@ -211,6 +371,16 @@ export class MaxBotApiClient extends BaseApiClient {
     super(config);
   }
 
+  async answerOnCallback(request: AnswerOnCallbackParams, options: RequestOptions = {}): Promise<ActionResponse> {
+    return this.request<ActionResponse>({
+      method: 'POST',
+      path: `/answers`,
+      query: { callback_id: request.query.callback_id },
+      body: request.body,
+      options,
+    });
+  }
+
   async getAllChats(request: GetAllChatsParams, options: RequestOptions = {}): Promise<GetAllChatsResponse> {
     return this.request<GetAllChatsResponse>({
       method: 'GET',
@@ -228,6 +398,15 @@ export class MaxBotApiClient extends BaseApiClient {
     });
   }
 
+  async editChatInfo(request: EditChatInfoParams, options: RequestOptions = {}): Promise<Chat> {
+    return this.request<Chat>({
+      method: 'PATCH',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}`,
+      body: request.body,
+      options,
+    });
+  }
+
   async sendAction(request: SendActionParams, options: RequestOptions = {}): Promise<ActionResponse> {
     return this.request<ActionResponse>({
       method: 'POST',
@@ -237,9 +416,77 @@ export class MaxBotApiClient extends BaseApiClient {
     });
   }
 
+  async getChatMembers(request: GetChatMembersParams, options: RequestOptions = {}): Promise<GetChatMembersResponse> {
+    return this.request<GetChatMembersResponse>({
+      method: 'GET',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/members`,
+      query: { count: request.query.count, marker: request.query.marker, user_ids: request.query.user_ids },
+      options,
+    });
+  }
+
+  async addChatMembers(request: AddChatMembersParams, options: RequestOptions = {}): Promise<ActionResponse> {
+    return this.request<ActionResponse>({
+      method: 'POST',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/members`,
+      body: request.body,
+      options,
+    });
+  }
+
+  async removeChatMember(request: RemoveChatMemberParams, options: RequestOptions = {}): Promise<ActionResponse> {
+    return this.request<ActionResponse>({
+      method: 'DELETE',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/members`,
+      body: request.body,
+      options,
+    });
+  }
+
+  async getChatAdmins(request: GetChatAdminsParams, options: RequestOptions = {}): Promise<GetChatAdminsResponse> {
+    return this.request<GetChatAdminsResponse>({
+      method: 'GET',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/members/admins`,
+      options,
+    });
+  }
+
+  async getChatMembership(request: GetChatMembershipParams, options: RequestOptions = {}): Promise<ChatMember> {
+    return this.request<ChatMember>({
+      method: 'GET',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/members/me`,
+      options,
+    });
+  }
+
+  async leaveChat(request: LeaveChatParams, options: RequestOptions = {}): Promise<ActionResponse> {
+    return this.request<ActionResponse>({
+      method: 'DELETE',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/members/me`,
+      options,
+    });
+  }
+
   async getPinnedMessage(request: GetPinnedMessageParams, options: RequestOptions = {}): Promise<GetPinnedMessageResponse> {
     return this.request<GetPinnedMessageResponse>({
       method: 'GET',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/pin`,
+      options,
+    });
+  }
+
+  async pinMessage(request: PinMessageParams, options: RequestOptions = {}): Promise<ActionResponse> {
+    return this.request<ActionResponse>({
+      method: 'PUT',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/pin`,
+      body: request.body,
+      options,
+    });
+  }
+
+  async unpinMessage(request: UnpinMessageParams, options: RequestOptions = {}): Promise<ActionResponse> {
+    return this.request<ActionResponse>({
+      method: 'DELETE',
       path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/pin`,
       options,
     });
@@ -284,6 +531,16 @@ export class MaxBotApiClient extends BaseApiClient {
       method: 'POST',
       path: `/messages`,
       query: { chat_id: request.query.chat_id, disable_link_preview: request.query.disable_link_preview, user_id: request.query.user_id },
+      body: request.body,
+      options,
+    });
+  }
+
+  async editMessage(request: EditMessageParams, options: RequestOptions = {}): Promise<ActionResponse> {
+    return this.request<ActionResponse>({
+      method: 'PUT',
+      path: `/messages`,
+      query: { message_id: request.query.message_id },
       body: request.body,
       options,
     });
