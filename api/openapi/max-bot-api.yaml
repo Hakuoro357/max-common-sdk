@@ -14,6 +14,8 @@ tags:
     description: Bootstrap endpoints used while the common SDK platform is scaffolded.
   - name: bots
     description: Bot profile methods.
+  - name: chats
+    description: Chat read and action methods.
   - name: subscriptions
     description: Update polling methods.
   - name: uploads
@@ -147,7 +149,163 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /chats:
+    get:
+      tags: [chats]
+      summary: Get all chats
+      operationId: getAllChats
+      parameters:
+        - name: count
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: marker
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chats page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllChatsResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chats/{chat_id}:
+    get:
+      tags: [chats]
+      summary: Get chat by id
+      operationId: getChatById
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chats/{chat_id}/actions:
+    post:
+      tags: [chats]
+      summary: Send action
+      operationId: sendAction
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendActionRequest'
+      responses:
+        '200':
+          description: Action sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chats/{chat_id}/pin:
+    get:
+      tags: [chats]
+      summary: Get pinned message
+      operationId: getPinnedMessage
+      parameters:
+        - name: chat_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pinned message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPinnedMessageResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /messages:
+    get:
+      tags: [messages]
+      summary: Get messages
+      operationId: getMessages
+      parameters:
+        - name: chat_id
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: message_ids
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: count
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Messages list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMessagesResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     post:
       tags: [messages]
       summary: Send message
@@ -181,6 +339,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SendMessageResponse'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [messages]
+      summary: Delete message
+      operationId: deleteMessage
+      parameters:
+        - name: message_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delete result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionResponse'
         default:
           description: API error
           content:
@@ -273,6 +454,74 @@ components:
             $ref: '#/components/schemas/BotCommand'
           nullable: true
 
+    ChatType:
+      type: string
+      enum: [dialog, chat, channel]
+
+    ChatStatus:
+      type: string
+      enum: [active, removed, left, closed, suspended]
+
+    SenderAction:
+      type: string
+      enum: [typing_on, sending_photo, sending_video, sending_audio, sending_file, mark_seen]
+
+    ChatIcon:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+
+    Chat:
+      type: object
+      required: [chat_id, type, status, last_event_time, participants_count, is_public]
+      properties:
+        chat_id:
+          type: integer
+        type:
+          $ref: '#/components/schemas/ChatType'
+        status:
+          $ref: '#/components/schemas/ChatStatus'
+        title:
+          type: string
+          nullable: true
+        icon:
+          $ref: '#/components/schemas/ChatIcon'
+        last_event_time:
+          type: integer
+        participants_count:
+          type: integer
+        owner_id:
+          type: integer
+          nullable: true
+        is_public:
+          type: boolean
+        link:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        messages_count:
+          type: integer
+          nullable: true
+        chat_message_id:
+          type: string
+          nullable: true
+
+    GetAllChatsResponse:
+      type: object
+      required: [chats]
+      properties:
+        chats:
+          type: array
+          items:
+            $ref: '#/components/schemas/Chat'
+        marker:
+          type: integer
+          nullable: true
+
     EditMyInfoRequest:
       type: object
       properties:
@@ -300,6 +549,16 @@ components:
           type: string
         token:
           type: string
+
+    ActionResponse:
+      type: object
+      required: [success]
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+          nullable: true
 
     MessageRecipient:
       type: object
@@ -349,6 +608,15 @@ components:
           type: string
           nullable: true
 
+    GetMessagesResponse:
+      type: object
+      required: [messages]
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+
     SendMessageResponse:
       type: object
       required: [message]
@@ -377,3 +645,17 @@ components:
             $ref: '#/components/schemas/Update'
         marker:
           type: integer
+
+    SendActionRequest:
+      type: object
+      required: [action]
+      properties:
+        action:
+          $ref: '#/components/schemas/SenderAction'
+
+    GetPinnedMessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          $ref: '#/components/schemas/Message'

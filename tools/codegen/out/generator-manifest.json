@@ -17,15 +17,21 @@
         "sdks/typescript/client/runtime/index.ts"
       ],
       "supported_operations": [
+        "deleteMessage",
         "editMyInfo",
+        "getAllChats",
+        "getChatById",
         "getHealth",
         "getMessageById",
+        "getMessages",
         "getMyInfo",
+        "getPinnedMessage",
         "getUpdates",
         "getUploadUrl",
+        "sendAction",
         "sendMessage"
       ],
-      "operation_count": 7,
+      "operation_count": 13,
       "coverage_complete": true
     },
     {
@@ -43,15 +49,21 @@
         "sdks/python/client/src/max_client/runtime/base_api_client.py"
       ],
       "supported_operations": [
+        "deleteMessage",
         "editMyInfo",
+        "getAllChats",
+        "getChatById",
         "getHealth",
         "getMessageById",
+        "getMessages",
         "getMyInfo",
+        "getPinnedMessage",
         "getUpdates",
         "getUploadUrl",
+        "sendAction",
         "sendMessage"
       ],
-      "operation_count": 7,
+      "operation_count": 13,
       "coverage_complete": true
     },
     {
@@ -70,15 +82,21 @@
         "sdks/csharp/client/Max.Client/Runtime/RequestOptions.cs"
       ],
       "supported_operations": [
+        "deleteMessage",
         "editMyInfo",
+        "getAllChats",
+        "getChatById",
         "getHealth",
         "getMessageById",
+        "getMessages",
         "getMyInfo",
+        "getPinnedMessage",
         "getUpdates",
         "getUploadUrl",
+        "sendAction",
         "sendMessage"
       ],
-      "operation_count": 7,
+      "operation_count": 13,
       "coverage_complete": true
     }
   ]

@@ -17,6 +17,15 @@
       ]
     },
     {
+      "name": "chats",
+      "operation_ids": [
+        "getAllChats",
+        "getChatById",
+        "getPinnedMessage",
+        "sendAction"
+      ]
+    },
+    {
       "name": "health",
       "operation_ids": [
         "getHealth"
@@ -25,7 +34,9 @@
     {
       "name": "messages",
       "operation_ids": [
+        "deleteMessage",
         "getMessageById",
+        "getMessages",
         "sendMessage"
       ]
     },
@@ -43,6 +54,222 @@
     }
   ],
   "operations": [
+    {
+      "operation_id": "getAllChats",
+      "method": "get",
+      "path": "/chats",
+      "summary": "Get all chats",
+      "description": null,
+      "tags": [
+        "chats"
+      ],
+      "service": "chats",
+      "parameters": [
+        {
+          "name": "count",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        },
+        {
+          "name": "marker",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": null,
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Chats page",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/GetAllChatsResponse",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "operation_id": "getChatById",
+      "method": "get",
+      "path": "/chats/{chat_id}",
+      "summary": "Get chat by id",
+      "description": null,
+      "tags": [
+        "chats"
+      ],
+      "service": "chats",
+      "parameters": [
+        {
+          "name": "chat_id",
+          "in": "path",
+          "required": true,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": null,
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Chat",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/Chat",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "operation_id": "sendAction",
+      "method": "post",
+      "path": "/chats/{chat_id}/actions",
+      "summary": "Send action",
+      "description": null,
+      "tags": [
+        "chats"
+      ],
+      "service": "chats",
+      "parameters": [
+        {
+          "name": "chat_id",
+          "in": "path",
+          "required": true,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": {
+        "required": true,
+        "media_types": [
+          {
+            "content_type": "application/json",
+            "schema_ref": "#/components/schemas/SendActionRequest",
+            "schema_type": null
+          }
+        ]
+      },
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Action sent",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ActionResponse",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "operation_id": "getPinnedMessage",
+      "method": "get",
+      "path": "/chats/{chat_id}/pin",
+      "summary": "Get pinned message",
+      "description": null,
+      "tags": [
+        "chats"
+      ],
+      "service": "chats",
+      "parameters": [
+        {
+          "name": "chat_id",
+          "in": "path",
+          "required": true,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": null,
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Pinned message",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/GetPinnedMessageResponse",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
     {
       "operation_id": "getHealth",
       "method": "get",
@@ -164,6 +391,99 @@
       ]
     },
     {
+      "operation_id": "getMessages",
+      "method": "get",
+      "path": "/messages",
+      "summary": "Get messages",
+      "description": null,
+      "tags": [
+        "messages"
+      ],
+      "service": "messages",
+      "parameters": [
+        {
+          "name": "chat_id",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        },
+        {
+          "name": "count",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        },
+        {
+          "name": "from",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        },
+        {
+          "name": "message_ids",
+          "in": "query",
+          "required": false,
+          "type": "array",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": "string",
+          "items_ref": null
+        },
+        {
+          "name": "to",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": null,
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Messages list",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/GetMessagesResponse",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
       "operation_id": "sendMessage",
       "method": "post",
       "path": "/messages",
@@ -226,6 +546,55 @@
             {
               "content_type": "application/json",
               "schema_ref": "#/components/schemas/SendMessageResponse",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "operation_id": "deleteMessage",
+      "method": "delete",
+      "path": "/messages",
+      "summary": "Delete message",
+      "description": null,
+      "tags": [
+        "messages"
+      ],
+      "service": "messages",
+      "parameters": [
+        {
+          "name": "message_id",
+          "in": "query",
+          "required": true,
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": null,
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Delete result",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ActionResponse",
               "schema_type": null
             }
           ]
@@ -426,6 +795,38 @@
   ],
   "schemas": [
     {
+      "name": "ActionResponse",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "success"
+      ],
+      "properties": [
+        {
+          "name": "message",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "success",
+          "type": "boolean",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
       "name": "BotCommand",
       "type": "object",
       "enum": null,
@@ -570,6 +971,209 @@
       ]
     },
     {
+      "name": "Chat",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "chat_id",
+        "is_public",
+        "last_event_time",
+        "participants_count",
+        "status",
+        "type"
+      ],
+      "properties": [
+        {
+          "name": "chat_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "chat_message_id",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "icon",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/ChatIcon",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "is_public",
+          "type": "boolean",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "last_event_time",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "link",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "messages_count",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "owner_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "participants_count",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/ChatStatus",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/ChatType",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "ChatIcon",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "url"
+      ],
+      "properties": [
+        {
+          "name": "url",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "ChatStatus",
+      "type": "string",
+      "enum": [
+        "active",
+        "removed",
+        "left",
+        "closed",
+        "suspended"
+      ],
+      "required": [],
+      "properties": []
+    },
+    {
+      "name": "ChatType",
+      "type": "string",
+      "enum": [
+        "dialog",
+        "chat",
+        "channel"
+      ],
+      "required": [],
+      "properties": []
+    },
+    {
       "name": "EditMyInfoRequest",
       "type": "object",
       "enum": null,
@@ -646,6 +1250,80 @@
           "type": "string",
           "format": null,
           "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "GetAllChatsResponse",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "chats"
+      ],
+      "properties": [
+        {
+          "name": "chats",
+          "type": "array",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": "#/components/schemas/Chat",
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "marker",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "GetMessagesResponse",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "messages"
+      ],
+      "properties": [
+        {
+          "name": "messages",
+          "type": "array",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": "#/components/schemas/Message",
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "GetPinnedMessageResponse",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "message"
+      ],
+      "properties": [
+        {
+          "name": "message",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/Message",
           "enum": null,
           "items_type": null,
           "items_ref": null,
@@ -873,6 +1551,27 @@
       ]
     },
     {
+      "name": "SendActionRequest",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "action"
+      ],
+      "properties": [
+        {
+          "name": "action",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/SenderAction",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
       "name": "SendMessageRequest",
       "type": "object",
       "enum": null,
@@ -935,6 +1634,20 @@
       ]
     },
     {
+      "name": "SenderAction",
+      "type": "string",
+      "enum": [
+        "typing_on",
+        "sending_photo",
+        "sending_video",
+        "sending_audio",
+        "sending_file",
+        "mark_seen"
+      ],
+      "required": [],
+      "properties": []
+    },
+    {
       "name": "Update",
       "type": "object",
       "enum": null,
@@ -992,8 +1705,8 @@
     }
   ],
   "stats": {
-    "service_count": 5,
-    "operation_count": 7,
-    "schema_count": 14
+    "service_count": 6,
+    "operation_count": 13,
+    "schema_count": 24
   }
 }

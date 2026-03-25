@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import keyword
 from typing import Any
 
 
@@ -9,6 +10,12 @@ TYPE_MAP = {
     "number": "float",
     "boolean": "bool",
 }
+
+
+def safe_python_name(value: str) -> str:
+    if keyword.iskeyword(value):
+        return f"{value}_"
+    return value
 
 
 def render_python_client(ir: dict[str, Any]) -> str:
@@ -72,10 +79,11 @@ def render_schema(schema: dict[str, Any]) -> list[str]:
 
     for prop in properties:
         prop_type = map_property_to_python(prop)
+        prop_name = safe_python_name(prop["name"])
         if prop.get("required"):
-            lines.append(f"    {prop['name']}: {prop_type}")
+            lines.append(f"    {prop_name}: {prop_type}")
         else:
-            lines.append(f"    {prop['name']}: NotRequired[{prop_type}]")
+            lines.append(f"    {prop_name}: NotRequired[{prop_type}]")
 
     return lines
 
@@ -95,7 +103,7 @@ def render_operation_request_typed_dict(operation: dict[str, Any]) -> list[str]:
         path_name = f"{operation_request_type_name(operation)}Path"
         lines.append(f"class {path_name}(TypedDict):")
         for param in path_params:
-            lines.append(f"    {param['name']}: {map_parameter_to_python(param)}")
+            lines.append(f"    {safe_python_name(param['name'])}: {map_parameter_to_python(param)}")
         lines.append("")
         main_fields.append(f"    path: {path_name}")
         emitted = True
@@ -104,7 +112,7 @@ def render_operation_request_typed_dict(operation: dict[str, Any]) -> list[str]:
         query_name = f"{operation_request_type_name(operation)}Query"
         lines.append(f"class {query_name}(TypedDict, total=False):")
         for param in query_params:
-            lines.append(f"    {param['name']}: {map_parameter_to_python(param)}")
+            lines.append(f"    {safe_python_name(param['name'])}: {map_parameter_to_python(param)}")
         lines.append("")
         main_fields.append(f"    query: {query_name}")
         emitted = True
@@ -162,7 +170,7 @@ def build_path_expression(path: str, operation: dict[str, Any]) -> str:
     expression = path
     for param in path_params:
         placeholder = "{" + param["name"] + "}"
-        replacement = '{quote(str(request["path"]["' + param["name"] + '"]), safe="")}'
+        replacement = '{quote(str(request["path"]["' + safe_python_name(param["name"]) + '"]), safe="")}'
         expression = expression.replace(placeholder, replacement)
 
     return f"f{quote_py(expression)}"
@@ -173,7 +181,10 @@ def build_query_expression(operation: dict[str, Any]) -> str | None:
     if not query_params:
         return None
 
-    parts = [f"{quote_py(param['name'])}: request['query'].get({quote_py(param['name'])})" for param in query_params]
+    parts = [
+        f"{quote_py(param['name'])}: request['query'].get({quote_py(safe_python_name(param['name']))})"
+        for param in query_params
+    ]
     return "{ " + ", ".join(parts) + " }"
 
 

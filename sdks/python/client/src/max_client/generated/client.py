@@ -8,6 +8,10 @@ from urllib.parse import quote
 
 from ..runtime import BaseApiClient, ClientConfig, RequestOptions
 
+class ActionResponse(TypedDict, total=False):
+    message: NotRequired[str | None]
+    success: bool
+
 class BotCommand(TypedDict, total=False):
     description: NotRequired[str | None]
     name: str
@@ -23,6 +27,28 @@ class BotInfo(TypedDict, total=False):
     user_id: int
     username: NotRequired[str | None]
 
+class Chat(TypedDict, total=False):
+    chat_id: int
+    chat_message_id: NotRequired[str | None]
+    description: NotRequired[str | None]
+    icon: NotRequired[ChatIcon]
+    is_public: bool
+    last_event_time: int
+    link: NotRequired[str | None]
+    messages_count: NotRequired[int | None]
+    owner_id: NotRequired[int | None]
+    participants_count: int
+    status: ChatStatus
+    title: NotRequired[str | None]
+    type: ChatType
+
+class ChatIcon(TypedDict, total=False):
+    url: str
+
+ChatStatus: TypeAlias = Literal['active', 'removed', 'left', 'closed', 'suspended']
+
+ChatType: TypeAlias = Literal['dialog', 'chat', 'channel']
+
 class EditMyInfoRequest(TypedDict, total=False):
     commands: NotRequired[list[BotCommand]]
     description: NotRequired[str | None]
@@ -32,6 +58,16 @@ class ErrorResponse(TypedDict, total=False):
     code: str
     details: NotRequired[str | None]
     message: str
+
+class GetAllChatsResponse(TypedDict, total=False):
+    chats: list[Chat]
+    marker: NotRequired[int | None]
+
+class GetMessagesResponse(TypedDict, total=False):
+    messages: list[Message]
+
+class GetPinnedMessageResponse(TypedDict, total=False):
+    message: Message
 
 class GetUpdatesResponse(TypedDict, total=False):
     marker: int
@@ -59,6 +95,9 @@ class MessageRecipient(TypedDict, total=False):
     chat_id: NotRequired[int | None]
     chat_type: str
 
+class SendActionRequest(TypedDict, total=False):
+    action: SenderAction
+
 class SendMessageRequest(TypedDict, total=False):
     format: NotRequired[str | None]
     notify: NotRequired[bool]
@@ -67,6 +106,8 @@ class SendMessageRequest(TypedDict, total=False):
 class SendMessageResponse(TypedDict, total=False):
     message: Message
 
+SenderAction: TypeAlias = Literal['typing_on', 'sending_photo', 'sending_video', 'sending_audio', 'sending_file', 'mark_seen']
+
 class Update(TypedDict, total=False):
     message: NotRequired[Message]
     timestamp: int
@@ -74,8 +115,44 @@ class Update(TypedDict, total=False):
 
 UploadType: TypeAlias = Literal['image', 'video', 'audio', 'file']
 
+class GetAllChatsParamsQuery(TypedDict, total=False):
+    count: int
+    marker: int
+
+class GetAllChatsParams(TypedDict, total=False):
+    query: GetAllChatsParamsQuery
+
+class GetChatByIdParamsPath(TypedDict):
+    chat_id: int
+
+class GetChatByIdParams(TypedDict, total=False):
+    path: GetChatByIdParamsPath
+
+class SendActionParamsPath(TypedDict):
+    chat_id: int
+
+class SendActionParams(TypedDict, total=False):
+    path: SendActionParamsPath
+    body: SendActionRequest
+
+class GetPinnedMessageParamsPath(TypedDict):
+    chat_id: int
+
+class GetPinnedMessageParams(TypedDict, total=False):
+    path: GetPinnedMessageParamsPath
+
 class EditMyInfoParams(TypedDict, total=False):
     body: EditMyInfoRequest
+
+class GetMessagesParamsQuery(TypedDict, total=False):
+    chat_id: int
+    count: int
+    from_: int
+    message_ids: list[str]
+    to: int
+
+class GetMessagesParams(TypedDict, total=False):
+    query: GetMessagesParamsQuery
 
 class SendMessageParamsQuery(TypedDict, total=False):
     chat_id: int
@@ -85,6 +162,12 @@ class SendMessageParamsQuery(TypedDict, total=False):
 class SendMessageParams(TypedDict, total=False):
     query: SendMessageParamsQuery
     body: SendMessageRequest
+
+class DeleteMessageParamsQuery(TypedDict, total=False):
+    message_id: str
+
+class DeleteMessageParams(TypedDict, total=False):
+    query: DeleteMessageParamsQuery
 
 class GetMessageByIdParamsPath(TypedDict):
     message_id: str
@@ -111,6 +194,36 @@ class MaxBotApiClient(BaseApiClient):
     def __init__(self, config: ClientConfig | None = None) -> None:
         super().__init__(config=config)
 
+    def getAllChats(self, request: GetAllChatsParams, options: RequestOptions | None = None) -> GetAllChatsResponse:
+        return self.request(
+            method='GET',
+            path='/chats',
+            query={ 'count': request['query'].get('count'), 'marker': request['query'].get('marker') },
+            options=options,
+        )
+
+    def getChatById(self, request: GetChatByIdParams, options: RequestOptions | None = None) -> Chat:
+        return self.request(
+            method='GET',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}',
+            options=options,
+        )
+
+    def sendAction(self, request: SendActionParams, options: RequestOptions | None = None) -> ActionResponse:
+        return self.request(
+            method='POST',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/actions',
+            body=request['body'],
+            options=options,
+        )
+
+    def getPinnedMessage(self, request: GetPinnedMessageParams, options: RequestOptions | None = None) -> GetPinnedMessageResponse:
+        return self.request(
+            method='GET',
+            path=f'/chats/{quote(str(request["path"]["chat_id"]), safe="")}/pin',
+            options=options,
+        )
+
     def getHealth(self, options: RequestOptions | None = None) -> HealthResponse:
         return self.request(
             method='GET',
@@ -133,12 +246,28 @@ class MaxBotApiClient(BaseApiClient):
             options=options,
         )
 
+    def getMessages(self, request: GetMessagesParams, options: RequestOptions | None = None) -> GetMessagesResponse:
+        return self.request(
+            method='GET',
+            path='/messages',
+            query={ 'chat_id': request['query'].get('chat_id'), 'count': request['query'].get('count'), 'from': request['query'].get('from_'), 'message_ids': request['query'].get('message_ids'), 'to': request['query'].get('to') },
+            options=options,
+        )
+
     def sendMessage(self, request: SendMessageParams, options: RequestOptions | None = None) -> SendMessageResponse:
         return self.request(
             method='POST',
             path='/messages',
             query={ 'chat_id': request['query'].get('chat_id'), 'disable_link_preview': request['query'].get('disable_link_preview'), 'user_id': request['query'].get('user_id') },
             body=request['body'],
+            options=options,
+        )
+
+    def deleteMessage(self, request: DeleteMessageParams, options: RequestOptions | None = None) -> ActionResponse:
+        return self.request(
+            method='DELETE',
+            path='/messages',
+            query={ 'message_id': request['query'].get('message_id') },
             options=options,
         )
 

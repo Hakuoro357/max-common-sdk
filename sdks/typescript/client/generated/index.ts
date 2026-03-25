@@ -3,6 +3,11 @@
 
 import { BaseApiClient, type ClientConfig, type RequestOptions } from '../runtime/index.js';
 
+export interface ActionResponse {
+  message?: string | null;
+  success: boolean;
+}
+
 export interface BotCommand {
   description?: string | null;
   name: string;
@@ -20,6 +25,30 @@ export interface BotInfo {
   username?: string | null;
 }
 
+export interface Chat {
+  chat_id: number;
+  chat_message_id?: string | null;
+  description?: string | null;
+  icon?: ChatIcon;
+  is_public: boolean;
+  last_event_time: number;
+  link?: string | null;
+  messages_count?: number | null;
+  owner_id?: number | null;
+  participants_count: number;
+  status: ChatStatus;
+  title?: string | null;
+  type: ChatType;
+}
+
+export interface ChatIcon {
+  url: string;
+}
+
+export type ChatStatus = 'active' | 'removed' | 'left' | 'closed' | 'suspended';
+
+export type ChatType = 'dialog' | 'chat' | 'channel';
+
 export interface EditMyInfoRequest {
   commands?: BotCommand[];
   description?: string | null;
@@ -30,6 +59,19 @@ export interface ErrorResponse {
   code: string;
   details?: string | null;
   message: string;
+}
+
+export interface GetAllChatsResponse {
+  chats: Chat[];
+  marker?: number | null;
+}
+
+export interface GetMessagesResponse {
+  messages: Message[];
+}
+
+export interface GetPinnedMessageResponse {
+  message: Message;
 }
 
 export interface GetUpdatesResponse {
@@ -64,6 +106,10 @@ export interface MessageRecipient {
   chat_type: string;
 }
 
+export interface SendActionRequest {
+  action: SenderAction;
+}
+
 export interface SendMessageRequest {
   format?: string | null;
   notify?: boolean;
@@ -74,6 +120,8 @@ export interface SendMessageResponse {
   message: Message;
 }
 
+export type SenderAction = 'typing_on' | 'sending_photo' | 'sending_video' | 'sending_audio' | 'sending_file' | 'mark_seen';
+
 export interface Update {
   message?: Message;
   timestamp: number;
@@ -82,8 +130,44 @@ export interface Update {
 
 export type UploadType = 'image' | 'video' | 'audio' | 'file';
 
+export interface GetAllChatsParams {
+  query: {
+    count?: number;
+    marker?: number;
+  };
+}
+
+export interface GetChatByIdParams {
+  path: {
+    chat_id: number;
+  };
+}
+
+export interface SendActionParams {
+  path: {
+    chat_id: number;
+  };
+  body: SendActionRequest;
+}
+
+export interface GetPinnedMessageParams {
+  path: {
+    chat_id: number;
+  };
+}
+
 export interface EditMyInfoParams {
   body: EditMyInfoRequest;
+}
+
+export interface GetMessagesParams {
+  query: {
+    chat_id?: number;
+    count?: number;
+    from?: number;
+    message_ids?: string[];
+    to?: number;
+  };
 }
 
 export interface SendMessageParams {
@@ -93,6 +177,12 @@ export interface SendMessageParams {
     user_id?: number;
   };
   body: SendMessageRequest;
+}
+
+export interface DeleteMessageParams {
+  query: {
+    message_id: string;
+  };
 }
 
 export interface GetMessageByIdParams {
@@ -121,6 +211,40 @@ export class MaxBotApiClient extends BaseApiClient {
     super(config);
   }
 
+  async getAllChats(request: GetAllChatsParams, options: RequestOptions = {}): Promise<GetAllChatsResponse> {
+    return this.request<GetAllChatsResponse>({
+      method: 'GET',
+      path: `/chats`,
+      query: { count: request.query.count, marker: request.query.marker },
+      options,
+    });
+  }
+
+  async getChatById(request: GetChatByIdParams, options: RequestOptions = {}): Promise<Chat> {
+    return this.request<Chat>({
+      method: 'GET',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}`,
+      options,
+    });
+  }
+
+  async sendAction(request: SendActionParams, options: RequestOptions = {}): Promise<ActionResponse> {
+    return this.request<ActionResponse>({
+      method: 'POST',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/actions`,
+      body: request.body,
+      options,
+    });
+  }
+
+  async getPinnedMessage(request: GetPinnedMessageParams, options: RequestOptions = {}): Promise<GetPinnedMessageResponse> {
+    return this.request<GetPinnedMessageResponse>({
+      method: 'GET',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_id))}/pin`,
+      options,
+    });
+  }
+
   async getHealth(options: RequestOptions = {}): Promise<HealthResponse> {
     return this.request<HealthResponse>({
       method: 'GET',
@@ -146,12 +270,30 @@ export class MaxBotApiClient extends BaseApiClient {
     });
   }
 
+  async getMessages(request: GetMessagesParams, options: RequestOptions = {}): Promise<GetMessagesResponse> {
+    return this.request<GetMessagesResponse>({
+      method: 'GET',
+      path: `/messages`,
+      query: { chat_id: request.query.chat_id, count: request.query.count, from: request.query.from, message_ids: request.query.message_ids, to: request.query.to },
+      options,
+    });
+  }
+
   async sendMessage(request: SendMessageParams, options: RequestOptions = {}): Promise<SendMessageResponse> {
     return this.request<SendMessageResponse>({
       method: 'POST',
       path: `/messages`,
       query: { chat_id: request.query.chat_id, disable_link_preview: request.query.disable_link_preview, user_id: request.query.user_id },
       body: request.body,
+      options,
+    });
+  }
+
+  async deleteMessage(request: DeleteMessageParams, options: RequestOptions = {}): Promise<ActionResponse> {
+    return this.request<ActionResponse>({
+      method: 'DELETE',
+      path: `/messages`,
+      query: { message_id: request.query.message_id },
       options,
     });
   }

@@ -26,18 +26,28 @@ class BootstrapIrTests(unittest.TestCase):
         spec = module.load_openapi(SPEC_PATH)
         normalized = module.normalize_openapi(spec)
         ir = module.build_ir(normalized)
+        operation_ids = [operation["operation_id"] for operation in ir["operations"]]
+        service_names = [service["name"] for service in ir["services"]]
+        schema_names = [schema["name"] for schema in ir["schemas"]]
 
         self.assertEqual(ir["api"]["title"], "MAX Bot API")
-        self.assertEqual(ir["stats"]["service_count"], 5)
-        self.assertEqual(ir["stats"]["operation_count"], 7)
-        self.assertGreaterEqual(ir["stats"]["schema_count"], 10)
-        self.assertEqual(ir["operations"][0]["operation_id"], "getHealth")
-        self.assertEqual(ir["operations"][0]["service"], "health")
-        self.assertEqual(ir["operations"][0]["parameters"], [])
-        self.assertIsNone(ir["operations"][0]["request_body"])
-        self.assertEqual(ir["services"][0]["name"], "bots")
-        self.assertIn("getUpdates", [operation["operation_id"] for operation in ir["operations"]])
-        self.assertIn("UploadType", [schema["name"] for schema in ir["schemas"]])
+        self.assertEqual(ir["stats"]["service_count"], 6)
+        self.assertEqual(ir["stats"]["operation_count"], 13)
+        self.assertGreaterEqual(ir["stats"]["schema_count"], 24)
+        self.assertEqual(service_names[0], "bots")
+        self.assertIn("health", service_names)
+        self.assertIn("messages", service_names)
+        self.assertIn("getHealth", operation_ids)
+        self.assertIn("getUpdates", operation_ids)
+        self.assertIn("getAllChats", operation_ids)
+        self.assertIn("deleteMessage", operation_ids)
+        self.assertIn("UploadType", schema_names)
+        self.assertIn("Chat", schema_names)
+
+        get_health = next(operation for operation in ir["operations"] if operation["operation_id"] == "getHealth")
+        self.assertEqual(get_health["service"], "health")
+        self.assertEqual(get_health["parameters"], [])
+        self.assertIsNone(get_health["request_body"])
 
     def test_normalize_openapi_sorts_and_derives_defaults(self) -> None:
         module = load_module()
