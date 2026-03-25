@@ -97,3 +97,12 @@ def validate_ir_shape(ir: dict[str, Any], schema: dict[str, Any]) -> None:
         unknown_ids = sorted(set(service_operations) - known_operation_ids)
         if unknown_ids:
             raise ValueError(f"Service {service_name} references unknown operations: {', '.join(unknown_ids)}")
+
+    for operation in operations:
+        parameters = operation.get("parameters")
+        if parameters is not None and not isinstance(parameters, list):
+            raise ValueError(f"Operation {operation['operation_id']} parameters must be a list.")
+
+        request_body = operation.get("request_body")
+        if request_body is not None and not isinstance(request_body, dict):
+            raise ValueError(f"Operation {operation['operation_id']} request_body must be an object or null.")

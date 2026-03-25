@@ -26,7 +26,15 @@ def render_typescript_client(ir: dict[str, Any]) -> str:
         lines.extend(render_schema(schema))
         lines.append("")
 
+    for operation in ir.get("operations", []):
+        request_interface = render_operation_request_interface(operation)
+        if request_interface:
+            lines.extend(request_interface)
+            lines.append("")
+
     lines.extend(render_http_types())
+    lines.append("")
+    lines.extend(render_helpers())
     lines.append("")
 
     class_name = "MaxBotApiClient"
@@ -56,6 +64,10 @@ def render_typescript_client(ir: dict[str, Any]) -> str:
 
 
 def render_schema(schema: dict[str, Any]) -> list[str]:
+    if schema.get("type") == "string" and schema.get("enum"):
+        variants = " | ".join(quote(value) for value in schema["enum"])
+        return [f"export type {schema['name']} = {variants};"]
+
     lines = [f"export interface {schema['name']} {{"]
 
     for prop in schema.get("properties", []):
@@ -76,23 +88,49 @@ def render_http_types() -> list[str]:
     ]
 
 
+def render_helpers() -> list[str]:
+    return [
+        "function serializeQueryValue(value: unknown): string {",
+        "  if (typeof value === 'boolean') {",
+        "    return value ? 'true' : 'false';",
+        "  }",
+        "",
+        "  return String(value);",
+        "}",
+    ]
+
+
 def render_operation(operation: dict[str, Any], ir: dict[str, Any]) -> list[str]:
     method = operation["method"].upper()
     path = operation["path"]
     operation_name = operation["operation_id"]
     response_type = resolve_response_type(operation, ir) or "unknown"
+    request_type = operation_request_type_name(operation)
+    has_request = operation_has_request(operation)
+    args = "options: RequestOptions = {}"
+    if has_request:
+        args = f"request: {request_type}, options: RequestOptions = {{}}"
+
+    body_expression = "undefined"
+    if operation.get("request_body"):
+        body_expression = "JSON.stringify(request.body)"
+    request_headers = ["          ...(options.headers ?? {}),"]
+    if operation.get("request_body"):
+        request_headers.insert(0, "          'Content-Type': 'application/json',")
 
     return [
-        f"  async {operation_name}(options: RequestOptions = {{}}): Promise<{response_type}> {{",
+        f"  async {operation_name}({args}): Promise<{response_type}> {{",
+        f"    const url = new URL({build_path_expression(path, operation)}, this.baseUrl);",
+        *render_query_params(operation),
         "    const response = await fetch(",
-        f"      `${{this.baseUrl}}{path}`,",
+        "      url,",
         "      {",
         f"        method: {quote(method)},",
         "        headers: {",
-        "          'Content-Type': 'application/json',",
-        "          ...(options.headers ?? {}),",
+        *request_headers,
         "        },",
         "        signal: options.signal,",
+        f"        body: {body_expression},",
         "      }",
         "    );",
         "",
@@ -128,10 +166,113 @@ def map_property_to_ts(prop: dict[str, Any]) -> str:
     if prop.get("ref"):
         return prop["ref"].rsplit("/", 1)[-1]
 
+    if prop.get("type") == "array":
+        return f"{map_array_items_to_ts(prop)}[]"
+
+    if prop.get("enum"):
+        return " | ".join(quote(value) for value in prop["enum"])
+
     ts_type = TYPE_MAP.get(prop.get("type"), "unknown")
     if prop.get("nullable"):
         return f"{ts_type} | null"
     return ts_type
+
+
+def map_parameter_to_ts(parameter: dict[str, Any]) -> str:
+    if parameter.get("ref"):
+        return parameter["ref"].rsplit("/", 1)[-1]
+
+    if parameter.get("type") == "array":
+        return f"{map_array_items_to_ts(parameter)}[]"
+
+    if parameter.get("enum"):
+        return " | ".join(quote(value) for value in parameter["enum"])
+
+    return TYPE_MAP.get(parameter.get("type"), "unknown")
+
+
+def map_array_items_to_ts(node: dict[str, Any]) -> str:
+    if node.get("items_ref"):
+        return node["items_ref"].rsplit("/", 1)[-1]
+
+    return TYPE_MAP.get(node.get("items_type"), "unknown")
+
+
+def render_operation_request_interface(operation: dict[str, Any]) -> list[str]:
+    if not operation_has_request(operation):
+        return []
+
+    lines = [f"export interface {operation_request_type_name(operation)} {{"]
+
+    path_params = [param for param in operation.get("parameters", []) if param.get("in") == "path"]
+    query_params = [param for param in operation.get("parameters", []) if param.get("in") == "query"]
+
+    if path_params:
+        lines.append("  path: {")
+        for param in path_params:
+            optional_marker = "" if param.get("required") else "?"
+            lines.append(f"    {param['name']}{optional_marker}: {map_parameter_to_ts(param)};")
+        lines.append("  };")
+
+    if query_params:
+        lines.append("  query: {")
+        for param in query_params:
+            optional_marker = "" if param.get("required") else "?"
+            lines.append(f"    {param['name']}{optional_marker}: {map_parameter_to_ts(param)};")
+        lines.append("  };")
+
+    body_schema = resolve_request_body_schema(operation)
+    if body_schema:
+        optional_marker = "" if (operation.get("request_body") or {}).get("required") else "?"
+        lines.append(f"  body{optional_marker}: {body_schema};")
+
+    lines.append("}")
+    return lines
+
+
+def render_query_params(operation: dict[str, Any]) -> list[str]:
+    lines: list[str] = []
+    query_params = [param for param in operation.get("parameters", []) if param.get("in") == "query"]
+
+    for param in query_params:
+        lines.append(f"    if (request.query.{param['name']} !== undefined) {{")
+        lines.append(
+            f"      url.searchParams.set({quote(param['name'])}, serializeQueryValue(request.query.{param['name']}));"
+        )
+        lines.append("    }")
+
+    return lines
+
+
+def operation_request_type_name(operation: dict[str, Any]) -> str:
+    return f"{operation['operation_id'][0].upper()}{operation['operation_id'][1:]}Params"
+
+
+def operation_has_request(operation: dict[str, Any]) -> bool:
+    return bool(operation.get("parameters")) or bool(operation.get("request_body"))
+
+
+def build_path_expression(path: str, operation: dict[str, Any]) -> str:
+    expression = path
+    for param in [p for p in operation.get("parameters", []) if p.get("in") == "path"]:
+        placeholder = "{" + param["name"] + "}"
+        replacement = "${encodeURIComponent(String(request.path." + param["name"] + "))}"
+        expression = expression.replace(placeholder, replacement)
+    return f"`{expression}`"
+
+
+def resolve_request_body_schema(operation: dict[str, Any]) -> str | None:
+    request_body = operation.get("request_body") or {}
+    for media_type in request_body.get("media_types", []):
+        schema_ref = media_type.get("schema_ref")
+        if schema_ref:
+            return schema_ref.rsplit("/", 1)[-1]
+
+        schema_type = media_type.get("schema_type")
+        if schema_type:
+            return TYPE_MAP.get(schema_type, "unknown")
+
+    return None
 
 
 def quote(value: str) -> str:

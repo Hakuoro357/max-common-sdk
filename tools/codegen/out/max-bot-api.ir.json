@@ -2,17 +2,43 @@
   "ir_version": "1.0.0",
   "api": {
     "title": "MAX Bot API",
-    "version": "0.1.0-draft",
-    "description": "Draft OpenAPI entrypoint for the future MAX common SDK platform.\n",
+    "version": "0.2.0-draft",
+    "description": "Draft OpenAPI entrypoint for the future MAX common SDK platform.\nThe initial operation set is aligned with public methods from the official\nmax-messenger TypeScript client.\n",
     "servers": [
       "https://api.max.ru"
     ]
   },
   "services": [
     {
+      "name": "bots",
+      "operation_ids": [
+        "editMyInfo",
+        "getMyInfo"
+      ]
+    },
+    {
       "name": "health",
       "operation_ids": [
         "getHealth"
+      ]
+    },
+    {
+      "name": "messages",
+      "operation_ids": [
+        "getMessageById",
+        "sendMessage"
+      ]
+    },
+    {
+      "name": "subscriptions",
+      "operation_ids": [
+        "getUpdates"
+      ]
+    },
+    {
+      "name": "uploads",
+      "operation_ids": [
+        "getUploadUrl"
       ]
     }
   ],
@@ -27,6 +53,8 @@
         "health"
       ],
       "service": "health",
+      "parameters": [],
+      "request_body": null,
       "responses": [
         {
           "status_code": "200",
@@ -40,12 +68,540 @@
           ]
         }
       ]
+    },
+    {
+      "operation_id": "getMyInfo",
+      "method": "get",
+      "path": "/me",
+      "summary": "Get current bot info",
+      "description": null,
+      "tags": [
+        "bots"
+      ],
+      "service": "bots",
+      "parameters": [],
+      "request_body": null,
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Bot info",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/BotInfo",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "operation_id": "editMyInfo",
+      "method": "patch",
+      "path": "/me",
+      "summary": "Edit current bot info",
+      "description": null,
+      "tags": [
+        "bots"
+      ],
+      "service": "bots",
+      "parameters": [],
+      "request_body": {
+        "required": true,
+        "media_types": [
+          {
+            "content_type": "application/json",
+            "schema_ref": "#/components/schemas/EditMyInfoRequest",
+            "schema_type": null
+          }
+        ]
+      },
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Updated bot info",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/BotInfo",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "operation_id": "sendMessage",
+      "method": "post",
+      "path": "/messages",
+      "summary": "Send message",
+      "description": null,
+      "tags": [
+        "messages"
+      ],
+      "service": "messages",
+      "parameters": [
+        {
+          "name": "chat_id",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        },
+        {
+          "name": "disable_link_preview",
+          "in": "query",
+          "required": false,
+          "type": "boolean",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        },
+        {
+          "name": "user_id",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": {
+        "required": true,
+        "media_types": [
+          {
+            "content_type": "application/json",
+            "schema_ref": "#/components/schemas/SendMessageRequest",
+            "schema_type": null
+          }
+        ]
+      },
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Sent message",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/SendMessageResponse",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "operation_id": "getMessageById",
+      "method": "get",
+      "path": "/messages/{message_id}",
+      "summary": "Get message by id",
+      "description": null,
+      "tags": [
+        "messages"
+      ],
+      "service": "messages",
+      "parameters": [
+        {
+          "name": "message_id",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": null,
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Message",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/Message",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "operation_id": "getUpdates",
+      "method": "get",
+      "path": "/updates",
+      "summary": "Get updates",
+      "description": null,
+      "tags": [
+        "subscriptions"
+      ],
+      "service": "subscriptions",
+      "parameters": [
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        },
+        {
+          "name": "marker",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        },
+        {
+          "name": "timeout",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        },
+        {
+          "name": "types",
+          "in": "query",
+          "required": false,
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": null,
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Updates page",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/GetUpdatesResponse",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "operation_id": "getUploadUrl",
+      "method": "post",
+      "path": "/uploads",
+      "summary": "Get upload URL",
+      "description": null,
+      "tags": [
+        "uploads"
+      ],
+      "service": "uploads",
+      "parameters": [
+        {
+          "name": "type",
+          "in": "query",
+          "required": true,
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/UploadType",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": null,
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Upload destination",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/GetUploadUrlResponse",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
     }
   ],
   "schemas": [
     {
+      "name": "BotCommand",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "name"
+      ],
+      "properties": [
+        {
+          "name": "description",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "BotInfo",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "is_bot",
+        "last_activity_time",
+        "name",
+        "user_id"
+      ],
+      "properties": [
+        {
+          "name": "avatar_url",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "commands",
+          "type": "array",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": "#/components/schemas/BotCommand",
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "full_avatar_url",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "is_bot",
+          "type": "boolean",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "last_activity_time",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "user_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "EditMyInfoRequest",
+      "type": "object",
+      "enum": null,
+      "required": [],
+      "properties": [
+        {
+          "name": "commands",
+          "type": "array",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": "#/components/schemas/BotCommand",
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "GetUpdatesResponse",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "marker",
+        "updates"
+      ],
+      "properties": [
+        {
+          "name": "marker",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "updates",
+          "type": "array",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": "#/components/schemas/Update",
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "GetUploadUrlResponse",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "url"
+      ],
+      "properties": [
+        {
+          "name": "token",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
       "name": "HealthResponse",
       "type": "object",
+      "enum": null,
       "required": [
         "status"
       ],
@@ -55,15 +611,268 @@
           "type": "string",
           "format": null,
           "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
           "nullable": false,
           "required": true
         }
       ]
+    },
+    {
+      "name": "Message",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "body",
+        "recipient",
+        "timestamp"
+      ],
+      "properties": [
+        {
+          "name": "body",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/MessageBody",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "recipient",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/MessageRecipient",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "MessageBody",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "mid",
+        "seq"
+      ],
+      "properties": [
+        {
+          "name": "mid",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "seq",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "MessageRecipient",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "chat_type"
+      ],
+      "properties": [
+        {
+          "name": "chat_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "chat_type",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "SendMessageRequest",
+      "type": "object",
+      "enum": null,
+      "required": [],
+      "properties": [
+        {
+          "name": "format",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "notify",
+          "type": "boolean",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "SendMessageResponse",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "message"
+      ],
+      "properties": [
+        {
+          "name": "message",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/Message",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "Update",
+      "type": "object",
+      "enum": null,
+      "required": [
+        "timestamp",
+        "update_type"
+      ],
+      "properties": [
+        {
+          "name": "message",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/Message",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        },
+        {
+          "name": "update_type",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "UploadType",
+      "type": "string",
+      "enum": [
+        "image",
+        "video",
+        "audio",
+        "file"
+      ],
+      "required": [],
+      "properties": []
     }
   ],
   "stats": {
-    "service_count": 1,
-    "operation_count": 1,
-    "schema_count": 1
+    "service_count": 5,
+    "operation_count": 7,
+    "schema_count": 13
   }
 }

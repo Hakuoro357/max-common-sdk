@@ -63,6 +63,8 @@ def normalize_openapi(spec: dict[str, Any]) -> dict[str, Any]:
 def normalize_operation(path_name: str, method: str, operation: dict[str, Any]) -> dict[str, Any]:
     tags = sorted(operation.get("tags") or [])
     operation_id = operation.get("operationId") or derive_operation_id(path_name, method)
+    parameters = operation.get("parameters") or []
+    request_body = normalize_request_body(operation.get("requestBody"))
 
     responses = []
     for status_code, response in sorted((operation.get("responses") or {}).items(), key=lambda item: str(item[0])):
@@ -96,6 +98,8 @@ def normalize_operation(path_name: str, method: str, operation: dict[str, Any]) 
         "description": operation.get("description"),
         "tags": tags,
         "service": derive_service_name(tags, path_name),
+        "parameters": normalize_parameters(parameters),
+        "request_body": request_body,
         "responses": responses,
     }
 
@@ -113,6 +117,9 @@ def normalize_schema(name: str, schema: dict[str, Any]) -> dict[str, Any]:
                 "type": prop.get("type"),
                 "format": prop.get("format"),
                 "ref": prop.get("$ref"),
+                "enum": prop.get("enum"),
+                "items_type": ((prop.get("items") or {}).get("type")),
+                "items_ref": ((prop.get("items") or {}).get("$ref")),
                 "nullable": bool(prop.get("nullable", False)),
                 "required": prop_name in required,
             }
@@ -121,6 +128,7 @@ def normalize_schema(name: str, schema: dict[str, Any]) -> dict[str, Any]:
     return {
         "name": name,
         "type": schema.get("type"),
+        "enum": schema.get("enum"),
         "required": required,
         "properties": normalized_properties,
     }
@@ -148,3 +156,53 @@ def derive_operation_id(path_name: str, method: str) -> str:
 
     joined = "_".join(normalized_parts) if normalized_parts else "root"
     return f"{method.lower()}_{joined}"
+
+
+def normalize_parameters(parameters: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    normalized = []
+
+    for parameter in parameters:
+        if not isinstance(parameter, dict):
+            continue
+
+        schema = parameter.get("schema") or {}
+        normalized.append(
+            {
+                "name": parameter.get("name"),
+                "in": parameter.get("in"),
+                "required": bool(parameter.get("required", False)),
+                "type": schema.get("type"),
+                "format": schema.get("format"),
+                "ref": schema.get("$ref"),
+                "enum": schema.get("enum"),
+                "items_type": ((schema.get("items") or {}).get("type")),
+                "items_ref": ((schema.get("items") or {}).get("$ref")),
+            }
+        )
+
+    return sorted(normalized, key=lambda item: (item["in"] or "", item["name"] or ""))
+
+
+def normalize_request_body(request_body: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not isinstance(request_body, dict):
+        return None
+
+    content = request_body.get("content") or {}
+    if not isinstance(content, dict):
+        return None
+
+    media_types = []
+    for content_type, content_spec in sorted(content.items()):
+        schema = ((content_spec or {}).get("schema")) or {}
+        media_types.append(
+            {
+                "content_type": content_type,
+                "schema_ref": schema.get("$ref"),
+                "schema_type": schema.get("type"),
+            }
+        )
+
+    return {
+        "required": bool(request_body.get("required", False)),
+        "media_types": media_types,
+    }

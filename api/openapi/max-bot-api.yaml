@@ -1,20 +1,29 @@
 openapi: 3.0.3
 info:
   title: MAX Bot API
-  version: 0.1.0-draft
+  version: 0.2.0-draft
   description: |
     Draft OpenAPI entrypoint for the future MAX common SDK platform.
+    The initial operation set is aligned with public methods from the official
+    max-messenger TypeScript client.
 servers:
   - url: https://api.max.ru
     description: Production
 tags:
   - name: health
     description: Bootstrap endpoints used while the common SDK platform is scaffolded.
+  - name: bots
+    description: Bot profile methods.
+  - name: subscriptions
+    description: Update polling methods.
+  - name: uploads
+    description: Upload bootstrap methods.
+  - name: messages
+    description: Message send and read methods.
 paths:
   /health:
     get:
-      tags:
-        - health
+      tags: [health]
       summary: Health check
       operationId: getHealth
       responses:
@@ -24,13 +33,293 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HealthResponse'
+
+  /me:
+    get:
+      tags: [bots]
+      summary: Get current bot info
+      operationId: getMyInfo
+      responses:
+        '200':
+          description: Bot info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BotInfo'
+    patch:
+      tags: [bots]
+      summary: Edit current bot info
+      operationId: editMyInfo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditMyInfoRequest'
+      responses:
+        '200':
+          description: Updated bot info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BotInfo'
+
+  /updates:
+    get:
+      tags: [subscriptions]
+      summary: Get updates
+      operationId: getUpdates
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: timeout
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: marker
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: types
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updates page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUpdatesResponse'
+
+  /uploads:
+    post:
+      tags: [uploads]
+      summary: Get upload URL
+      operationId: getUploadUrl
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/UploadType'
+      responses:
+        '200':
+          description: Upload destination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUploadUrlResponse'
+
+  /messages:
+    post:
+      tags: [messages]
+      summary: Send message
+      operationId: sendMessage
+      parameters:
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: chat_id
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: disable_link_preview
+          in: query
+          required: false
+          schema:
+            type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '200':
+          description: Sent message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendMessageResponse'
+
+  /messages/{message_id}:
+    get:
+      tags: [messages]
+      summary: Get message by id
+      operationId: getMessageById
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
 components:
   schemas:
     HealthResponse:
       type: object
-      required:
-        - status
+      required: [status]
       properties:
         status:
           type: string
           example: ok
+
+    BotCommand:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+
+    BotInfo:
+      type: object
+      required: [user_id, name, is_bot, last_activity_time]
+      properties:
+        user_id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+          nullable: true
+        is_bot:
+          type: boolean
+        last_activity_time:
+          type: integer
+        description:
+          type: string
+          nullable: true
+        avatar_url:
+          type: string
+        full_avatar_url:
+          type: string
+        commands:
+          type: array
+          items:
+            $ref: '#/components/schemas/BotCommand'
+          nullable: true
+
+    EditMyInfoRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        commands:
+          type: array
+          items:
+            $ref: '#/components/schemas/BotCommand'
+          nullable: true
+
+    UploadType:
+      type: string
+      enum: [image, video, audio, file]
+
+    GetUploadUrlResponse:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+        token:
+          type: string
+
+    MessageRecipient:
+      type: object
+      required: [chat_type]
+      properties:
+        chat_id:
+          type: integer
+          nullable: true
+        chat_type:
+          type: string
+
+    MessageBody:
+      type: object
+      required: [mid, seq]
+      properties:
+        mid:
+          type: string
+        seq:
+          type: integer
+        text:
+          type: string
+          nullable: true
+
+    Message:
+      type: object
+      required: [recipient, timestamp, body]
+      properties:
+        recipient:
+          $ref: '#/components/schemas/MessageRecipient'
+        timestamp:
+          type: integer
+        body:
+          $ref: '#/components/schemas/MessageBody'
+        url:
+          type: string
+          nullable: true
+
+    SendMessageRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          nullable: true
+        notify:
+          type: boolean
+        format:
+          type: string
+          nullable: true
+
+    SendMessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          $ref: '#/components/schemas/Message'
+
+    Update:
+      type: object
+      required: [update_type, timestamp]
+      properties:
+        update_type:
+          type: string
+        timestamp:
+          type: integer
+        message:
+          $ref: '#/components/schemas/Message'
+
+    GetUpdatesResponse:
+      type: object
+      required: [updates, marker]
+      properties:
+        updates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Update'
+        marker:
+          type: integer
