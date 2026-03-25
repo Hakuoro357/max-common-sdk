@@ -845,6 +845,9 @@ components:
         token:
           type: string
           nullable: true
+        photos:
+          type: object
+          nullable: true
 
     Chat:
       type: object
@@ -881,6 +884,15 @@ components:
           nullable: true
         chat_message_id:
           type: string
+          nullable: true
+        participants:
+          type: object
+          nullable: true
+        dialog_with_user:
+          type: object
+          nullable: true
+        pinned_message:
+          type: object
           nullable: true
 
     ChatPermissions:
@@ -1070,6 +1082,22 @@ components:
           type: string
         size:
           type: integer
+        buttons:
+          type: object
+        contact_id:
+          type: integer
+          nullable: true
+        vcf_info:
+          type: string
+          nullable: true
+        vcf_phone:
+          type: string
+          nullable: true
+        code:
+          type: string
+        photos:
+          type: object
+          nullable: true
 
     Attachment:
       type: object
@@ -1099,6 +1127,15 @@ components:
           type: string
         size:
           type: integer
+        thumbnail:
+          type: string
+          nullable: true
+        duration:
+          type: integer
+          nullable: true
+        tam_info:
+          $ref: '#/components/schemas/User'
+          nullable: true
 
     MessageLinkType:
       type: string
@@ -1138,6 +1175,7 @@ components:
           $ref: '#/components/schemas/MessageLinkType'
         sender:
           $ref: '#/components/schemas/User'
+          nullable: true
         chat_id:
           type: integer
         message:
@@ -1192,21 +1230,25 @@ components:
       properties:
         sender:
           $ref: '#/components/schemas/User'
+          nullable: true
         recipient:
           $ref: '#/components/schemas/MessageRecipient'
         timestamp:
           type: integer
         link:
           $ref: '#/components/schemas/LinkedMessage'
+          nullable: true
         body:
           $ref: '#/components/schemas/MessageBody'
         stat:
           $ref: '#/components/schemas/MessageStat'
+          nullable: true
         url:
           type: string
           nullable: true
         constructor:
           $ref: '#/components/schemas/User'
+          nullable: true
 
     SendMessageRequest:
       type: object
@@ -1291,6 +1333,15 @@ components:
           type: integer
         user:
           $ref: '#/components/schemas/User'
+        user_locale:
+          type: string
+          nullable: true
+        inviter_id:
+          type: integer
+          nullable: true
+        admin_id:
+          type: integer
+          nullable: true
         is_channel:
           type: boolean
         payload:

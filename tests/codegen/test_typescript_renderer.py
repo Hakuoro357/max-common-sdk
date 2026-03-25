@@ -39,6 +39,8 @@ class TypeScriptRendererTests(unittest.TestCase):
         self.assertIn("query: { chat_id: request.query.chat_id", output)
         self.assertIn("request.path.message_id", output)
         self.assertIn("`/chats/${encodeURIComponent(String(request.path.chat_link))}`", output)
+        self.assertIn("sender?: User | null;", output)
+        self.assertIn("photos?: unknown | null;", output)
 
 
 if __name__ == "__main__":

@@ -130,15 +130,14 @@ def resolve_response_type(operation: dict[str, Any], ir: dict[str, Any]) -> str 
 
 def map_property_to_ts(prop: dict[str, Any]) -> str:
     if prop.get("ref"):
-        return prop["ref"].rsplit("/", 1)[-1]
+        ts_type = prop["ref"].rsplit("/", 1)[-1]
+    elif prop.get("type") == "array":
+        ts_type = f"{map_array_items_to_ts(prop)}[]"
+    elif prop.get("enum"):
+        ts_type = " | ".join(quote(value) for value in prop["enum"])
+    else:
+        ts_type = TYPE_MAP.get(prop.get("type"), "unknown")
 
-    if prop.get("type") == "array":
-        return f"{map_array_items_to_ts(prop)}[]"
-
-    if prop.get("enum"):
-        return " | ".join(quote(value) for value in prop["enum"])
-
-    ts_type = TYPE_MAP.get(prop.get("type"), "unknown")
     if prop.get("nullable"):
         return f"{ts_type} | null"
     return ts_type

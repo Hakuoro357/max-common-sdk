@@ -231,16 +231,15 @@ def resolve_request_body_schema(operation: dict[str, Any]) -> str | None:
 
 def map_property_to_python(prop: dict[str, Any]) -> str:
     if prop.get("ref"):
-        return prop["ref"].rsplit("/", 1)[-1]
-
-    if prop.get("type") == "array":
-        return f"list[{map_array_items_to_python(prop)}]"
-
-    if prop.get("enum"):
+        scalar_type = prop["ref"].rsplit("/", 1)[-1]
+    elif prop.get("type") == "array":
+        scalar_type = f"list[{map_array_items_to_python(prop)}]"
+    elif prop.get("enum"):
         variants = ", ".join(quote_py(value) for value in prop["enum"])
-        return f"Literal[{variants}]"
+        scalar_type = f"Literal[{variants}]"
+    else:
+        scalar_type = TYPE_MAP.get(prop.get("type"), "Any")
 
-    scalar_type = TYPE_MAP.get(prop.get("type"), "Any")
     if prop.get("nullable"):
         return f"{scalar_type} | None"
     return scalar_type

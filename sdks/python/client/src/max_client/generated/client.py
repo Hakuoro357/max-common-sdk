@@ -21,6 +21,7 @@ class AnswerOnCallbackRequest(TypedDict, total=False):
 
 class Attachment(TypedDict, total=False):
     description: NotRequired[str | None]
+    duration: NotRequired[int | None]
     filename: NotRequired[str]
     height: NotRequired[int]
     image_url: NotRequired[str | None]
@@ -28,11 +29,16 @@ class Attachment(TypedDict, total=False):
     longitude: NotRequired[float]
     payload: NotRequired[Any]
     size: NotRequired[int]
+    tam_info: NotRequired[User | None]
+    thumbnail: NotRequired[str | None]
     title: NotRequired[str | None]
     type: NotRequired[str]
     width: NotRequired[int]
 
 class AttachmentRequest(TypedDict, total=False):
+    buttons: NotRequired[Any]
+    code: NotRequired[str]
+    contact_id: NotRequired[int | None]
     description: NotRequired[str | None]
     filename: NotRequired[str]
     height: NotRequired[int]
@@ -40,9 +46,12 @@ class AttachmentRequest(TypedDict, total=False):
     latitude: NotRequired[float]
     longitude: NotRequired[float]
     payload: NotRequired[Any]
+    photos: NotRequired[Any | None]
     size: NotRequired[int]
     title: NotRequired[str | None]
     type: NotRequired[str]
+    vcf_info: NotRequired[str | None]
+    vcf_phone: NotRequired[str | None]
     width: NotRequired[int]
 
 class BotCommand(TypedDict, total=False):
@@ -51,7 +60,7 @@ class BotCommand(TypedDict, total=False):
 
 class BotInfo(TypedDict, total=False):
     avatar_url: NotRequired[str]
-    commands: NotRequired[list[BotCommand]]
+    commands: NotRequired[list[BotCommand] | None]
     description: NotRequired[str | None]
     full_avatar_url: NotRequired[str]
     is_bot: bool
@@ -70,13 +79,16 @@ class Chat(TypedDict, total=False):
     chat_id: int
     chat_message_id: NotRequired[str | None]
     description: NotRequired[str | None]
+    dialog_with_user: NotRequired[Any | None]
     icon: NotRequired[ChatIcon]
     is_public: bool
     last_event_time: int
     link: NotRequired[str | None]
     messages_count: NotRequired[int | None]
     owner_id: NotRequired[int | None]
+    participants: NotRequired[Any | None]
     participants_count: int
+    pinned_message: NotRequired[Any | None]
     status: ChatStatus
     title: NotRequired[str | None]
     type: ChatType
@@ -95,7 +107,7 @@ class ChatMember(TypedDict, total=False):
     last_access_time: int
     last_activity_time: int
     name: str
-    permissions: NotRequired[list[ChatPermissions]]
+    permissions: NotRequired[list[ChatPermissions] | None]
     user_id: int
     username: NotRequired[str | None]
 
@@ -112,14 +124,14 @@ class EditChatInfoRequest(TypedDict, total=False):
     title: NotRequired[str | None]
 
 class EditMessageRequest(TypedDict, total=False):
-    attachments: NotRequired[list[AttachmentRequest]]
+    attachments: NotRequired[list[AttachmentRequest] | None]
     format: NotRequired[str | None]
     link: NotRequired[MessageLinkReference]
     notify: NotRequired[bool]
     text: NotRequired[str | None]
 
 class EditMyInfoRequest(TypedDict, total=False):
-    commands: NotRequired[list[BotCommand]]
+    commands: NotRequired[list[BotCommand] | None]
     description: NotRequired[str | None]
     name: NotRequired[str | None]
     photo: NotRequired[PhotoAttachmentRequestPayload]
@@ -161,7 +173,7 @@ class HealthResponse(TypedDict, total=False):
 class LinkedMessage(TypedDict, total=False):
     chat_id: NotRequired[int]
     message: MessageBody
-    sender: NotRequired[User]
+    sender: NotRequired[User | None]
     type: MessageLinkType
 
 class MarkupElement(TypedDict, total=False):
@@ -173,17 +185,17 @@ class MarkupElement(TypedDict, total=False):
 
 class Message(TypedDict, total=False):
     body: MessageBody
-    constructor: NotRequired[User]
-    link: NotRequired[LinkedMessage]
+    constructor: NotRequired[User | None]
+    link: NotRequired[LinkedMessage | None]
     recipient: MessageRecipient
-    sender: NotRequired[User]
-    stat: NotRequired[MessageStat]
+    sender: NotRequired[User | None]
+    stat: NotRequired[MessageStat | None]
     timestamp: int
     url: NotRequired[str | None]
 
 class MessageBody(TypedDict, total=False):
-    attachments: NotRequired[list[Attachment]]
-    markup: NotRequired[list[MarkupElement]]
+    attachments: NotRequired[list[Attachment] | None]
+    markup: NotRequired[list[MarkupElement] | None]
     mid: str
     seq: int
     text: NotRequired[str | None]
@@ -202,6 +214,7 @@ class MessageStat(TypedDict, total=False):
     views: int
 
 class PhotoAttachmentRequestPayload(TypedDict, total=False):
+    photos: NotRequired[Any | None]
     token: NotRequired[str | None]
     url: NotRequired[str | None]
 
@@ -217,7 +230,7 @@ class SendActionRequest(TypedDict, total=False):
     action: SenderAction
 
 class SendMessageRequest(TypedDict, total=False):
-    attachments: NotRequired[list[AttachmentRequest]]
+    attachments: NotRequired[list[AttachmentRequest] | None]
     format: NotRequired[str | None]
     link: NotRequired[MessageLinkReference]
     notify: NotRequired[bool]
@@ -229,11 +242,13 @@ class SendMessageResponse(TypedDict, total=False):
 SenderAction: TypeAlias = Literal['typing_on', 'sending_photo', 'sending_video', 'sending_audio', 'sending_file', 'mark_seen']
 
 class Update(TypedDict, total=False):
+    admin_id: NotRequired[int | None]
     callback: NotRequired[CallbackInfo]
     chat: NotRequired[Chat]
     chat_id: NotRequired[int]
     data: NotRequired[str | None]
     input: NotRequired[Any]
+    inviter_id: NotRequired[int | None]
     is_channel: NotRequired[bool]
     message: NotRequired[Message]
     message_id: NotRequired[str]
@@ -245,6 +260,7 @@ class Update(TypedDict, total=False):
     update_type: str
     user: NotRequired[User]
     user_id: NotRequired[int]
+    user_locale: NotRequired[str | None]
 
 UploadType: TypeAlias = Literal['image', 'video', 'audio', 'file']
 

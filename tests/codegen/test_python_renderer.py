@@ -37,6 +37,8 @@ class PythonRendererTests(unittest.TestCase):
         self.assertIn("query={ 'chat_id': request['query'].get('chat_id')", output)
         self.assertIn("quote(str(request[\"path\"][\"message_id\"])", output)
         self.assertIn("path=f'/chats/{quote(str(request[\"path\"][\"chat_link\"]), safe=\"\")}'", output)
+        self.assertIn("sender: NotRequired[User | None]", output)
+        self.assertIn("photos: NotRequired[Any | None]", output)
 
 
 if __name__ == "__main__":

@@ -39,6 +39,9 @@ public sealed class Attachment
     [JsonPropertyName("description")]
     public string? Description { get; init; }
 
+    [JsonPropertyName("duration")]
+    public int? Duration { get; init; }
+
     [JsonPropertyName("filename")]
     public string? Filename { get; init; }
 
@@ -60,6 +63,12 @@ public sealed class Attachment
     [JsonPropertyName("size")]
     public int? Size { get; init; }
 
+    [JsonPropertyName("tam_info")]
+    public User? TamInfo { get; init; }
+
+    [JsonPropertyName("thumbnail")]
+    public string? Thumbnail { get; init; }
+
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 
@@ -72,6 +81,15 @@ public sealed class Attachment
 
 public sealed class AttachmentRequest
 {
+    [JsonPropertyName("buttons")]
+    public object? Buttons { get; init; }
+
+    [JsonPropertyName("code")]
+    public string? Code { get; init; }
+
+    [JsonPropertyName("contact_id")]
+    public int? ContactId { get; init; }
+
     [JsonPropertyName("description")]
     public string? Description { get; init; }
 
@@ -93,6 +111,9 @@ public sealed class AttachmentRequest
     [JsonPropertyName("payload")]
     public object? Payload { get; init; }
 
+    [JsonPropertyName("photos")]
+    public object? Photos { get; init; }
+
     [JsonPropertyName("size")]
     public int? Size { get; init; }
 
@@ -101,6 +122,12 @@ public sealed class AttachmentRequest
 
     [JsonPropertyName("type")]
     public string? Type { get; init; }
+
+    [JsonPropertyName("vcf_info")]
+    public string? VcfInfo { get; init; }
+
+    [JsonPropertyName("vcf_phone")]
+    public string? VcfPhone { get; init; }
 
     [JsonPropertyName("width")]
     public int? Width { get; init; }
@@ -171,6 +198,9 @@ public sealed class Chat
     [JsonPropertyName("description")]
     public string? Description { get; init; }
 
+    [JsonPropertyName("dialog_with_user")]
+    public object? DialogWithUser { get; init; }
+
     [JsonPropertyName("icon")]
     public ChatIcon? Icon { get; init; }
 
@@ -189,8 +219,14 @@ public sealed class Chat
     [JsonPropertyName("owner_id")]
     public int? OwnerId { get; init; }
 
+    [JsonPropertyName("participants")]
+    public object? Participants { get; init; }
+
     [JsonPropertyName("participants_count")]
     public int ParticipantsCount { get; init; }
+
+    [JsonPropertyName("pinned_message")]
+    public object? PinnedMessage { get; init; }
 
     [JsonPropertyName("status")]
     public ChatStatus Status { get; init; }
@@ -509,6 +545,9 @@ public sealed class MessageStat
 
 public sealed class PhotoAttachmentRequestPayload
 {
+    [JsonPropertyName("photos")]
+    public object? Photos { get; init; }
+
     [JsonPropertyName("token")]
     public string? Token { get; init; }
 
@@ -576,6 +615,9 @@ public enum SenderAction
 
 public sealed class Update
 {
+    [JsonPropertyName("admin_id")]
+    public int? AdminId { get; init; }
+
     [JsonPropertyName("callback")]
     public CallbackInfo? Callback { get; init; }
 
@@ -590,6 +632,9 @@ public sealed class Update
 
     [JsonPropertyName("input")]
     public object? Input { get; init; }
+
+    [JsonPropertyName("inviter_id")]
+    public int? InviterId { get; init; }
 
     [JsonPropertyName("is_channel")]
     public bool? IsChannel { get; init; }
@@ -623,6 +668,9 @@ public sealed class Update
 
     [JsonPropertyName("user_id")]
     public int? UserId { get; init; }
+
+    [JsonPropertyName("user_locale")]
+    public string? UserLocale { get; init; }
 }
 
 public enum UploadType

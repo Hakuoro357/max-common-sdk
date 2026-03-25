@@ -19,6 +19,7 @@ export interface AnswerOnCallbackRequest {
 
 export interface Attachment {
   description?: string | null;
+  duration?: number | null;
   filename?: string;
   height?: number;
   image_url?: string | null;
@@ -26,12 +27,17 @@ export interface Attachment {
   longitude?: number;
   payload?: unknown;
   size?: number;
+  tam_info?: User | null;
+  thumbnail?: string | null;
   title?: string | null;
   type?: string;
   width?: number;
 }
 
 export interface AttachmentRequest {
+  buttons?: unknown;
+  code?: string;
+  contact_id?: number | null;
   description?: string | null;
   filename?: string;
   height?: number;
@@ -39,9 +45,12 @@ export interface AttachmentRequest {
   latitude?: number;
   longitude?: number;
   payload?: unknown;
+  photos?: unknown | null;
   size?: number;
   title?: string | null;
   type?: string;
+  vcf_info?: string | null;
+  vcf_phone?: string | null;
   width?: number;
 }
 
@@ -52,7 +61,7 @@ export interface BotCommand {
 
 export interface BotInfo {
   avatar_url?: string;
-  commands?: BotCommand[];
+  commands?: BotCommand[] | null;
   description?: string | null;
   full_avatar_url?: string;
   is_bot: boolean;
@@ -73,13 +82,16 @@ export interface Chat {
   chat_id: number;
   chat_message_id?: string | null;
   description?: string | null;
+  dialog_with_user?: unknown | null;
   icon?: ChatIcon;
   is_public: boolean;
   last_event_time: number;
   link?: string | null;
   messages_count?: number | null;
   owner_id?: number | null;
+  participants?: unknown | null;
   participants_count: number;
+  pinned_message?: unknown | null;
   status: ChatStatus;
   title?: string | null;
   type: ChatType;
@@ -100,7 +112,7 @@ export interface ChatMember {
   last_access_time: number;
   last_activity_time: number;
   name: string;
-  permissions?: ChatPermissions[];
+  permissions?: ChatPermissions[] | null;
   user_id: number;
   username?: string | null;
 }
@@ -119,7 +131,7 @@ export interface EditChatInfoRequest {
 }
 
 export interface EditMessageRequest {
-  attachments?: AttachmentRequest[];
+  attachments?: AttachmentRequest[] | null;
   format?: string | null;
   link?: MessageLinkReference;
   notify?: boolean;
@@ -127,7 +139,7 @@ export interface EditMessageRequest {
 }
 
 export interface EditMyInfoRequest {
-  commands?: BotCommand[];
+  commands?: BotCommand[] | null;
   description?: string | null;
   name?: string | null;
   photo?: PhotoAttachmentRequestPayload;
@@ -179,7 +191,7 @@ export interface HealthResponse {
 export interface LinkedMessage {
   chat_id?: number;
   message: MessageBody;
-  sender?: User;
+  sender?: User | null;
   type: MessageLinkType;
 }
 
@@ -193,18 +205,18 @@ export interface MarkupElement {
 
 export interface Message {
   body: MessageBody;
-  constructor?: User;
-  link?: LinkedMessage;
+  constructor?: User | null;
+  link?: LinkedMessage | null;
   recipient: MessageRecipient;
-  sender?: User;
-  stat?: MessageStat;
+  sender?: User | null;
+  stat?: MessageStat | null;
   timestamp: number;
   url?: string | null;
 }
 
 export interface MessageBody {
-  attachments?: Attachment[];
-  markup?: MarkupElement[];
+  attachments?: Attachment[] | null;
+  markup?: MarkupElement[] | null;
   mid: string;
   seq: number;
   text?: string | null;
@@ -227,6 +239,7 @@ export interface MessageStat {
 }
 
 export interface PhotoAttachmentRequestPayload {
+  photos?: unknown | null;
   token?: string | null;
   url?: string | null;
 }
@@ -246,7 +259,7 @@ export interface SendActionRequest {
 }
 
 export interface SendMessageRequest {
-  attachments?: AttachmentRequest[];
+  attachments?: AttachmentRequest[] | null;
   format?: string | null;
   link?: MessageLinkReference;
   notify?: boolean;
@@ -260,11 +273,13 @@ export interface SendMessageResponse {
 export type SenderAction = 'typing_on' | 'sending_photo' | 'sending_video' | 'sending_audio' | 'sending_file' | 'mark_seen';
 
 export interface Update {
+  admin_id?: number | null;
   callback?: CallbackInfo;
   chat?: Chat;
   chat_id?: number;
   data?: string | null;
   input?: unknown;
+  inviter_id?: number | null;
   is_channel?: boolean;
   message?: Message;
   message_id?: string;
@@ -276,6 +291,7 @@ export interface Update {
   update_type: string;
   user?: User;
   user_id?: number;
+  user_locale?: string | null;
 }
 
 export type UploadType = 'image' | 'video' | 'audio' | 'file';

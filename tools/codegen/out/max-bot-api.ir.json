@@ -1607,6 +1607,17 @@
           "required": false
         },
         {
+          "name": "duration",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
           "name": "filename",
           "type": "string",
           "format": null,
@@ -1684,6 +1695,28 @@
           "required": false
         },
         {
+          "name": "tam_info",
+          "type": null,
+          "format": null,
+          "ref": "#/components/schemas/User",
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "thumbnail",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
           "name": "title",
           "type": "string",
           "format": null,
@@ -1724,6 +1757,39 @@
       "enum": null,
       "required": [],
       "properties": [
+        {
+          "name": "buttons",
+          "type": "object",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "code",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": false,
+          "required": false
+        },
+        {
+          "name": "contact_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
         {
           "name": "description",
           "type": "string",
@@ -1802,6 +1868,17 @@
           "required": false
         },
         {
+          "name": "photos",
+          "type": "object",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
           "name": "size",
           "type": "integer",
           "format": null,
@@ -1832,6 +1909,28 @@
           "items_type": null,
           "items_ref": null,
           "nullable": false,
+          "required": false
+        },
+        {
+          "name": "vcf_info",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
+          "name": "vcf_phone",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
           "required": false
         },
         {
@@ -2094,6 +2193,17 @@
           "required": false
         },
         {
+          "name": "dialog_with_user",
+          "type": "object",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
           "name": "icon",
           "type": null,
           "format": null,
@@ -2160,6 +2270,17 @@
           "required": false
         },
         {
+          "name": "participants",
+          "type": "object",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
           "name": "participants_count",
           "type": "integer",
           "format": null,
@@ -2169,6 +2290,17 @@
           "items_ref": null,
           "nullable": false,
           "required": true
+        },
+        {
+          "name": "pinned_message",
+          "type": "object",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
         },
         {
           "name": "status",
@@ -2898,7 +3030,7 @@
           "enum": null,
           "items_type": null,
           "items_ref": null,
-          "nullable": false,
+          "nullable": true,
           "required": false
         },
         {
@@ -3010,7 +3142,7 @@
           "enum": null,
           "items_type": null,
           "items_ref": null,
-          "nullable": false,
+          "nullable": true,
           "required": false
         },
         {
@@ -3021,7 +3153,7 @@
           "enum": null,
           "items_type": null,
           "items_ref": null,
-          "nullable": false,
+          "nullable": true,
           "required": false
         },
         {
@@ -3043,7 +3175,7 @@
           "enum": null,
           "items_type": null,
           "items_ref": null,
-          "nullable": false,
+          "nullable": true,
           "required": false
         },
         {
@@ -3054,7 +3186,7 @@
           "enum": null,
           "items_type": null,
           "items_ref": null,
-          "nullable": false,
+          "nullable": true,
           "required": false
         },
         {
@@ -3249,6 +3381,17 @@
       "enum": null,
       "required": [],
       "properties": [
+        {
+          "name": "photos",
+          "type": "object",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
         {
           "name": "token",
           "type": "string",
@@ -3466,6 +3609,17 @@
       ],
       "properties": [
         {
+          "name": "admin_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
+          "required": false
+        },
+        {
           "name": "callback",
           "type": null,
           "format": null,
@@ -3518,6 +3672,17 @@
           "items_type": null,
           "items_ref": null,
           "nullable": false,
+          "required": false
+        },
+        {
+          "name": "inviter_id",
+          "type": "integer",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
           "required": false
         },
         {
@@ -3639,6 +3804,17 @@
           "items_type": null,
           "items_ref": null,
           "nullable": false,
+          "required": false
+        },
+        {
+          "name": "user_locale",
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null,
+          "nullable": true,
           "required": false
         }
       ]
