@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://max.ru/schemas/codegen/ir-schema.json",
+  "title": "MAX Codegen IR",
+  "type": "object",
+  "required": [
+    "ir_version",
+    "api",
+    "services",
+    "operations",
+    "schemas",
+    "stats"
+  ],
+  "properties": {
+    "ir_version": {
+      "type": "string"
+    },
+    "api": {
+      "type": "object",
+      "required": [
+        "title",
+        "version",
+        "servers"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "servers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "services": {
+      "type": "array"
+    },
+    "operations": {
+      "type": "array"
+    },
+    "schemas": {
+      "type": "array"
+    },
+    "stats": {
+      "type": "object",
+      "required": [
+        "service_count",
+        "operation_count",
+        "schema_count"
+      ]
+    }
+  }
+}

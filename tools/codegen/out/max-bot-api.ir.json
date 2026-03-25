@@ -1,28 +1,43 @@
 {
+  "ir_version": "1.0.0",
   "api": {
     "title": "MAX Bot API",
     "version": "0.1.0-draft",
+    "description": "Draft OpenAPI entrypoint for the future MAX common SDK platform.\n",
     "servers": [
       "https://api.max.ru"
     ]
   },
+  "services": [
+    {
+      "name": "health",
+      "operation_ids": [
+        "getHealth"
+      ]
+    }
+  ],
   "operations": [
     {
       "operation_id": "getHealth",
       "method": "get",
       "path": "/health",
       "summary": "Health check",
+      "description": null,
       "tags": [
         "health"
       ],
+      "service": "health",
       "responses": [
         {
           "status_code": "200",
           "description": "OK",
-          "content_types": [
-            "application/json"
-          ],
-          "schema_ref": "#/components/schemas/HealthResponse"
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/HealthResponse",
+              "schema_type": null
+            }
+          ]
         }
       ]
     }
@@ -34,16 +49,20 @@
       "required": [
         "status"
       ],
-      "properties": {
-        "status": {
+      "properties": [
+        {
+          "name": "status",
           "type": "string",
           "format": null,
-          "ref": null
+          "ref": null,
+          "nullable": false,
+          "required": true
         }
-      }
+      ]
     }
   ],
   "stats": {
+    "service_count": 1,
     "operation_count": 1,
     "schema_count": 1
   }
