@@ -1,0 +1,36 @@
+openapi: 3.0.3
+info:
+  title: MAX Bot API
+  version: 0.1.0-draft
+  description: |
+    Draft OpenAPI entrypoint for the future MAX common SDK platform.
+servers:
+  - url: https://api.max.ru
+    description: Production
+tags:
+  - name: health
+    description: Bootstrap endpoints used while the common SDK platform is scaffolded.
+paths:
+  /health:
+    get:
+      tags:
+        - health
+      summary: Health check
+      operationId: getHealth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          example: ok
