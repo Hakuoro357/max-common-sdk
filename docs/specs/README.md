@@ -1,0 +1,25 @@
+# Specs
+
+В этой папке хранятся архитектурные и продуктовые спецификации проекта.
+
+## RFC Pack
+
+Базовый набор RFC по SDK-платформе MAX:
+
+- [rfc-index.md](C:\pro\max\docs\specs\rfc-index.md) — входная страница и карта всего RFC-пакета
+- [sdk-architecture-spec.md](C:\pro\max\docs\specs\sdk-architecture-spec.md) — целевая архитектура multi-language SDK для MAX
+- [api-governance.md](C:\pro\max\docs\specs\api-governance.md) — правила управления API-контрактом и изменениями схемы
+- [release-model.md](C:\pro\max\docs\specs\release-model.md) — модель релизов, версионирования и compatibility gates
+- [codegen-architecture.md](C:\pro\max\docs\specs\codegen-architecture.md) — архитектура code generation pipeline для SDK
+- [support-matrix.md](C:\pro\max\docs\specs\support-matrix.md) — матрица поддержки языков, статусов и приоритетов SDK
+- [roadmap.md](C:\pro\max\docs\specs\roadmap.md) — поэтапный план развития SDK-платформы
+
+## Рекомендуемый порядок чтения
+
+1. [rfc-index.md](C:\pro\max\docs\specs\rfc-index.md)
+2. [sdk-architecture-spec.md](C:\pro\max\docs\specs\sdk-architecture-spec.md)
+3. [api-governance.md](C:\pro\max\docs\specs\api-governance.md)
+4. [codegen-architecture.md](C:\pro\max\docs\specs\codegen-architecture.md)
+5. [release-model.md](C:\pro\max\docs\specs\release-model.md)
+6. [support-matrix.md](C:\pro\max\docs\specs\support-matrix.md)
+7. [roadmap.md](C:\pro\max\docs\specs\roadmap.md)
