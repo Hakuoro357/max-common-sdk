@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import shutil
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -16,6 +17,7 @@ from tools.codegen.bootstrap_ir import load_openapi, write_ir
 from tools.codegen.lib.ir_builder import build_ir
 from tools.codegen.lib.manifest import build_generator_manifest
 from tools.codegen.lib.normalize import normalize_openapi
+from tools.codegen.lib.renderers.csharp_client import render_csharp_client
 from tools.codegen.lib.renderers.python_client import render_python_client
 from tools.codegen.lib.renderers.typescript_client import render_typescript_client
 from tools.codegen.lib.validate import load_ir_schema, validate_ir_shape
@@ -26,6 +28,8 @@ IR_SCHEMA_PATH = ROOT / "tools" / "codegen" / "ir-schema.json"
 IR_OUTPUT_PATH = ROOT / "tools" / "codegen" / "out" / "max-bot-api.ir.json"
 TS_OUTPUT_PATH = ROOT / "sdks" / "typescript" / "client" / "generated" / "index.ts"
 PY_OUTPUT_PATH = ROOT / "sdks" / "python" / "client" / "src" / "max_client" / "generated" / "client.py"
+CSPROJ_PATH = ROOT / "sdks" / "csharp" / "client" / "Max.Client" / "Max.Client.csproj"
+CS_OUTPUT_PATH = ROOT / "sdks" / "csharp" / "client" / "Max.Client" / "Generated" / "MaxBotApiClient.g.cs"
 MANIFEST_OUTPUT_PATH = ROOT / "tools" / "codegen" / "out" / "generator-manifest.json"
 
 
@@ -57,6 +61,9 @@ def run_generation(root: Path = ROOT) -> dict[str, str]:
     python_client = render_python_client(ir)
     write_text(PY_OUTPUT_PATH, python_client)
 
+    csharp_client = render_csharp_client(ir)
+    write_text(CS_OUTPUT_PATH, csharp_client)
+
     manifest = build_generator_manifest(root, ir)
     write_json(MANIFEST_OUTPUT_PATH, manifest)
 
@@ -64,6 +71,7 @@ def run_generation(root: Path = ROOT) -> dict[str, str]:
         "ir": IR_OUTPUT_PATH.relative_to(root).as_posix(),
         "typescript": TS_OUTPUT_PATH.relative_to(root).as_posix(),
         "python": PY_OUTPUT_PATH.relative_to(root).as_posix(),
+        "csharp": CS_OUTPUT_PATH.relative_to(root).as_posix(),
         "manifest": MANIFEST_OUTPUT_PATH.relative_to(root).as_posix(),
     }
 
@@ -74,7 +82,7 @@ def run_verification(root: Path = ROOT) -> None:
 
     commands = [
         (
-            [python_exe, "-m", "unittest", "tests.codegen.test_bootstrap_ir", "tests.codegen.test_typescript_renderer", "tests.codegen.test_python_renderer", "tests.codegen.test_multilang_contract", "tests.codegen.test_generator_manifest", "tests.codegen.test_pipeline"],
+            [python_exe, "-m", "unittest", "tests.codegen.test_bootstrap_ir", "tests.codegen.test_typescript_renderer", "tests.codegen.test_python_renderer", "tests.codegen.test_csharp_renderer", "tests.codegen.test_multilang_contract", "tests.codegen.test_generator_manifest", "tests.codegen.test_pipeline"],
             root,
         ),
         ([python_exe, "-m", "compileall", str(root / "sdks" / "python" / "client" / "src")], root),
@@ -84,6 +92,15 @@ def run_verification(root: Path = ROOT) -> None:
 
     for command, cwd in commands:
         subprocess.run(command, cwd=str(cwd), check=True)
+
+    dotnet_cmd = shutil.which("dotnet")
+    if dotnet_cmd and has_dotnet_sdk(dotnet_cmd):
+        subprocess.run([dotnet_cmd, "build", str(CSPROJ_PATH)], cwd=str(root), check=True)
+
+
+def has_dotnet_sdk(dotnet_cmd: str) -> bool:
+    result = subprocess.run([dotnet_cmd, "--list-sdks"], capture_output=True, text=True, check=False)
+    return bool(result.stdout.strip())
 
 
 def main() -> int:

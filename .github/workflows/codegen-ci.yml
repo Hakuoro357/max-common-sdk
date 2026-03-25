@@ -26,6 +26,11 @@ jobs:
           cache: "npm"
           cache-dependency-path: sdks/typescript/client/package-lock.json
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
       - name: Install Python dependencies
         run: python -m pip install --upgrade pip && pip install -r tools/codegen/requirements.txt
 

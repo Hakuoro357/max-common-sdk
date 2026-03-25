@@ -22,7 +22,7 @@ class GeneratorManifestTests(unittest.TestCase):
 
         self.assertEqual(manifest["ir_version"], ir["ir_version"])
         self.assertEqual(manifest["api_version"], ir["api"]["version"])
-        self.assertEqual(len(manifest["languages"]), 2)
+        self.assertEqual(len(manifest["languages"]), 3)
 
         for language in manifest["languages"]:
             self.assertEqual(language["supported_operations"], expected_operations)

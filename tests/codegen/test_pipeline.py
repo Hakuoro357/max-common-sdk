@@ -30,6 +30,7 @@ class PipelineTests(unittest.TestCase):
                 "ir": "tools/codegen/out/max-bot-api.ir.json",
                 "typescript": "sdks/typescript/client/generated/index.ts",
                 "python": "sdks/python/client/src/max_client/generated/client.py",
+                "csharp": "sdks/csharp/client/Max.Client/Generated/MaxBotApiClient.g.cs",
                 "manifest": "tools/codegen/out/generator-manifest.json",
             },
         )

@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 IR_PATH = ROOT / "tools" / "codegen" / "out" / "max-bot-api.ir.json"
 TS_CLIENT_PATH = ROOT / "sdks" / "typescript" / "client" / "generated" / "index.ts"
 PY_CLIENT_PATH = ROOT / "sdks" / "python" / "client" / "src" / "max_client" / "generated" / "client.py"
+CS_CLIENT_PATH = ROOT / "sdks" / "csharp" / "client" / "Max.Client" / "Generated" / "MaxBotApiClient.g.cs"
 
 
 class MultiLanguageContractTests(unittest.TestCase):
@@ -21,12 +22,19 @@ class MultiLanguageContractTests(unittest.TestCase):
 
         ts_content = TS_CLIENT_PATH.read_text(encoding="utf-8")
         py_content = PY_CLIENT_PATH.read_text(encoding="utf-8")
+        cs_content = CS_CLIENT_PATH.read_text(encoding="utf-8")
 
         ts_operations = set(re.findall(r"async\s+([A-Za-z_][A-Za-z0-9_]*)\(", ts_content))
         py_operations = set(re.findall(r"^\s+def\s+([A-Za-z_][A-Za-z0-9_]*)\(", py_content, flags=re.MULTILINE))
+        cs_operations = {
+            (name[: -len("Async")] if name.endswith("Async") else name)[:1].lower()
+            + (name[: -len("Async")] if name.endswith("Async") else name)[1:]
+            for name in re.findall(r"public\s+Task<[^>]+>\s+([A-Za-z_][A-Za-z0-9_]*)Async\(", cs_content)
+        }
 
         self.assertEqual(expected_operations, ts_operations)
         self.assertTrue(expected_operations.issubset(py_operations))
+        self.assertEqual(expected_operations, cs_operations)
 
 
 if __name__ == "__main__":

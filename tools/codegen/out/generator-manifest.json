@@ -53,6 +53,33 @@
       ],
       "operation_count": 7,
       "coverage_complete": true
+    },
+    {
+      "language": "csharp",
+      "package_name": "Max.Client",
+      "package_root": "sdks/csharp/client/Max.Client",
+      "entrypoint": "sdks/csharp/client/Max.Client/Generated/MaxBotApiClient.g.cs",
+      "generated_files": [
+        "sdks/csharp/client/Max.Client/Generated/MaxBotApiClient.g.cs"
+      ],
+      "runtime_files": [
+        "sdks/csharp/client/Max.Client/Runtime/ApiRequest.cs",
+        "sdks/csharp/client/Max.Client/Runtime/BaseApiClient.cs",
+        "sdks/csharp/client/Max.Client/Runtime/ClientConfig.cs",
+        "sdks/csharp/client/Max.Client/Runtime/MaxApiException.cs",
+        "sdks/csharp/client/Max.Client/Runtime/RequestOptions.cs"
+      ],
+      "supported_operations": [
+        "editMyInfo",
+        "getHealth",
+        "getMessageById",
+        "getMyInfo",
+        "getUpdates",
+        "getUploadUrl",
+        "sendMessage"
+      ],
+      "operation_count": 7,
+      "coverage_complete": true
     }
   ]
 }
