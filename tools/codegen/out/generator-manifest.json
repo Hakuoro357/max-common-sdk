@@ -1,0 +1,58 @@
+{
+  "manifest_version": "1.0.0",
+  "ir_version": "1.0.0",
+  "api_version": "0.2.0-draft",
+  "languages": [
+    {
+      "language": "typescript",
+      "package_name": "@max/client",
+      "package_root": "sdks/typescript/client",
+      "entrypoint": "sdks/typescript/client/generated/index.ts",
+      "generated_files": [
+        "sdks/typescript/client/generated/index.ts"
+      ],
+      "runtime_files": [
+        "sdks/typescript/client/runtime/api-error.ts",
+        "sdks/typescript/client/runtime/base-api-client.ts",
+        "sdks/typescript/client/runtime/index.ts"
+      ],
+      "supported_operations": [
+        "editMyInfo",
+        "getHealth",
+        "getMessageById",
+        "getMyInfo",
+        "getUpdates",
+        "getUploadUrl",
+        "sendMessage"
+      ],
+      "operation_count": 7,
+      "coverage_complete": true
+    },
+    {
+      "language": "python",
+      "package_name": "max-client",
+      "package_root": "sdks/python/client",
+      "entrypoint": "sdks/python/client/src/max_client/generated/client.py",
+      "generated_files": [
+        "sdks/python/client/src/max_client/generated/client.py",
+        "sdks/python/client/src/max_client/generated/__init__.py"
+      ],
+      "runtime_files": [
+        "sdks/python/client/src/max_client/runtime/__init__.py",
+        "sdks/python/client/src/max_client/runtime/api_error.py",
+        "sdks/python/client/src/max_client/runtime/base_api_client.py"
+      ],
+      "supported_operations": [
+        "editMyInfo",
+        "getHealth",
+        "getMessageById",
+        "getMyInfo",
+        "getUpdates",
+        "getUploadUrl",
+        "sendMessage"
+      ],
+      "operation_count": 7,
+      "coverage_complete": true
+    }
+  ]
+}
