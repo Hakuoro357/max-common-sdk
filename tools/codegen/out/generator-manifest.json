@@ -26,6 +26,7 @@
         "getAllChats",
         "getChatAdmins",
         "getChatById",
+        "getChatByLink",
         "getChatMembers",
         "getChatMembership",
         "getHealth",
@@ -42,7 +43,7 @@
         "sendMessage",
         "unpinMessage"
       ],
-      "operation_count": 24,
+      "operation_count": 25,
       "coverage_complete": true
     },
     {
@@ -69,6 +70,7 @@
         "getAllChats",
         "getChatAdmins",
         "getChatById",
+        "getChatByLink",
         "getChatMembers",
         "getChatMembership",
         "getHealth",
@@ -85,7 +87,7 @@
         "sendMessage",
         "unpinMessage"
       ],
-      "operation_count": 24,
+      "operation_count": 25,
       "coverage_complete": true
     },
     {
@@ -113,6 +115,7 @@
         "getAllChats",
         "getChatAdmins",
         "getChatById",
+        "getChatByLink",
         "getChatMembers",
         "getChatMembership",
         "getHealth",
@@ -129,7 +132,7 @@
         "sendMessage",
         "unpinMessage"
       ],
-      "operation_count": 24,
+      "operation_count": 25,
       "coverage_complete": true
     }
   ]

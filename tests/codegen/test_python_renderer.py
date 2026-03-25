@@ -36,6 +36,7 @@ class PythonRendererTests(unittest.TestCase):
         self.assertIn("def getHealth", output)
         self.assertIn("query={ 'chat_id': request['query'].get('chat_id')", output)
         self.assertIn("quote(str(request[\"path\"][\"message_id\"])", output)
+        self.assertIn("path=f'/chats/{quote(str(request[\"path\"][\"chat_link\"]), safe=\"\")}'", output)
 
 
 if __name__ == "__main__":

@@ -89,7 +89,7 @@ def render_operation(operation: dict[str, Any], ir: dict[str, Any]) -> list[str]
         f"  async {operation_name}({args}): Promise<{response_type}> {{",
         f"    return this.request<{response_type}>({{",
         f"      method: {quote(method)},",
-        f"      path: {build_path_expression(operation['path'], operation)},",
+        f"      path: {build_path_expression(operation.get('wire_path') or operation['path'], operation)},",
     ]
 
     query_expression = build_query_expression(operation)

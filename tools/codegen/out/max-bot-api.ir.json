@@ -24,6 +24,7 @@
         "getAllChats",
         "getChatAdmins",
         "getChatById",
+        "getChatByLink",
         "getChatMembers",
         "getChatMembership",
         "getPinnedMessage",
@@ -69,6 +70,7 @@
       "operation_id": "answerOnCallback",
       "method": "post",
       "path": "/answers",
+      "wire_path": "/answers",
       "summary": "Answer on callback",
       "description": null,
       "tags": [
@@ -127,6 +129,7 @@
       "operation_id": "getAllChats",
       "method": "get",
       "path": "/chats",
+      "wire_path": "/chats",
       "summary": "Get all chats",
       "description": null,
       "tags": [
@@ -184,9 +187,60 @@
       ]
     },
     {
+      "operation_id": "getChatByLink",
+      "method": "get",
+      "path": "/chats/by-link/{chat_link}",
+      "wire_path": "/chats/{chat_link}",
+      "summary": "Get chat by link",
+      "description": null,
+      "tags": [
+        "chats"
+      ],
+      "service": "chats",
+      "parameters": [
+        {
+          "name": "chat_link",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "format": null,
+          "ref": null,
+          "enum": null,
+          "items_type": null,
+          "items_ref": null
+        }
+      ],
+      "request_body": null,
+      "responses": [
+        {
+          "status_code": "200",
+          "description": "Chat",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/Chat",
+              "schema_type": null
+            }
+          ]
+        },
+        {
+          "status_code": "default",
+          "description": "API error",
+          "media_types": [
+            {
+              "content_type": "application/json",
+              "schema_ref": "#/components/schemas/ErrorResponse",
+              "schema_type": null
+            }
+          ]
+        }
+      ]
+    },
+    {
       "operation_id": "getChatById",
       "method": "get",
       "path": "/chats/{chat_id}",
+      "wire_path": "/chats/{chat_id}",
       "summary": "Get chat by id",
       "description": null,
       "tags": [
@@ -236,6 +290,7 @@
       "operation_id": "editChatInfo",
       "method": "patch",
       "path": "/chats/{chat_id}",
+      "wire_path": "/chats/{chat_id}",
       "summary": "Edit chat info",
       "description": null,
       "tags": [
@@ -294,6 +349,7 @@
       "operation_id": "sendAction",
       "method": "post",
       "path": "/chats/{chat_id}/actions",
+      "wire_path": "/chats/{chat_id}/actions",
       "summary": "Send action",
       "description": null,
       "tags": [
@@ -352,6 +408,7 @@
       "operation_id": "getChatMembers",
       "method": "get",
       "path": "/chats/{chat_id}/members",
+      "wire_path": "/chats/{chat_id}/members",
       "summary": "Get chat members",
       "description": null,
       "tags": [
@@ -434,6 +491,7 @@
       "operation_id": "addChatMembers",
       "method": "post",
       "path": "/chats/{chat_id}/members",
+      "wire_path": "/chats/{chat_id}/members",
       "summary": "Add chat members",
       "description": null,
       "tags": [
@@ -492,6 +550,7 @@
       "operation_id": "removeChatMember",
       "method": "delete",
       "path": "/chats/{chat_id}/members",
+      "wire_path": "/chats/{chat_id}/members",
       "summary": "Remove chat member",
       "description": null,
       "tags": [
@@ -550,6 +609,7 @@
       "operation_id": "getChatAdmins",
       "method": "get",
       "path": "/chats/{chat_id}/members/admins",
+      "wire_path": "/chats/{chat_id}/members/admins",
       "summary": "Get chat admins",
       "description": null,
       "tags": [
@@ -599,6 +659,7 @@
       "operation_id": "getChatMembership",
       "method": "get",
       "path": "/chats/{chat_id}/members/me",
+      "wire_path": "/chats/{chat_id}/members/me",
       "summary": "Get current bot membership in chat",
       "description": null,
       "tags": [
@@ -648,6 +709,7 @@
       "operation_id": "leaveChat",
       "method": "delete",
       "path": "/chats/{chat_id}/members/me",
+      "wire_path": "/chats/{chat_id}/members/me",
       "summary": "Leave chat",
       "description": null,
       "tags": [
@@ -697,6 +759,7 @@
       "operation_id": "getPinnedMessage",
       "method": "get",
       "path": "/chats/{chat_id}/pin",
+      "wire_path": "/chats/{chat_id}/pin",
       "summary": "Get pinned message",
       "description": null,
       "tags": [
@@ -746,6 +809,7 @@
       "operation_id": "pinMessage",
       "method": "put",
       "path": "/chats/{chat_id}/pin",
+      "wire_path": "/chats/{chat_id}/pin",
       "summary": "Pin message",
       "description": null,
       "tags": [
@@ -804,6 +868,7 @@
       "operation_id": "unpinMessage",
       "method": "delete",
       "path": "/chats/{chat_id}/pin",
+      "wire_path": "/chats/{chat_id}/pin",
       "summary": "Unpin message",
       "description": null,
       "tags": [
@@ -853,6 +918,7 @@
       "operation_id": "getHealth",
       "method": "get",
       "path": "/health",
+      "wire_path": "/health",
       "summary": "Health check",
       "description": null,
       "tags": [
@@ -890,6 +956,7 @@
       "operation_id": "getMyInfo",
       "method": "get",
       "path": "/me",
+      "wire_path": "/me",
       "summary": "Get current bot info",
       "description": null,
       "tags": [
@@ -927,6 +994,7 @@
       "operation_id": "editMyInfo",
       "method": "patch",
       "path": "/me",
+      "wire_path": "/me",
       "summary": "Edit current bot info",
       "description": null,
       "tags": [
@@ -973,6 +1041,7 @@
       "operation_id": "getMessages",
       "method": "get",
       "path": "/messages",
+      "wire_path": "/messages",
       "summary": "Get messages",
       "description": null,
       "tags": [
@@ -1066,6 +1135,7 @@
       "operation_id": "sendMessage",
       "method": "post",
       "path": "/messages",
+      "wire_path": "/messages",
       "summary": "Send message",
       "description": null,
       "tags": [
@@ -1146,6 +1216,7 @@
       "operation_id": "editMessage",
       "method": "put",
       "path": "/messages",
+      "wire_path": "/messages",
       "summary": "Edit message",
       "description": null,
       "tags": [
@@ -1204,6 +1275,7 @@
       "operation_id": "deleteMessage",
       "method": "delete",
       "path": "/messages",
+      "wire_path": "/messages",
       "summary": "Delete message",
       "description": null,
       "tags": [
@@ -1253,6 +1325,7 @@
       "operation_id": "getMessageById",
       "method": "get",
       "path": "/messages/{message_id}",
+      "wire_path": "/messages/{message_id}",
       "summary": "Get message by id",
       "description": null,
       "tags": [
@@ -1302,6 +1375,7 @@
       "operation_id": "getUpdates",
       "method": "get",
       "path": "/updates",
+      "wire_path": "/updates",
       "summary": "Get updates",
       "description": null,
       "tags": [
@@ -1384,6 +1458,7 @@
       "operation_id": "getUploadUrl",
       "method": "post",
       "path": "/uploads",
+      "wire_path": "/uploads",
       "summary": "Get upload URL",
       "description": null,
       "tags": [
@@ -3684,7 +3759,7 @@
   ],
   "stats": {
     "service_count": 6,
-    "operation_count": 24,
+    "operation_count": 25,
     "schema_count": 44
   }
 }

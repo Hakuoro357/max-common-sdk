@@ -168,7 +168,7 @@ def render_operation(operation: dict[str, Any], ir: dict[str, Any]) -> list[str]
         f"        return SendAsync<{response_type}>(new ApiRequest",
         "        {",
         f"            Method = HttpMethod.{http_method_name(operation['method'])},",
-        f"            Path = {build_path_expression(operation['path'], operation)},",
+        f"            Path = {build_path_expression(operation.get('wire_path') or operation['path'], operation)},",
     ]
 
     query_expression = build_query_expression(operation)

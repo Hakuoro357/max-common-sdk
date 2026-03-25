@@ -32,14 +32,15 @@ class BootstrapIrTests(unittest.TestCase):
 
         self.assertEqual(ir["api"]["title"], "MAX Bot API")
         self.assertEqual(ir["stats"]["service_count"], 6)
-        self.assertEqual(ir["stats"]["operation_count"], 24)
-        self.assertGreaterEqual(ir["stats"]["schema_count"], 38)
+        self.assertEqual(ir["stats"]["operation_count"], 25)
+        self.assertGreaterEqual(ir["stats"]["schema_count"], 44)
         self.assertEqual(service_names[0], "bots")
         self.assertIn("health", service_names)
         self.assertIn("messages", service_names)
         self.assertIn("getHealth", operation_ids)
         self.assertIn("getUpdates", operation_ids)
         self.assertIn("getAllChats", operation_ids)
+        self.assertIn("getChatByLink", operation_ids)
         self.assertIn("answerOnCallback", operation_ids)
         self.assertIn("getChatMembers", operation_ids)
         self.assertIn("pinMessage", operation_ids)
@@ -52,6 +53,10 @@ class BootstrapIrTests(unittest.TestCase):
         self.assertEqual(get_health["service"], "health")
         self.assertEqual(get_health["parameters"], [])
         self.assertIsNone(get_health["request_body"])
+
+        get_chat_by_link = next(operation for operation in ir["operations"] if operation["operation_id"] == "getChatByLink")
+        self.assertEqual(get_chat_by_link["path"], "/chats/by-link/{chat_link}")
+        self.assertEqual(get_chat_by_link["wire_path"], "/chats/{chat_link}")
 
     def test_normalize_openapi_sorts_and_derives_defaults(self) -> None:
         module = load_module()
@@ -147,6 +152,36 @@ class BootstrapIrTests(unittest.TestCase):
             operation["request_body"]["media_types"][0]["schema_ref"],
             "#/components/schemas/EditMessageRequest",
         )
+
+    def test_normalize_openapi_keeps_wire_path_override(self) -> None:
+        module = load_module()
+        raw_spec = {
+            "openapi": "3.0.3",
+            "info": {"title": "Test API", "version": "1.0.0"},
+            "paths": {
+                "/chats/by-link/{chat_link}": {
+                    "get": {
+                        "operationId": "getChatByLink",
+                        "x-max-wire-path": "/chats/{chat_link}",
+                        "parameters": [
+                            {
+                                "name": "chat_link",
+                                "in": "path",
+                                "required": True,
+                                "schema": {"type": "string"},
+                            }
+                        ],
+                        "responses": {"200": {"description": "OK"}},
+                    }
+                }
+            },
+        }
+
+        normalized = module.normalize_openapi(raw_spec)
+        operation = normalized["operations"][0]
+
+        self.assertEqual(operation["path"], "/chats/by-link/{chat_link}")
+        self.assertEqual(operation["wire_path"], "/chats/{chat_link}")
 
 
 if __name__ == "__main__":

@@ -142,7 +142,7 @@ def render_operation(operation: dict[str, Any], ir: dict[str, Any]) -> list[str]
         f"    def {operation_name}(self, {args}) -> {response_type}:",
         f"        return self.request(",
         f"            method={quote_py(operation['method'].upper())},",
-        f"            path={build_path_expression(operation['path'], operation)},",
+        f"            path={build_path_expression(operation.get('wire_path') or operation['path'], operation)},",
     ]
 
     query_expression = build_query_expression(operation)

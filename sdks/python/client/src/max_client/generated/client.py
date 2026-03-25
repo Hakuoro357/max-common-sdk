@@ -272,6 +272,12 @@ class GetAllChatsParamsQuery(TypedDict, total=False):
 class GetAllChatsParams(TypedDict, total=False):
     query: GetAllChatsParamsQuery
 
+class GetChatByLinkParamsPath(TypedDict):
+    chat_link: str
+
+class GetChatByLinkParams(TypedDict, total=False):
+    path: GetChatByLinkParamsPath
+
 class GetChatByIdParamsPath(TypedDict):
     chat_id: int
 
@@ -429,6 +435,13 @@ class MaxBotApiClient(BaseApiClient):
             method='GET',
             path='/chats',
             query={ 'count': request['query'].get('count'), 'marker': request['query'].get('marker') },
+            options=options,
+        )
+
+    def getChatByLink(self, request: GetChatByLinkParams, options: RequestOptions | None = None) -> Chat:
+        return self.request(
+            method='GET',
+            path=f'/chats/{quote(str(request["path"]["chat_link"]), safe="")}',
             options=options,
         )
 

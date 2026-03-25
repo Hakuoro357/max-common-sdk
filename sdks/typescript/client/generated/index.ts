@@ -305,6 +305,12 @@ export interface GetAllChatsParams {
   };
 }
 
+export interface GetChatByLinkParams {
+  path: {
+    chat_link: string;
+  };
+}
+
 export interface GetChatByIdParams {
   path: {
     chat_id: number;
@@ -464,6 +470,14 @@ export class MaxBotApiClient extends BaseApiClient {
       method: 'GET',
       path: `/chats`,
       query: { count: request.query.count, marker: request.query.marker },
+      options,
+    });
+  }
+
+  async getChatByLink(request: GetChatByLinkParams, options: RequestOptions = {}): Promise<Chat> {
+    return this.request<Chat>({
+      method: 'GET',
+      path: `/chats/${encodeURIComponent(String(request.path.chat_link))}`,
       options,
     });
   }

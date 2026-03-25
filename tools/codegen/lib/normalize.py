@@ -94,6 +94,7 @@ def normalize_operation(path_name: str, method: str, operation: dict[str, Any]) 
         "operation_id": operation_id,
         "method": method.lower(),
         "path": path_name,
+        "wire_path": operation.get("x-max-wire-path", path_name),
         "summary": operation.get("summary"),
         "description": operation.get("description"),
         "tags": tags,

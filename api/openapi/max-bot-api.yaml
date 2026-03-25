@@ -233,6 +233,32 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /chats/by-link/{chat_link}:
+    get:
+      tags: [chats]
+      summary: Get chat by link
+      operationId: getChatByLink
+      x-max-wire-path: /chats/{chat_link}
+      parameters:
+        - name: chat_link
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+        default:
+          description: API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /chats/{chat_id}/actions:
     post:
       tags: [chats]

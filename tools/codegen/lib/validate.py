@@ -81,6 +81,9 @@ def validate_ir_shape(ir: dict[str, Any], schema: dict[str, Any]) -> None:
         if not operation.get("path"):
             raise ValueError(f"Operation {operation_id} must have path.")
 
+        if not operation.get("wire_path"):
+            raise ValueError(f"Operation {operation_id} must have wire_path.")
+
         if not operation.get("method"):
             raise ValueError(f"Operation {operation_id} must have method.")
 

@@ -683,6 +683,16 @@ public sealed class GetAllChatsParams
     public GetAllChatsParamsQuery Query { get; init; } = new();
 }
 
+public sealed class GetChatByLinkParamsPath
+{
+    public string ChatLink { get; init; }
+}
+
+public sealed class GetChatByLinkParams
+{
+    public GetChatByLinkParamsPath Path { get; init; } = new();
+}
+
 public sealed class GetChatByIdParamsPath
 {
     public int ChatId { get; init; }
@@ -946,6 +956,16 @@ public sealed class MaxBotApiClient : BaseApiClient
                 ["count"] = request.Query.Count,
                 ["marker"] = request.Query.Marker,
             },
+            Options = options,
+        }, cancellationToken);
+    }
+
+    public Task<Chat?> GetChatByLinkAsync(GetChatByLinkParams request, RequestOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return SendAsync<Chat>(new ApiRequest
+        {
+            Method = HttpMethod.Get,
+            Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatLink.ToString())}",
             Options = options,
         }, cancellationToken);
     }
