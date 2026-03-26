@@ -34,11 +34,35 @@ public sealed class AnswerOnCallbackRequest
     public string? Notification { get; init; }
 }
 
-public sealed class Attachment { }
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(ImageAttachment), typeDiscriminator: "image")]
+[JsonDerivedType(typeof(VideoAttachment), typeDiscriminator: "video")]
+[JsonDerivedType(typeof(AudioAttachment), typeDiscriminator: "audio")]
+[JsonDerivedType(typeof(FileAttachment), typeDiscriminator: "file")]
+[JsonDerivedType(typeof(StickerAttachment), typeDiscriminator: "sticker")]
+[JsonDerivedType(typeof(ContactAttachment), typeDiscriminator: "contact")]
+[JsonDerivedType(typeof(InlineKeyboardAttachment), typeDiscriminator: "inline_keyboard")]
+[JsonDerivedType(typeof(ShareAttachment), typeDiscriminator: "share")]
+[JsonDerivedType(typeof(LocationAttachment), typeDiscriminator: "location")]
+public abstract class Attachment
+{
+}
 
-public sealed class AttachmentRequest { }
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(ImageAttachmentRequest), typeDiscriminator: "image")]
+[JsonDerivedType(typeof(VideoAttachmentRequest), typeDiscriminator: "video")]
+[JsonDerivedType(typeof(AudioAttachmentRequest), typeDiscriminator: "audio")]
+[JsonDerivedType(typeof(FileAttachmentRequest), typeDiscriminator: "file")]
+[JsonDerivedType(typeof(StickerAttachmentRequest), typeDiscriminator: "sticker")]
+[JsonDerivedType(typeof(ContactAttachmentRequest), typeDiscriminator: "contact")]
+[JsonDerivedType(typeof(InlineKeyboardAttachmentRequest), typeDiscriminator: "inline_keyboard")]
+[JsonDerivedType(typeof(ShareAttachmentRequest), typeDiscriminator: "share")]
+[JsonDerivedType(typeof(LocationAttachmentRequest), typeDiscriminator: "location")]
+public abstract class AttachmentRequest
+{
+}
 
-public sealed class AudioAttachment
+public sealed class AudioAttachment : Attachment
 {
     [JsonPropertyName("payload")]
     public MediaPayload Payload { get; init; }
@@ -47,7 +71,7 @@ public sealed class AudioAttachment
     public string Type { get; init; }
 }
 
-public sealed class AudioAttachmentRequest
+public sealed class AudioAttachmentRequest : AttachmentRequest
 {
     [JsonPropertyName("payload")]
     public MediaAttachmentRequestPayload Payload { get; init; }
@@ -56,7 +80,7 @@ public sealed class AudioAttachmentRequest
     public string Type { get; init; }
 }
 
-public sealed class BotAddedUpdate
+public sealed class BotAddedUpdate : Update
 {
     [JsonPropertyName("chat_id")]
     public int ChatId { get; init; }
@@ -113,7 +137,7 @@ public sealed class BotInfo
     public string? Username { get; init; }
 }
 
-public sealed class BotRemovedUpdate
+public sealed class BotRemovedUpdate : Update
 {
     [JsonPropertyName("chat_id")]
     public int ChatId { get; init; }
@@ -131,7 +155,7 @@ public sealed class BotRemovedUpdate
     public User User { get; init; }
 }
 
-public sealed class BotStartedUpdate
+public sealed class BotStartedUpdate : Update
 {
     [JsonPropertyName("chat_id")]
     public int ChatId { get; init; }
@@ -289,7 +313,7 @@ public enum ChatStatus
     Suspended,
 }
 
-public sealed class ChatTitleChangedUpdate
+public sealed class ChatTitleChangedUpdate : Update
 {
     [JsonPropertyName("chat_id")]
     public int ChatId { get; init; }
@@ -329,7 +353,7 @@ public sealed class ConstructedMessage
     public int Timestamp { get; init; }
 }
 
-public sealed class ContactAttachment
+public sealed class ContactAttachment : Attachment
 {
     [JsonPropertyName("payload")]
     public ContactAttachmentPayload Payload { get; init; }
@@ -347,7 +371,7 @@ public sealed class ContactAttachmentPayload
     public string? VcfInfo { get; init; }
 }
 
-public sealed class ContactAttachmentRequest
+public sealed class ContactAttachmentRequest : AttachmentRequest
 {
     [JsonPropertyName("payload")]
     public ContactAttachmentRequestPayload Payload { get; init; }
@@ -431,7 +455,7 @@ public sealed class ErrorResponse
     public string Message { get; init; }
 }
 
-public sealed class FileAttachment
+public sealed class FileAttachment : Attachment
 {
     [JsonPropertyName("filename")]
     public string Filename { get; init; }
@@ -446,7 +470,7 @@ public sealed class FileAttachment
     public string Type { get; init; }
 }
 
-public sealed class FileAttachmentRequest
+public sealed class FileAttachmentRequest : AttachmentRequest
 {
     [JsonPropertyName("payload")]
     public MediaAttachmentRequestPayload Payload { get; init; }
@@ -518,7 +542,7 @@ public sealed class HealthResponse
     public string Status { get; init; }
 }
 
-public sealed class ImageAttachment
+public sealed class ImageAttachment : Attachment
 {
     [JsonPropertyName("payload")]
     public ImageAttachmentPayload Payload { get; init; }
@@ -539,7 +563,7 @@ public sealed class ImageAttachmentPayload
     public string Url { get; init; }
 }
 
-public sealed class ImageAttachmentRequest
+public sealed class ImageAttachmentRequest : AttachmentRequest
 {
     [JsonPropertyName("payload")]
     public PhotoAttachmentRequestPayload Payload { get; init; }
@@ -548,7 +572,7 @@ public sealed class ImageAttachmentRequest
     public string Type { get; init; }
 }
 
-public sealed class InlineKeyboardAttachment
+public sealed class InlineKeyboardAttachment : Attachment
 {
     [JsonPropertyName("payload")]
     public InlineKeyboardAttachmentPayload Payload { get; init; }
@@ -563,7 +587,7 @@ public sealed class InlineKeyboardAttachmentPayload
     public Dictionary<string, object?>? Buttons { get; init; }
 }
 
-public sealed class InlineKeyboardAttachmentRequest
+public sealed class InlineKeyboardAttachmentRequest : AttachmentRequest
 {
     [JsonPropertyName("payload")]
     public InlineKeyboardAttachmentRequestPayload Payload { get; init; }
@@ -593,7 +617,7 @@ public sealed class LinkedMessage
     public MessageLinkType Type { get; init; }
 }
 
-public sealed class LocationAttachment
+public sealed class LocationAttachment : Attachment
 {
     [JsonPropertyName("latitude")]
     public double Latitude { get; init; }
@@ -605,7 +629,7 @@ public sealed class LocationAttachment
     public string Type { get; init; }
 }
 
-public sealed class LocationAttachmentRequest
+public sealed class LocationAttachmentRequest : AttachmentRequest
 {
     [JsonPropertyName("latitude")]
     public double Latitude { get; init; }
@@ -695,7 +719,7 @@ public sealed class MessageBody
     public string? Text { get; init; }
 }
 
-public sealed class MessageCallbackUpdate
+public sealed class MessageCallbackUpdate : Update
 {
     [JsonPropertyName("callback")]
     public CallbackInfo Callback { get; init; }
@@ -713,7 +737,7 @@ public sealed class MessageCallbackUpdate
     public UserLocale? UserLocale { get; init; }
 }
 
-public sealed class MessageChatCreatedUpdate
+public sealed class MessageChatCreatedUpdate : Update
 {
     [JsonPropertyName("chat")]
     public Chat Chat { get; init; }
@@ -731,7 +755,7 @@ public sealed class MessageChatCreatedUpdate
     public string UpdateType { get; init; }
 }
 
-public sealed class MessageConstructedUpdate
+public sealed class MessageConstructedUpdate : Update
 {
     [JsonPropertyName("message")]
     public ConstructedMessage Message { get; init; }
@@ -749,7 +773,7 @@ public sealed class MessageConstructedUpdate
     public User User { get; init; }
 }
 
-public sealed class MessageConstructionRequestUpdate
+public sealed class MessageConstructionRequestUpdate : Update
 {
     [JsonPropertyName("data")]
     public string? Data { get; init; }
@@ -773,7 +797,7 @@ public sealed class MessageConstructionRequestUpdate
     public UserLocale? UserLocale { get; init; }
 }
 
-public sealed class MessageCreatedUpdate
+public sealed class MessageCreatedUpdate : Update
 {
     [JsonPropertyName("message")]
     public Message Message { get; init; }
@@ -788,7 +812,7 @@ public sealed class MessageCreatedUpdate
     public UserLocale? UserLocale { get; init; }
 }
 
-public sealed class MessageEditedUpdate
+public sealed class MessageEditedUpdate : Update
 {
     [JsonPropertyName("message")]
     public Message Message { get; init; }
@@ -824,7 +848,7 @@ public sealed class MessageRecipient
     public string ChatType { get; init; }
 }
 
-public sealed class MessageRemovedUpdate
+public sealed class MessageRemovedUpdate : Update
 {
     [JsonPropertyName("chat_id")]
     public int ChatId { get; init; }
@@ -922,7 +946,7 @@ public enum SenderAction
     MarkSeen,
 }
 
-public sealed class ShareAttachment
+public sealed class ShareAttachment : Attachment
 {
     [JsonPropertyName("description")]
     public string? Description { get; init; }
@@ -940,7 +964,7 @@ public sealed class ShareAttachment
     public string Type { get; init; }
 }
 
-public sealed class ShareAttachmentRequest
+public sealed class ShareAttachmentRequest : AttachmentRequest
 {
     [JsonPropertyName("payload")]
     public ShareAttachmentRequestPayload Payload { get; init; }
@@ -958,7 +982,7 @@ public sealed class ShareAttachmentRequestPayload
     public string? Url { get; init; }
 }
 
-public sealed class StickerAttachment
+public sealed class StickerAttachment : Attachment
 {
     [JsonPropertyName("height")]
     public int Height { get; init; }
@@ -982,7 +1006,7 @@ public sealed class StickerAttachmentPayload
     public string Url { get; init; }
 }
 
-public sealed class StickerAttachmentRequest
+public sealed class StickerAttachmentRequest : AttachmentRequest
 {
     [JsonPropertyName("payload")]
     public StickerAttachmentRequestPayload Payload { get; init; }
@@ -997,7 +1021,23 @@ public sealed class StickerAttachmentRequestPayload
     public string Code { get; init; }
 }
 
-public sealed class Update { }
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "update_type")]
+[JsonDerivedType(typeof(MessageCallbackUpdate), typeDiscriminator: "message_callback")]
+[JsonDerivedType(typeof(MessageCreatedUpdate), typeDiscriminator: "message_created")]
+[JsonDerivedType(typeof(MessageRemovedUpdate), typeDiscriminator: "message_removed")]
+[JsonDerivedType(typeof(MessageEditedUpdate), typeDiscriminator: "message_edited")]
+[JsonDerivedType(typeof(BotAddedUpdate), typeDiscriminator: "bot_added")]
+[JsonDerivedType(typeof(BotRemovedUpdate), typeDiscriminator: "bot_removed")]
+[JsonDerivedType(typeof(UserAddedUpdate), typeDiscriminator: "user_added")]
+[JsonDerivedType(typeof(UserRemovedUpdate), typeDiscriminator: "user_removed")]
+[JsonDerivedType(typeof(BotStartedUpdate), typeDiscriminator: "bot_started")]
+[JsonDerivedType(typeof(ChatTitleChangedUpdate), typeDiscriminator: "chat_title_changed")]
+[JsonDerivedType(typeof(MessageConstructionRequestUpdate), typeDiscriminator: "message_construction_request")]
+[JsonDerivedType(typeof(MessageConstructedUpdate), typeDiscriminator: "message_constructed")]
+[JsonDerivedType(typeof(MessageChatCreatedUpdate), typeDiscriminator: "message_chat_created")]
+public abstract class Update
+{
+}
 
 public enum UploadType
 {
@@ -1034,7 +1074,7 @@ public sealed class User
     public string? Username { get; init; }
 }
 
-public sealed class UserAddedUpdate
+public sealed class UserAddedUpdate : Update
 {
     [JsonPropertyName("chat_id")]
     public int ChatId { get; init; }
@@ -1057,7 +1097,7 @@ public sealed class UserAddedUpdate
 
 public sealed class UserLocale { }
 
-public sealed class UserRemovedUpdate
+public sealed class UserRemovedUpdate : Update
 {
     [JsonPropertyName("admin_id")]
     public int? AdminId { get; init; }
@@ -1078,7 +1118,7 @@ public sealed class UserRemovedUpdate
     public User User { get; init; }
 }
 
-public sealed class VideoAttachment
+public sealed class VideoAttachment : Attachment
 {
     [JsonPropertyName("duration")]
     public int? Duration { get; init; }
@@ -1099,7 +1139,7 @@ public sealed class VideoAttachment
     public int? Width { get; init; }
 }
 
-public sealed class VideoAttachmentRequest
+public sealed class VideoAttachmentRequest : AttachmentRequest
 {
     [JsonPropertyName("payload")]
     public MediaAttachmentRequestPayload Payload { get; init; }

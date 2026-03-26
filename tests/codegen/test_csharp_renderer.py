@@ -36,6 +36,15 @@ class CSharpRendererTests(unittest.TestCase):
         self.assertIn("request.Query.ChatId", output)
         self.assertIn("request.Path.MessageId", output)
         self.assertIn('Path = $"/chats/{Uri.EscapeDataString(request.Path.ChatLink.ToString())}"', output)
+        self.assertIn('[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]', output)
+        self.assertIn('[JsonDerivedType(typeof(ImageAttachment), typeDiscriminator: "image")]', output)
+        self.assertIn("public abstract class Attachment", output)
+        self.assertIn("public sealed class ImageAttachment : Attachment", output)
+        self.assertIn("public abstract class AttachmentRequest", output)
+        self.assertIn("public sealed class ImageAttachmentRequest : AttachmentRequest", output)
+        self.assertIn('[JsonPolymorphic(TypeDiscriminatorPropertyName = "update_type")]', output)
+        self.assertIn("public abstract class Update", output)
+        self.assertIn("public sealed class MessageCreatedUpdate : Update", output)
 
 
 if __name__ == "__main__":
