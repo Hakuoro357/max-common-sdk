@@ -8,6 +8,18 @@ from urllib.parse import quote
 
 from ..runtime import BaseApiClient, ClientConfig, RequestOptions
 
+ChatPermissions: TypeAlias = Literal['read_all_messages', 'add_remove_members', 'add_admins', 'change_chat_info', 'pin_message', 'write']
+
+ChatStatus: TypeAlias = Literal['active', 'removed', 'left', 'closed', 'suspended']
+
+ChatType: TypeAlias = Literal['dialog', 'chat', 'channel']
+
+MessageLinkType: TypeAlias = Literal['forward', 'reply']
+
+SenderAction: TypeAlias = Literal['typing_on', 'sending_photo', 'sending_video', 'sending_audio', 'sending_file', 'mark_seen']
+
+UploadType: TypeAlias = Literal['image', 'video', 'audio', 'file']
+
 class ActionResponse(TypedDict, total=False):
     message: NotRequired[str | None]
     success: bool
@@ -19,40 +31,13 @@ class AnswerOnCallbackRequest(TypedDict, total=False):
     message: NotRequired[SendMessageRequest]
     notification: NotRequired[str | None]
 
-class Attachment(TypedDict, total=False):
-    description: NotRequired[str | None]
-    duration: NotRequired[int | None]
-    filename: NotRequired[str]
-    height: NotRequired[int]
-    image_url: NotRequired[str | None]
-    latitude: NotRequired[float]
-    longitude: NotRequired[float]
-    payload: NotRequired[dict[str, Any]]
-    size: NotRequired[int]
-    tam_info: NotRequired[User | None]
-    thumbnail: NotRequired[str | None]
-    title: NotRequired[str | None]
-    type: NotRequired[str]
-    width: NotRequired[int]
+class AudioAttachment(TypedDict, total=False):
+    payload: MediaPayload
+    type: Literal['audio']
 
-class AttachmentRequest(TypedDict, total=False):
-    buttons: NotRequired[dict[str, Any]]
-    code: NotRequired[str]
-    contact_id: NotRequired[int | None]
-    description: NotRequired[str | None]
-    filename: NotRequired[str]
-    height: NotRequired[int]
-    image_url: NotRequired[str | None]
-    latitude: NotRequired[float]
-    longitude: NotRequired[float]
-    payload: NotRequired[dict[str, Any]]
-    photos: NotRequired[PhotoTokenMap | None]
-    size: NotRequired[int]
-    title: NotRequired[str | None]
-    type: NotRequired[str]
-    vcf_info: NotRequired[str | None]
-    vcf_phone: NotRequired[str | None]
-    width: NotRequired[int]
+class AudioAttachmentRequest(TypedDict, total=False):
+    payload: MediaAttachmentRequestPayload
+    type: Literal['audio']
 
 class BotCommand(TypedDict, total=False):
     description: NotRequired[str | None]
@@ -111,13 +96,23 @@ class ChatMember(TypedDict, total=False):
     user_id: int
     username: NotRequired[str | None]
 
-ChatParticipantsMap: TypeAlias = dict[str, int]
+class ContactAttachment(TypedDict, total=False):
+    payload: ContactAttachmentPayload
+    type: Literal['contact']
 
-ChatPermissions: TypeAlias = Literal['read_all_messages', 'add_remove_members', 'add_admins', 'change_chat_info', 'pin_message', 'write']
+class ContactAttachmentPayload(TypedDict, total=False):
+    tam_info: NotRequired[User | None]
+    vcf_info: NotRequired[str | None]
 
-ChatStatus: TypeAlias = Literal['active', 'removed', 'left', 'closed', 'suspended']
+class ContactAttachmentRequest(TypedDict, total=False):
+    payload: ContactAttachmentRequestPayload
+    type: Literal['contact']
 
-ChatType: TypeAlias = Literal['dialog', 'chat', 'channel']
+class ContactAttachmentRequestPayload(TypedDict, total=False):
+    contact_id: NotRequired[int | None]
+    name: NotRequired[str | None]
+    vcf_info: NotRequired[str | None]
+    vcf_phone: NotRequired[str | None]
 
 class EditChatInfoRequest(TypedDict, total=False):
     icon: NotRequired[PhotoAttachmentRequestPayload]
@@ -142,6 +137,16 @@ class ErrorResponse(TypedDict, total=False):
     code: str
     details: NotRequired[str | None]
     message: str
+
+class FileAttachment(TypedDict, total=False):
+    filename: str
+    payload: MediaPayload
+    size: int
+    type: Literal['file']
+
+class FileAttachmentRequest(TypedDict, total=False):
+    payload: MediaAttachmentRequestPayload
+    type: Literal['file']
 
 class GetAllChatsResponse(TypedDict, total=False):
     chats: list[Chat]
@@ -172,11 +177,48 @@ class GetUploadUrlResponse(TypedDict, total=False):
 class HealthResponse(TypedDict, total=False):
     status: str
 
+class ImageAttachment(TypedDict, total=False):
+    payload: ImageAttachmentPayload
+    type: Literal['image']
+
+class ImageAttachmentPayload(TypedDict, total=False):
+    photo_id: int
+    token: str
+    url: str
+
+class ImageAttachmentRequest(TypedDict, total=False):
+    payload: PhotoAttachmentRequestPayload
+    type: Literal['image']
+
+class InlineKeyboardAttachment(TypedDict, total=False):
+    payload: InlineKeyboardAttachmentPayload
+    type: Literal['inline_keyboard']
+
+class InlineKeyboardAttachmentPayload(TypedDict, total=False):
+    buttons: NotRequired[dict[str, Any]]
+
+class InlineKeyboardAttachmentRequest(TypedDict, total=False):
+    payload: InlineKeyboardAttachmentRequestPayload
+    type: Literal['inline_keyboard']
+
+class InlineKeyboardAttachmentRequestPayload(TypedDict, total=False):
+    buttons: NotRequired[dict[str, Any]]
+
 class LinkedMessage(TypedDict, total=False):
     chat_id: NotRequired[int]
     message: MessageBody
     sender: NotRequired[User | None]
     type: MessageLinkType
+
+class LocationAttachment(TypedDict, total=False):
+    latitude: float
+    longitude: float
+    type: Literal['location']
+
+class LocationAttachmentRequest(TypedDict, total=False):
+    latitude: float
+    longitude: float
+    type: Literal['location']
 
 class MarkupElement(TypedDict, total=False):
     from_: int
@@ -184,6 +226,13 @@ class MarkupElement(TypedDict, total=False):
     type: str
     user_id: NotRequired[int | None]
     user_link: NotRequired[str | None]
+
+class MediaAttachmentRequestPayload(TypedDict, total=False):
+    token: NotRequired[str | None]
+
+class MediaPayload(TypedDict, total=False):
+    token: str
+    url: str
 
 class Message(TypedDict, total=False):
     body: MessageBody
@@ -206,8 +255,6 @@ class MessageLinkReference(TypedDict, total=False):
     mid: str
     type: MessageLinkType
 
-MessageLinkType: TypeAlias = Literal['forward', 'reply']
-
 class MessageRecipient(TypedDict, total=False):
     chat_id: NotRequired[int | None]
     chat_type: str
@@ -219,8 +266,6 @@ class PhotoAttachmentRequestPayload(TypedDict, total=False):
     photos: NotRequired[PhotoTokenMap | None]
     token: NotRequired[str | None]
     url: NotRequired[str | None]
-
-PhotoTokenMap: TypeAlias = dict[str, str]
 
 class PinMessageRequest(TypedDict, total=False):
     message_id: str
@@ -243,7 +288,37 @@ class SendMessageRequest(TypedDict, total=False):
 class SendMessageResponse(TypedDict, total=False):
     message: Message
 
-SenderAction: TypeAlias = Literal['typing_on', 'sending_photo', 'sending_video', 'sending_audio', 'sending_file', 'mark_seen']
+class ShareAttachment(TypedDict, total=False):
+    description: NotRequired[str | None]
+    image_url: NotRequired[str | None]
+    payload: dict[str, Any]
+    title: NotRequired[str | None]
+    type: Literal['share']
+
+class ShareAttachmentRequest(TypedDict, total=False):
+    payload: ShareAttachmentRequestPayload
+    type: Literal['share']
+
+class ShareAttachmentRequestPayload(TypedDict, total=False):
+    token: NotRequired[str | None]
+    url: NotRequired[str | None]
+
+class StickerAttachment(TypedDict, total=False):
+    height: int
+    payload: StickerAttachmentPayload
+    type: Literal['sticker']
+    width: int
+
+class StickerAttachmentPayload(TypedDict, total=False):
+    code: str
+    url: str
+
+class StickerAttachmentRequest(TypedDict, total=False):
+    payload: StickerAttachmentRequestPayload
+    type: Literal['sticker']
+
+class StickerAttachmentRequestPayload(TypedDict, total=False):
+    code: str
 
 class Update(TypedDict, total=False):
     admin_id: NotRequired[int | None]
@@ -266,8 +341,6 @@ class Update(TypedDict, total=False):
     user_id: NotRequired[int]
     user_locale: NotRequired[str | None]
 
-UploadType: TypeAlias = Literal['image', 'video', 'audio', 'file']
-
 class User(TypedDict, total=False):
     avatar_url: NotRequired[str]
     description: NotRequired[str | None]
@@ -277,6 +350,26 @@ class User(TypedDict, total=False):
     name: str
     user_id: int
     username: NotRequired[str | None]
+
+class VideoAttachment(TypedDict, total=False):
+    duration: NotRequired[int | None]
+    height: NotRequired[int | None]
+    payload: MediaPayload
+    thumbnail: NotRequired[str | None]
+    type: Literal['video']
+    width: NotRequired[int | None]
+
+class VideoAttachmentRequest(TypedDict, total=False):
+    payload: MediaAttachmentRequestPayload
+    type: Literal['video']
+
+ChatParticipantsMap: TypeAlias = dict[str, int]
+
+PhotoTokenMap: TypeAlias = dict[str, str]
+
+Attachment: TypeAlias = ImageAttachment | VideoAttachment | AudioAttachment | FileAttachment | StickerAttachment | ContactAttachment | InlineKeyboardAttachment | ShareAttachment | LocationAttachment
+
+AttachmentRequest: TypeAlias = ImageAttachmentRequest | VideoAttachmentRequest | AudioAttachmentRequest | FileAttachmentRequest | StickerAttachmentRequest | ContactAttachmentRequest | InlineKeyboardAttachmentRequest | ShareAttachmentRequest | LocationAttachmentRequest
 
 class AnswerOnCallbackParamsQuery(TypedDict, total=False):
     callback_id: str

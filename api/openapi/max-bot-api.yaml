@@ -1065,35 +1065,141 @@ components:
           type: string
 
     AttachmentRequest:
+      oneOf:
+        - $ref: '#/components/schemas/ImageAttachmentRequest'
+        - $ref: '#/components/schemas/VideoAttachmentRequest'
+        - $ref: '#/components/schemas/AudioAttachmentRequest'
+        - $ref: '#/components/schemas/FileAttachmentRequest'
+        - $ref: '#/components/schemas/StickerAttachmentRequest'
+        - $ref: '#/components/schemas/ContactAttachmentRequest'
+        - $ref: '#/components/schemas/InlineKeyboardAttachmentRequest'
+        - $ref: '#/components/schemas/ShareAttachmentRequest'
+        - $ref: '#/components/schemas/LocationAttachmentRequest'
+      discriminator:
+        propertyName: type
+        mapping:
+          image: '#/components/schemas/ImageAttachmentRequest'
+          video: '#/components/schemas/VideoAttachmentRequest'
+          audio: '#/components/schemas/AudioAttachmentRequest'
+          file: '#/components/schemas/FileAttachmentRequest'
+          sticker: '#/components/schemas/StickerAttachmentRequest'
+          contact: '#/components/schemas/ContactAttachmentRequest'
+          inline_keyboard: '#/components/schemas/InlineKeyboardAttachmentRequest'
+          share: '#/components/schemas/ShareAttachmentRequest'
+          location: '#/components/schemas/LocationAttachmentRequest'
+
+    ImageAttachmentRequest:
       type: object
+      required: [type, payload]
       properties:
         type:
           type: string
+          enum: [image]
         payload:
-          type: object
+          $ref: '#/components/schemas/PhotoAttachmentRequestPayload'
+
+    VideoAttachmentRequest:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [video]
+        payload:
+          $ref: '#/components/schemas/MediaAttachmentRequestPayload'
+
+    AudioAttachmentRequest:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [audio]
+        payload:
+          $ref: '#/components/schemas/MediaAttachmentRequestPayload'
+
+    FileAttachmentRequest:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [file]
+        payload:
+          $ref: '#/components/schemas/MediaAttachmentRequestPayload'
+
+    StickerAttachmentRequest:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [sticker]
+        payload:
+          $ref: '#/components/schemas/StickerAttachmentRequestPayload'
+
+    ContactAttachmentRequest:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [contact]
+        payload:
+          $ref: '#/components/schemas/ContactAttachmentRequestPayload'
+
+    InlineKeyboardAttachmentRequest:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [inline_keyboard]
+        payload:
+          $ref: '#/components/schemas/InlineKeyboardAttachmentRequestPayload'
+
+    ShareAttachmentRequest:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [share]
+        payload:
+          $ref: '#/components/schemas/ShareAttachmentRequestPayload'
+
+    LocationAttachmentRequest:
+      type: object
+      required: [type, latitude, longitude]
+      properties:
+        type:
+          type: string
+          enum: [location]
         latitude:
           type: number
         longitude:
           type: number
-        title:
+
+    MediaAttachmentRequestPayload:
+      type: object
+      properties:
+        token:
           type: string
           nullable: true
-        description:
+
+    StickerAttachmentRequestPayload:
+      type: object
+      required: [code]
+      properties:
+        code:
+          type: string
+
+    ContactAttachmentRequestPayload:
+      type: object
+      properties:
+        name:
           type: string
           nullable: true
-        image_url:
-          type: string
-          nullable: true
-        width:
-          type: integer
-        height:
-          type: integer
-        filename:
-          type: string
-        size:
-          type: integer
-        buttons:
-          type: object
         contact_id:
           type: integer
           nullable: true
@@ -1103,23 +1209,191 @@ components:
         vcf_phone:
           type: string
           nullable: true
-        code:
+
+    InlineKeyboardAttachmentRequestPayload:
+      type: object
+      properties:
+        buttons:
+          type: object
+
+    ShareAttachmentRequestPayload:
+      type: object
+      properties:
+        token:
           type: string
-        photos:
-          $ref: '#/components/schemas/PhotoTokenMap'
+          nullable: true
+        url:
+          type: string
           nullable: true
 
     Attachment:
+      oneOf:
+        - $ref: '#/components/schemas/ImageAttachment'
+        - $ref: '#/components/schemas/VideoAttachment'
+        - $ref: '#/components/schemas/AudioAttachment'
+        - $ref: '#/components/schemas/FileAttachment'
+        - $ref: '#/components/schemas/StickerAttachment'
+        - $ref: '#/components/schemas/ContactAttachment'
+        - $ref: '#/components/schemas/InlineKeyboardAttachment'
+        - $ref: '#/components/schemas/ShareAttachment'
+        - $ref: '#/components/schemas/LocationAttachment'
+      discriminator:
+        propertyName: type
+        mapping:
+          image: '#/components/schemas/ImageAttachment'
+          video: '#/components/schemas/VideoAttachment'
+          audio: '#/components/schemas/AudioAttachment'
+          file: '#/components/schemas/FileAttachment'
+          sticker: '#/components/schemas/StickerAttachment'
+          contact: '#/components/schemas/ContactAttachment'
+          inline_keyboard: '#/components/schemas/InlineKeyboardAttachment'
+          share: '#/components/schemas/ShareAttachment'
+          location: '#/components/schemas/LocationAttachment'
+
+    MediaPayload:
       type: object
+      required: [url, token]
+      properties:
+        url:
+          type: string
+        token:
+          type: string
+
+    ImageAttachmentPayload:
+      type: object
+      required: [url, token, photo_id]
+      properties:
+        url:
+          type: string
+        token:
+          type: string
+        photo_id:
+          type: integer
+
+    ImageAttachment:
+      type: object
+      required: [type, payload]
       properties:
         type:
           type: string
+          enum: [image]
+        payload:
+          $ref: '#/components/schemas/ImageAttachmentPayload'
+
+    VideoAttachment:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [video]
+        payload:
+          $ref: '#/components/schemas/MediaPayload'
+        thumbnail:
+          type: string
+          nullable: true
+        width:
+          type: integer
+          nullable: true
+        height:
+          type: integer
+          nullable: true
+        duration:
+          type: integer
+          nullable: true
+
+    AudioAttachment:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [audio]
+        payload:
+          $ref: '#/components/schemas/MediaPayload'
+
+    FileAttachment:
+      type: object
+      required: [type, payload, filename, size]
+      properties:
+        type:
+          type: string
+          enum: [file]
+        payload:
+          $ref: '#/components/schemas/MediaPayload'
+        filename:
+          type: string
+        size:
+          type: integer
+
+    StickerAttachmentPayload:
+      type: object
+      required: [url, code]
+      properties:
+        url:
+          type: string
+        code:
+          type: string
+
+    StickerAttachment:
+      type: object
+      required: [type, payload, width, height]
+      properties:
+        type:
+          type: string
+          enum: [sticker]
+        payload:
+          $ref: '#/components/schemas/StickerAttachmentPayload'
+        width:
+          type: integer
+        height:
+          type: integer
+
+    ContactAttachmentPayload:
+      type: object
+      properties:
+        vcf_info:
+          type: string
+          nullable: true
+        tam_info:
+          $ref: '#/components/schemas/User'
+          nullable: true
+
+    ContactAttachment:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [contact]
+        payload:
+          $ref: '#/components/schemas/ContactAttachmentPayload'
+
+    InlineKeyboardAttachmentPayload:
+      type: object
+      properties:
+        buttons:
+          type: object
+
+    InlineKeyboardAttachment:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [inline_keyboard]
+        payload:
+          $ref: '#/components/schemas/InlineKeyboardAttachmentPayload'
+
+    ShareAttachment:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          enum: [share]
         payload:
           type: object
-        latitude:
-          type: number
-        longitude:
-          type: number
         title:
           type: string
           nullable: true
@@ -1129,23 +1403,18 @@ components:
         image_url:
           type: string
           nullable: true
-        width:
-          type: integer
-        height:
-          type: integer
-        filename:
+
+    LocationAttachment:
+      type: object
+      required: [type, latitude, longitude]
+      properties:
+        type:
           type: string
-        size:
-          type: integer
-        thumbnail:
-          type: string
-          nullable: true
-        duration:
-          type: integer
-          nullable: true
-        tam_info:
-          $ref: '#/components/schemas/User'
-          nullable: true
+          enum: [location]
+        latitude:
+          type: number
+        longitude:
+          type: number
 
     MessageLinkType:
       type: string

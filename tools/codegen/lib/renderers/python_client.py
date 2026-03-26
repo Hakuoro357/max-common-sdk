@@ -32,7 +32,7 @@ def render_python_client(ir: dict[str, Any]) -> str:
         "",
     ]
 
-    for schema in ir.get("schemas", []):
+    for schema in sorted(ir.get("schemas", []), key=schema_render_order):
         lines.extend(render_schema(schema))
         lines.append("")
 
@@ -98,6 +98,19 @@ def render_schema(schema: dict[str, Any]) -> list[str]:
             lines.append(f"    {prop_name}: NotRequired[{prop_type}]")
 
     return lines
+
+
+def schema_render_order(schema: dict[str, Any]) -> tuple[int, str]:
+    kind = schema.get("kind")
+    priorities = {
+        "enum": 0,
+        "scalar": 1,
+        "raw": 2,
+        "object": 3,
+        "map": 4,
+        "union": 5,
+    }
+    return (priorities.get(kind, 99), schema.get("name", ""))
 
 
 def render_operation_request_typed_dict(operation: dict[str, Any]) -> list[str]:

@@ -48,6 +48,8 @@ class BootstrapIrTests(unittest.TestCase):
         self.assertIn("UploadType", schema_names)
         self.assertIn("Chat", schema_names)
         self.assertIn("ChatMember", schema_names)
+        self.assertIn("AttachmentRequest", schema_names)
+        self.assertIn("Attachment", schema_names)
 
         get_health = next(operation for operation in ir["operations"] if operation["operation_id"] == "getHealth")
         self.assertEqual(get_health["service"], "health")
@@ -57,6 +59,14 @@ class BootstrapIrTests(unittest.TestCase):
         get_chat_by_link = next(operation for operation in ir["operations"] if operation["operation_id"] == "getChatByLink")
         self.assertEqual(get_chat_by_link["path"], "/chats/by-link/{chat_link}")
         self.assertEqual(get_chat_by_link["wire_path"], "/chats/{chat_link}")
+
+        attachment_request = next(schema for schema in ir["schemas"] if schema["name"] == "AttachmentRequest")
+        attachment = next(schema for schema in ir["schemas"] if schema["name"] == "Attachment")
+        self.assertEqual(attachment_request["kind"], "union")
+        self.assertEqual(len(attachment_request["variants"]), 9)
+        self.assertEqual(attachment_request["discriminator"]["property_name"], "type")
+        self.assertEqual(attachment["kind"], "union")
+        self.assertEqual(len(attachment["variants"]), 9)
 
     def test_normalize_openapi_sorts_and_derives_defaults(self) -> None:
         module = load_module()

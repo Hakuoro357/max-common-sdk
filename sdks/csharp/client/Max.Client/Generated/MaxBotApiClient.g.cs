@@ -34,103 +34,26 @@ public sealed class AnswerOnCallbackRequest
     public string? Notification { get; init; }
 }
 
-public sealed class Attachment
+public sealed class Attachment { }
+
+public sealed class AttachmentRequest { }
+
+public sealed class AudioAttachment
 {
-    [JsonPropertyName("description")]
-    public string? Description { get; init; }
-
-    [JsonPropertyName("duration")]
-    public int? Duration { get; init; }
-
-    [JsonPropertyName("filename")]
-    public string? Filename { get; init; }
-
-    [JsonPropertyName("height")]
-    public int? Height { get; init; }
-
-    [JsonPropertyName("image_url")]
-    public string? ImageUrl { get; init; }
-
-    [JsonPropertyName("latitude")]
-    public double? Latitude { get; init; }
-
-    [JsonPropertyName("longitude")]
-    public double? Longitude { get; init; }
-
     [JsonPropertyName("payload")]
-    public Dictionary<string, object?>? Payload { get; init; }
-
-    [JsonPropertyName("size")]
-    public int? Size { get; init; }
-
-    [JsonPropertyName("tam_info")]
-    public User? TamInfo { get; init; }
-
-    [JsonPropertyName("thumbnail")]
-    public string? Thumbnail { get; init; }
-
-    [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public MediaPayload Payload { get; init; }
 
     [JsonPropertyName("type")]
-    public string? Type { get; init; }
-
-    [JsonPropertyName("width")]
-    public int? Width { get; init; }
+    public string Type { get; init; }
 }
 
-public sealed class AttachmentRequest
+public sealed class AudioAttachmentRequest
 {
-    [JsonPropertyName("buttons")]
-    public Dictionary<string, object?>? Buttons { get; init; }
-
-    [JsonPropertyName("code")]
-    public string? Code { get; init; }
-
-    [JsonPropertyName("contact_id")]
-    public int? ContactId { get; init; }
-
-    [JsonPropertyName("description")]
-    public string? Description { get; init; }
-
-    [JsonPropertyName("filename")]
-    public string? Filename { get; init; }
-
-    [JsonPropertyName("height")]
-    public int? Height { get; init; }
-
-    [JsonPropertyName("image_url")]
-    public string? ImageUrl { get; init; }
-
-    [JsonPropertyName("latitude")]
-    public double? Latitude { get; init; }
-
-    [JsonPropertyName("longitude")]
-    public double? Longitude { get; init; }
-
     [JsonPropertyName("payload")]
-    public Dictionary<string, object?>? Payload { get; init; }
-
-    [JsonPropertyName("photos")]
-    public PhotoTokenMap? Photos { get; init; }
-
-    [JsonPropertyName("size")]
-    public int? Size { get; init; }
-
-    [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public MediaAttachmentRequestPayload Payload { get; init; }
 
     [JsonPropertyName("type")]
-    public string? Type { get; init; }
-
-    [JsonPropertyName("vcf_info")]
-    public string? VcfInfo { get; init; }
-
-    [JsonPropertyName("vcf_phone")]
-    public string? VcfPhone { get; init; }
-
-    [JsonPropertyName("width")]
-    public int? Width { get; init; }
+    public string Type { get; init; }
 }
 
 public sealed class BotCommand
@@ -316,6 +239,48 @@ public enum ChatType
     Channel,
 }
 
+public sealed class ContactAttachment
+{
+    [JsonPropertyName("payload")]
+    public ContactAttachmentPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class ContactAttachmentPayload
+{
+    [JsonPropertyName("tam_info")]
+    public User? TamInfo { get; init; }
+
+    [JsonPropertyName("vcf_info")]
+    public string? VcfInfo { get; init; }
+}
+
+public sealed class ContactAttachmentRequest
+{
+    [JsonPropertyName("payload")]
+    public ContactAttachmentRequestPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class ContactAttachmentRequestPayload
+{
+    [JsonPropertyName("contact_id")]
+    public int? ContactId { get; init; }
+
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
+
+    [JsonPropertyName("vcf_info")]
+    public string? VcfInfo { get; init; }
+
+    [JsonPropertyName("vcf_phone")]
+    public string? VcfPhone { get; init; }
+}
+
 public sealed class EditChatInfoRequest
 {
     [JsonPropertyName("icon")]
@@ -374,6 +339,30 @@ public sealed class ErrorResponse
 
     [JsonPropertyName("message")]
     public string Message { get; init; }
+}
+
+public sealed class FileAttachment
+{
+    [JsonPropertyName("filename")]
+    public string Filename { get; init; }
+
+    [JsonPropertyName("payload")]
+    public MediaPayload Payload { get; init; }
+
+    [JsonPropertyName("size")]
+    public int Size { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class FileAttachmentRequest
+{
+    [JsonPropertyName("payload")]
+    public MediaAttachmentRequestPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
 }
 
 public sealed class GetAllChatsResponse
@@ -439,6 +428,66 @@ public sealed class HealthResponse
     public string Status { get; init; }
 }
 
+public sealed class ImageAttachment
+{
+    [JsonPropertyName("payload")]
+    public ImageAttachmentPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class ImageAttachmentPayload
+{
+    [JsonPropertyName("photo_id")]
+    public int PhotoId { get; init; }
+
+    [JsonPropertyName("token")]
+    public string Token { get; init; }
+
+    [JsonPropertyName("url")]
+    public string Url { get; init; }
+}
+
+public sealed class ImageAttachmentRequest
+{
+    [JsonPropertyName("payload")]
+    public PhotoAttachmentRequestPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class InlineKeyboardAttachment
+{
+    [JsonPropertyName("payload")]
+    public InlineKeyboardAttachmentPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class InlineKeyboardAttachmentPayload
+{
+    [JsonPropertyName("buttons")]
+    public Dictionary<string, object?>? Buttons { get; init; }
+}
+
+public sealed class InlineKeyboardAttachmentRequest
+{
+    [JsonPropertyName("payload")]
+    public InlineKeyboardAttachmentRequestPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class InlineKeyboardAttachmentRequestPayload
+{
+    [JsonPropertyName("buttons")]
+    public Dictionary<string, object?>? Buttons { get; init; }
+}
+
 public sealed class LinkedMessage
 {
     [JsonPropertyName("chat_id")]
@@ -452,6 +501,30 @@ public sealed class LinkedMessage
 
     [JsonPropertyName("type")]
     public MessageLinkType Type { get; init; }
+}
+
+public sealed class LocationAttachment
+{
+    [JsonPropertyName("latitude")]
+    public double Latitude { get; init; }
+
+    [JsonPropertyName("longitude")]
+    public double Longitude { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class LocationAttachmentRequest
+{
+    [JsonPropertyName("latitude")]
+    public double Latitude { get; init; }
+
+    [JsonPropertyName("longitude")]
+    public double Longitude { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
 }
 
 public sealed class MarkupElement
@@ -470,6 +543,21 @@ public sealed class MarkupElement
 
     [JsonPropertyName("user_link")]
     public string? UserLink { get; init; }
+}
+
+public sealed class MediaAttachmentRequestPayload
+{
+    [JsonPropertyName("token")]
+    public string? Token { get; init; }
+}
+
+public sealed class MediaPayload
+{
+    [JsonPropertyName("token")]
+    public string Token { get; init; }
+
+    [JsonPropertyName("url")]
+    public string Url { get; init; }
 }
 
 public sealed class Message
@@ -621,6 +709,81 @@ public enum SenderAction
     MarkSeen,
 }
 
+public sealed class ShareAttachment
+{
+    [JsonPropertyName("description")]
+    public string? Description { get; init; }
+
+    [JsonPropertyName("image_url")]
+    public string? ImageUrl { get; init; }
+
+    [JsonPropertyName("payload")]
+    public Dictionary<string, object?> Payload { get; init; }
+
+    [JsonPropertyName("title")]
+    public string? Title { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class ShareAttachmentRequest
+{
+    [JsonPropertyName("payload")]
+    public ShareAttachmentRequestPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class ShareAttachmentRequestPayload
+{
+    [JsonPropertyName("token")]
+    public string? Token { get; init; }
+
+    [JsonPropertyName("url")]
+    public string? Url { get; init; }
+}
+
+public sealed class StickerAttachment
+{
+    [JsonPropertyName("height")]
+    public int Height { get; init; }
+
+    [JsonPropertyName("payload")]
+    public StickerAttachmentPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+
+    [JsonPropertyName("width")]
+    public int Width { get; init; }
+}
+
+public sealed class StickerAttachmentPayload
+{
+    [JsonPropertyName("code")]
+    public string Code { get; init; }
+
+    [JsonPropertyName("url")]
+    public string Url { get; init; }
+}
+
+public sealed class StickerAttachmentRequest
+{
+    [JsonPropertyName("payload")]
+    public StickerAttachmentRequestPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class StickerAttachmentRequestPayload
+{
+    [JsonPropertyName("code")]
+    public string Code { get; init; }
+}
+
 public sealed class Update
 {
     [JsonPropertyName("admin_id")]
@@ -714,6 +877,36 @@ public sealed class User
 
     [JsonPropertyName("username")]
     public string? Username { get; init; }
+}
+
+public sealed class VideoAttachment
+{
+    [JsonPropertyName("duration")]
+    public int? Duration { get; init; }
+
+    [JsonPropertyName("height")]
+    public int? Height { get; init; }
+
+    [JsonPropertyName("payload")]
+    public MediaPayload Payload { get; init; }
+
+    [JsonPropertyName("thumbnail")]
+    public string? Thumbnail { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+
+    [JsonPropertyName("width")]
+    public int? Width { get; init; }
+}
+
+public sealed class VideoAttachmentRequest
+{
+    [JsonPropertyName("payload")]
+    public MediaAttachmentRequestPayload Payload { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
 }
 
 public sealed class AnswerOnCallbackParamsQuery

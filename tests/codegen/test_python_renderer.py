@@ -40,6 +40,8 @@ class PythonRendererTests(unittest.TestCase):
         self.assertIn("sender: NotRequired[User | None]", output)
         self.assertIn("photos: NotRequired[PhotoTokenMap | None]", output)
         self.assertIn("PhotoTokenMap: TypeAlias = dict[str, str]", output)
+        self.assertIn("AttachmentRequest: TypeAlias =", output)
+        self.assertIn("ImageAttachmentRequest | VideoAttachmentRequest", output)
 
     def test_render_python_client_supports_union_and_map_types(self) -> None:
         module = load_module()

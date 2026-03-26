@@ -42,6 +42,8 @@ class TypeScriptRendererTests(unittest.TestCase):
         self.assertIn("sender?: User | null;", output)
         self.assertIn("photos?: PhotoTokenMap | null;", output)
         self.assertIn("export type PhotoTokenMap = Record<string, string>;", output)
+        self.assertIn("export type AttachmentRequest =", output)
+        self.assertIn("ImageAttachmentRequest | VideoAttachmentRequest", output)
 
     def test_render_typescript_client_supports_union_and_map_types(self) -> None:
         module = load_module()

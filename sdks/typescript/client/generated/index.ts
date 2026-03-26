@@ -17,41 +17,18 @@ export interface AnswerOnCallbackRequest {
   notification?: string | null;
 }
 
-export interface Attachment {
-  description?: string | null;
-  duration?: number | null;
-  filename?: string;
-  height?: number;
-  image_url?: string | null;
-  latitude?: number;
-  longitude?: number;
-  payload?: Record<string, unknown>;
-  size?: number;
-  tam_info?: User | null;
-  thumbnail?: string | null;
-  title?: string | null;
-  type?: string;
-  width?: number;
+export type Attachment = ImageAttachment | VideoAttachment | AudioAttachment | FileAttachment | StickerAttachment | ContactAttachment | InlineKeyboardAttachment | ShareAttachment | LocationAttachment;
+
+export type AttachmentRequest = ImageAttachmentRequest | VideoAttachmentRequest | AudioAttachmentRequest | FileAttachmentRequest | StickerAttachmentRequest | ContactAttachmentRequest | InlineKeyboardAttachmentRequest | ShareAttachmentRequest | LocationAttachmentRequest;
+
+export interface AudioAttachment {
+  payload: MediaPayload;
+  type: 'audio';
 }
 
-export interface AttachmentRequest {
-  buttons?: Record<string, unknown>;
-  code?: string;
-  contact_id?: number | null;
-  description?: string | null;
-  filename?: string;
-  height?: number;
-  image_url?: string | null;
-  latitude?: number;
-  longitude?: number;
-  payload?: Record<string, unknown>;
-  photos?: PhotoTokenMap | null;
-  size?: number;
-  title?: string | null;
-  type?: string;
-  vcf_info?: string | null;
-  vcf_phone?: string | null;
-  width?: number;
+export interface AudioAttachmentRequest {
+  payload: MediaAttachmentRequestPayload;
+  type: 'audio';
 }
 
 export interface BotCommand {
@@ -125,6 +102,28 @@ export type ChatStatus = 'active' | 'removed' | 'left' | 'closed' | 'suspended';
 
 export type ChatType = 'dialog' | 'chat' | 'channel';
 
+export interface ContactAttachment {
+  payload: ContactAttachmentPayload;
+  type: 'contact';
+}
+
+export interface ContactAttachmentPayload {
+  tam_info?: User | null;
+  vcf_info?: string | null;
+}
+
+export interface ContactAttachmentRequest {
+  payload: ContactAttachmentRequestPayload;
+  type: 'contact';
+}
+
+export interface ContactAttachmentRequestPayload {
+  contact_id?: number | null;
+  name?: string | null;
+  vcf_info?: string | null;
+  vcf_phone?: string | null;
+}
+
 export interface EditChatInfoRequest {
   icon?: PhotoAttachmentRequestPayload;
   notify?: boolean | null;
@@ -151,6 +150,18 @@ export interface ErrorResponse {
   code: string;
   details?: string | null;
   message: string;
+}
+
+export interface FileAttachment {
+  filename: string;
+  payload: MediaPayload;
+  size: number;
+  type: 'file';
+}
+
+export interface FileAttachmentRequest {
+  payload: MediaAttachmentRequestPayload;
+  type: 'file';
 }
 
 export interface GetAllChatsResponse {
@@ -190,11 +201,57 @@ export interface HealthResponse {
   status: string;
 }
 
+export interface ImageAttachment {
+  payload: ImageAttachmentPayload;
+  type: 'image';
+}
+
+export interface ImageAttachmentPayload {
+  photo_id: number;
+  token: string;
+  url: string;
+}
+
+export interface ImageAttachmentRequest {
+  payload: PhotoAttachmentRequestPayload;
+  type: 'image';
+}
+
+export interface InlineKeyboardAttachment {
+  payload: InlineKeyboardAttachmentPayload;
+  type: 'inline_keyboard';
+}
+
+export interface InlineKeyboardAttachmentPayload {
+  buttons?: Record<string, unknown>;
+}
+
+export interface InlineKeyboardAttachmentRequest {
+  payload: InlineKeyboardAttachmentRequestPayload;
+  type: 'inline_keyboard';
+}
+
+export interface InlineKeyboardAttachmentRequestPayload {
+  buttons?: Record<string, unknown>;
+}
+
 export interface LinkedMessage {
   chat_id?: number;
   message: MessageBody;
   sender?: User | null;
   type: MessageLinkType;
+}
+
+export interface LocationAttachment {
+  latitude: number;
+  longitude: number;
+  type: 'location';
+}
+
+export interface LocationAttachmentRequest {
+  latitude: number;
+  longitude: number;
+  type: 'location';
 }
 
 export interface MarkupElement {
@@ -203,6 +260,15 @@ export interface MarkupElement {
   type: string;
   user_id?: number | null;
   user_link?: string | null;
+}
+
+export interface MediaAttachmentRequestPayload {
+  token?: string | null;
+}
+
+export interface MediaPayload {
+  token: string;
+  url: string;
 }
 
 export interface Message {
@@ -276,6 +342,45 @@ export interface SendMessageResponse {
 
 export type SenderAction = 'typing_on' | 'sending_photo' | 'sending_video' | 'sending_audio' | 'sending_file' | 'mark_seen';
 
+export interface ShareAttachment {
+  description?: string | null;
+  image_url?: string | null;
+  payload: Record<string, unknown>;
+  title?: string | null;
+  type: 'share';
+}
+
+export interface ShareAttachmentRequest {
+  payload: ShareAttachmentRequestPayload;
+  type: 'share';
+}
+
+export interface ShareAttachmentRequestPayload {
+  token?: string | null;
+  url?: string | null;
+}
+
+export interface StickerAttachment {
+  height: number;
+  payload: StickerAttachmentPayload;
+  type: 'sticker';
+  width: number;
+}
+
+export interface StickerAttachmentPayload {
+  code: string;
+  url: string;
+}
+
+export interface StickerAttachmentRequest {
+  payload: StickerAttachmentRequestPayload;
+  type: 'sticker';
+}
+
+export interface StickerAttachmentRequestPayload {
+  code: string;
+}
+
 export interface Update {
   admin_id?: number | null;
   callback?: CallbackInfo;
@@ -309,6 +414,20 @@ export interface User {
   name: string;
   user_id: number;
   username?: string | null;
+}
+
+export interface VideoAttachment {
+  duration?: number | null;
+  height?: number | null;
+  payload: MediaPayload;
+  thumbnail?: string | null;
+  type: 'video';
+  width?: number | null;
+}
+
+export interface VideoAttachmentRequest {
+  payload: MediaAttachmentRequestPayload;
+  type: 'video';
 }
 
 export interface AnswerOnCallbackParams {
