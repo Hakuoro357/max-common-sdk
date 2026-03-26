@@ -12,6 +12,7 @@
 - [openapi-route-modeling.md](C:\pro\max\docs\specs\openapi-route-modeling.md) — правила моделирования реальных HTTP-маршрутов в каноническом OpenAPI
 - [openapi-schema-fidelity-plan.md](C:\pro\max\docs\specs\openapi-schema-fidelity-plan.md) — план доведения схем до более точного соответствия реальным типам MAX
 - [openapi-markup-fidelity-plan.md](C:\pro\max\docs\specs\openapi-markup-fidelity-plan.md) — план точной типизации markup и inline keyboard без выхода за текущие возможности `IR`
+- [openapi-remaining-raw-plan.md](C:\pro\max\docs\specs\openapi-remaining-raw-plan.md) — план добивки оставшихся raw-object мест после этапа keyboard/markup
 - [ir-next-phase.md](C:\pro\max\docs\specs\ir-next-phase.md) — следующий этап развития `IR` под `oneOf`, discriminator и map-типы
 - [release-model.md](C:\pro\max\docs\specs\release-model.md) — модель релизов, версионирования и compatibility gates
 - [codegen-architecture.md](C:\pro\max\docs\specs\codegen-architecture.md) — архитектура code generation pipeline для SDK
@@ -26,8 +27,9 @@
 4. [openapi-route-modeling.md](C:\pro\max\docs\specs\openapi-route-modeling.md)
 5. [openapi-schema-fidelity-plan.md](C:\pro\max\docs\specs\openapi-schema-fidelity-plan.md)
 6. [openapi-markup-fidelity-plan.md](C:\pro\max\docs\specs\openapi-markup-fidelity-plan.md)
-7. [ir-next-phase.md](C:\pro\max\docs\specs\ir-next-phase.md)
-8. [codegen-architecture.md](C:\pro\max\docs\specs\codegen-architecture.md)
-9. [release-model.md](C:\pro\max\docs\specs\release-model.md)
-10. [support-matrix.md](C:\pro\max\docs\specs\support-matrix.md)
-11. [roadmap.md](C:\pro\max\docs\specs\roadmap.md)
+7. [openapi-remaining-raw-plan.md](C:\pro\max\docs\specs\openapi-remaining-raw-plan.md)
+8. [ir-next-phase.md](C:\pro\max\docs\specs\ir-next-phase.md)
+9. [codegen-architecture.md](C:\pro\max\docs\specs\codegen-architecture.md)
+10. [release-model.md](C:\pro\max\docs\specs\release-model.md)
+11. [support-matrix.md](C:\pro\max\docs\specs\support-matrix.md)
+12. [roadmap.md](C:\pro\max\docs\specs\roadmap.md)

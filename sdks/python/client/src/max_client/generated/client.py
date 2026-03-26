@@ -98,7 +98,7 @@ class Chat(TypedDict, total=False):
     chat_id: int
     chat_message_id: NotRequired[str | None]
     description: NotRequired[str | None]
-    dialog_with_user: NotRequired[dict[str, Any] | None]
+    dialog_with_user: NotRequired[UserWithPhoto | None]
     icon: NotRequired[ChatIcon]
     is_public: bool
     last_event_time: int
@@ -107,7 +107,7 @@ class Chat(TypedDict, total=False):
     owner_id: NotRequired[int | None]
     participants: NotRequired[ChatParticipantsMap | None]
     participants_count: int
-    pinned_message: NotRequired[dict[str, Any] | None]
+    pinned_message: NotRequired[Message | None]
     status: ChatStatus
     title: NotRequired[str | None]
     type: ChatType
@@ -411,9 +411,13 @@ class SendMessageResponse(TypedDict, total=False):
 class ShareAttachment(TypedDict, total=False):
     description: NotRequired[str | None]
     image_url: NotRequired[str | None]
-    payload: dict[str, Any]
+    payload: ShareAttachmentPayload
     title: NotRequired[str | None]
     type: Literal['share']
+
+class ShareAttachmentPayload(TypedDict, total=False):
+    token: NotRequired[str | None]
+    url: NotRequired[str | None]
 
 class ShareAttachmentRequest(TypedDict, total=False):
     payload: ShareAttachmentRequestPayload
@@ -465,6 +469,13 @@ class UserRemovedUpdate(TypedDict, total=False):
     timestamp: int
     update_type: Literal['user_removed']
     user: User
+
+class UserWithPhoto(TypedDict, total=False):
+    avatar_url: NotRequired[str | None]
+    full_avatar_url: NotRequired[str | None]
+    name: str
+    user_id: int
+    username: NotRequired[str | None]
 
 class VideoAttachment(TypedDict, total=False):
     duration: NotRequired[int | None]

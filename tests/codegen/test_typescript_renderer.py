@@ -52,6 +52,9 @@ class TypeScriptRendererTests(unittest.TestCase):
         self.assertIn("CallbackButton | LinkButton | RequestContactButton", output)
         self.assertIn("export type MarkupElementType =", output)
         self.assertIn("'mention'", output)
+        self.assertIn("dialog_with_user?: UserWithPhoto | null;", output)
+        self.assertIn("pinned_message?: Message | null;", output)
+        self.assertIn("payload: ShareAttachmentPayload;", output)
 
     def test_render_typescript_client_supports_union_and_map_types(self) -> None:
         module = load_module()

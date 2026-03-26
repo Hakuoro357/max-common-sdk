@@ -91,7 +91,7 @@ export interface Chat {
   chat_id: number;
   chat_message_id?: string | null;
   description?: string | null;
-  dialog_with_user?: Record<string, unknown> | null;
+  dialog_with_user?: UserWithPhoto | null;
   icon?: ChatIcon;
   is_public: boolean;
   last_event_time: number;
@@ -100,7 +100,7 @@ export interface Chat {
   owner_id?: number | null;
   participants?: ChatParticipantsMap | null;
   participants_count: number;
-  pinned_message?: Record<string, unknown> | null;
+  pinned_message?: Message | null;
   status: ChatStatus;
   title?: string | null;
   type: ChatType;
@@ -487,9 +487,14 @@ export type SenderAction = 'typing_on' | 'sending_photo' | 'sending_video' | 'se
 export interface ShareAttachment {
   description?: string | null;
   image_url?: string | null;
-  payload: Record<string, unknown>;
+  payload: ShareAttachmentPayload;
   title?: string | null;
   type: 'share';
+}
+
+export interface ShareAttachmentPayload {
+  token?: string | null;
+  url?: string | null;
 }
 
 export interface ShareAttachmentRequest {
@@ -556,6 +561,14 @@ export interface UserRemovedUpdate {
   timestamp: number;
   update_type: 'user_removed';
   user: User;
+}
+
+export interface UserWithPhoto {
+  avatar_url?: string | null;
+  full_avatar_url?: string | null;
+  name: string;
+  user_id: number;
+  username?: string | null;
 }
 
 export interface VideoAttachment {

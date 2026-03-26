@@ -218,7 +218,7 @@ public sealed class Chat
     public string? Description { get; init; }
 
     [JsonPropertyName("dialog_with_user")]
-    public Dictionary<string, object?>? DialogWithUser { get; init; }
+    public UserWithPhoto? DialogWithUser { get; init; }
 
     [JsonPropertyName("icon")]
     public ChatIcon? Icon { get; init; }
@@ -245,7 +245,7 @@ public sealed class Chat
     public int ParticipantsCount { get; init; }
 
     [JsonPropertyName("pinned_message")]
-    public Dictionary<string, object?>? PinnedMessage { get; init; }
+    public Message? PinnedMessage { get; init; }
 
     [JsonPropertyName("status")]
     public ChatStatus Status { get; init; }
@@ -1070,13 +1070,22 @@ public sealed class ShareAttachment : Attachment
     public string? ImageUrl { get; init; }
 
     [JsonPropertyName("payload")]
-    public Dictionary<string, object?> Payload { get; init; }
+    public ShareAttachmentPayload Payload { get; init; }
 
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 
     [JsonPropertyName("type")]
     public string Type { get; init; }
+}
+
+public sealed class ShareAttachmentPayload
+{
+    [JsonPropertyName("token")]
+    public string? Token { get; init; }
+
+    [JsonPropertyName("url")]
+    public string? Url { get; init; }
 }
 
 public sealed class ShareAttachmentRequest : AttachmentRequest
@@ -1231,6 +1240,24 @@ public sealed class UserRemovedUpdate : Update
 
     [JsonPropertyName("user")]
     public User User { get; init; }
+}
+
+public sealed class UserWithPhoto
+{
+    [JsonPropertyName("avatar_url")]
+    public string? AvatarUrl { get; init; }
+
+    [JsonPropertyName("full_avatar_url")]
+    public string? FullAvatarUrl { get; init; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; init; }
+
+    [JsonPropertyName("user_id")]
+    public int UserId { get; init; }
+
+    [JsonPropertyName("username")]
+    public string? Username { get; init; }
 }
 
 public sealed class VideoAttachment : Attachment

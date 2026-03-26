@@ -817,6 +817,24 @@ components:
         full_avatar_url:
           type: string
 
+    UserWithPhoto:
+      type: object
+      required: [user_id, name]
+      properties:
+        user_id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+          nullable: true
+        avatar_url:
+          type: string
+          nullable: true
+        full_avatar_url:
+          type: string
+          nullable: true
+
     ChatType:
       type: string
       enum: [dialog, chat, channel]
@@ -894,10 +912,10 @@ components:
           $ref: '#/components/schemas/ChatParticipantsMap'
           nullable: true
         dialog_with_user:
-          type: object
+          $ref: '#/components/schemas/UserWithPhoto'
           nullable: true
         pinned_message:
-          type: object
+          $ref: '#/components/schemas/Message'
           nullable: true
 
     ChatParticipantsMap:
@@ -1337,6 +1355,16 @@ components:
           type: string
           nullable: true
 
+    ShareAttachmentPayload:
+      type: object
+      properties:
+        token:
+          type: string
+          nullable: true
+        url:
+          type: string
+          nullable: true
+
     Attachment:
       oneOf:
         - $ref: '#/components/schemas/ImageAttachment'
@@ -1504,7 +1532,7 @@ components:
           type: string
           enum: [share]
         payload:
-          type: object
+          $ref: '#/components/schemas/ShareAttachmentPayload'
         title:
           type: string
           nullable: true

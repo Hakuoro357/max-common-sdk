@@ -50,6 +50,9 @@ class PythonRendererTests(unittest.TestCase):
         self.assertIn("CallbackButton | LinkButton | RequestContactButton", output)
         self.assertIn("MarkupElementType: TypeAlias = Literal[", output)
         self.assertIn("'mention'", output)
+        self.assertIn("dialog_with_user: NotRequired[UserWithPhoto | None]", output)
+        self.assertIn("pinned_message: NotRequired[Message | None]", output)
+        self.assertIn("payload: ShareAttachmentPayload", output)
 
     def test_render_python_client_supports_union_and_map_types(self) -> None:
         module = load_module()

@@ -52,6 +52,9 @@ class CSharpRendererTests(unittest.TestCase):
         self.assertIn("public abstract class InlineKeyboardButton", output)
         self.assertIn("public sealed class CallbackButton : InlineKeyboardButton", output)
         self.assertIn("public enum MarkupElementType", output)
+        self.assertIn("public UserWithPhoto? DialogWithUser { get; init; }", output)
+        self.assertIn("public Message? PinnedMessage { get; init; }", output)
+        self.assertIn("public ShareAttachmentPayload Payload { get; init; }", output)
 
 
 if __name__ == "__main__":
