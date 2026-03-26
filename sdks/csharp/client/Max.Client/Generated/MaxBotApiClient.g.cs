@@ -58,7 +58,7 @@ public sealed class Attachment
     public double? Longitude { get; init; }
 
     [JsonPropertyName("payload")]
-    public object? Payload { get; init; }
+    public Dictionary<string, object?>? Payload { get; init; }
 
     [JsonPropertyName("size")]
     public int? Size { get; init; }
@@ -82,7 +82,7 @@ public sealed class Attachment
 public sealed class AttachmentRequest
 {
     [JsonPropertyName("buttons")]
-    public object? Buttons { get; init; }
+    public Dictionary<string, object?>? Buttons { get; init; }
 
     [JsonPropertyName("code")]
     public string? Code { get; init; }
@@ -109,10 +109,10 @@ public sealed class AttachmentRequest
     public double? Longitude { get; init; }
 
     [JsonPropertyName("payload")]
-    public object? Payload { get; init; }
+    public Dictionary<string, object?>? Payload { get; init; }
 
     [JsonPropertyName("photos")]
-    public object? Photos { get; init; }
+    public PhotoTokenMap? Photos { get; init; }
 
     [JsonPropertyName("size")]
     public int? Size { get; init; }
@@ -199,7 +199,7 @@ public sealed class Chat
     public string? Description { get; init; }
 
     [JsonPropertyName("dialog_with_user")]
-    public object? DialogWithUser { get; init; }
+    public Dictionary<string, object?>? DialogWithUser { get; init; }
 
     [JsonPropertyName("icon")]
     public ChatIcon? Icon { get; init; }
@@ -220,13 +220,13 @@ public sealed class Chat
     public int? OwnerId { get; init; }
 
     [JsonPropertyName("participants")]
-    public object? Participants { get; init; }
+    public ChatParticipantsMap? Participants { get; init; }
 
     [JsonPropertyName("participants_count")]
     public int ParticipantsCount { get; init; }
 
     [JsonPropertyName("pinned_message")]
-    public object? PinnedMessage { get; init; }
+    public Dictionary<string, object?>? PinnedMessage { get; init; }
 
     [JsonPropertyName("status")]
     public ChatStatus Status { get; init; }
@@ -284,6 +284,10 @@ public sealed class ChatMember
 
     [JsonPropertyName("username")]
     public string? Username { get; init; }
+}
+
+public sealed class ChatParticipantsMap : Dictionary<string, int>
+{
 }
 
 public enum ChatPermissions
@@ -546,13 +550,17 @@ public sealed class MessageStat
 public sealed class PhotoAttachmentRequestPayload
 {
     [JsonPropertyName("photos")]
-    public object? Photos { get; init; }
+    public PhotoTokenMap? Photos { get; init; }
 
     [JsonPropertyName("token")]
     public string? Token { get; init; }
 
     [JsonPropertyName("url")]
     public string? Url { get; init; }
+}
+
+public sealed class PhotoTokenMap : Dictionary<string, string>
+{
 }
 
 public sealed class PinMessageRequest
@@ -631,7 +639,7 @@ public sealed class Update
     public string? Data { get; init; }
 
     [JsonPropertyName("input")]
-    public object? Input { get; init; }
+    public Dictionary<string, object?>? Input { get; init; }
 
     [JsonPropertyName("inviter_id")]
     public int? InviterId { get; init; }

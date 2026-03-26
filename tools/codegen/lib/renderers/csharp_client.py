@@ -66,14 +66,33 @@ def render_csharp_client(ir: dict[str, Any]) -> str:
 
 
 def render_schema(schema: dict[str, Any]) -> list[str]:
-    if schema.get("type") == "string" and schema.get("enum"):
+    kind = schema.get("kind")
+
+    if kind == "enum":
         lines = [f"public enum {schema['name']}", "{"]
         for value in schema["enum"]:
             lines.append(f"    {pascal_case(value)},")
         lines.append("}")
         return lines
 
-    if schema.get("type") != "object":
+    if kind == "map":
+        return [
+            f"public sealed class {schema['name']} : Dictionary<string, {map_node_type_to_csharp(schema.get('additional_properties'))}>",
+            "{",
+            "}",
+        ]
+
+    if kind == "raw":
+        return [
+            f"public sealed class {schema['name']} : Dictionary<string, object?>",
+            "{",
+            "}",
+        ]
+
+    if kind == "union":
+        return [f"public sealed class {schema['name']} {{ }}"]
+
+    if kind != "object":
         return [f"public sealed class {schema['name']} {{ }}"]
 
     lines = [f"public sealed class {schema['name']}", "{"]
@@ -269,17 +288,24 @@ def map_parameter_to_csharp(parameter: dict[str, Any]) -> str:
 
 
 def map_node_type_to_csharp(node: dict[str, Any]) -> str:
-    if node.get("ref"):
+    kind = node.get("kind")
+    if kind == "ref":
         return node["ref"].rsplit("/", 1)[-1]
-    if node.get("type") == "array":
+    if kind == "array":
         return f"List<{map_array_item_to_csharp(node)}>"
+    if kind == "map":
+        return f"Dictionary<string, {map_node_type_to_csharp(node.get('additional_properties') or {})}>"
+    if kind == "raw":
+        return "Dictionary<string, object?>"
+    if kind == "union":
+        return "object"
+    if kind == "enum":
+        return "string"
     return TYPE_MAP.get(node.get("type"), "object")
 
 
 def map_array_item_to_csharp(node: dict[str, Any]) -> str:
-    if node.get("items_ref"):
-        return node["items_ref"].rsplit("/", 1)[-1]
-    return TYPE_MAP.get(node.get("items_type"), "object")
+    return map_node_type_to_csharp(node.get("items") or {"type": node.get("items_type"), "ref": node.get("items_ref")})
 
 
 def http_method_name(method: str) -> str:

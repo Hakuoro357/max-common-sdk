@@ -64,12 +64,24 @@ def render_python_client(ir: dict[str, Any]) -> str:
 
 
 def render_schema(schema: dict[str, Any]) -> list[str]:
-    if schema.get("type") == "string" and schema.get("enum"):
+    kind = schema.get("kind")
+
+    if kind == "enum":
         variants = ", ".join(quote_py(value) for value in schema["enum"])
         return [f"{schema['name']}: TypeAlias = Literal[{variants}]"]
 
-    if schema.get("type") != "object":
-        return [f"{schema['name']}: TypeAlias = {map_scalar_type(schema)}"]
+    if kind == "union":
+        variants = " | ".join(map_node_to_python(variant) for variant in schema.get("variants", [])) or "Any"
+        return [f"{schema['name']}: TypeAlias = {variants}"]
+
+    if kind == "map":
+        return [f"{schema['name']}: TypeAlias = dict[str, {map_node_to_python(schema.get('additional_properties'))}]"]
+
+    if kind == "raw":
+        return [f"{schema['name']}: TypeAlias = dict[str, Any]"]
+
+    if kind != "object":
+        return [f"{schema['name']}: TypeAlias = {map_node_to_python(schema)}"]
 
     lines = [f"class {schema['name']}(TypedDict, total=False):"]
     properties = schema.get("properties", [])
@@ -230,40 +242,43 @@ def resolve_request_body_schema(operation: dict[str, Any]) -> str | None:
 
 
 def map_property_to_python(prop: dict[str, Any]) -> str:
-    if prop.get("ref"):
-        scalar_type = prop["ref"].rsplit("/", 1)[-1]
-    elif prop.get("type") == "array":
-        scalar_type = f"list[{map_array_items_to_python(prop)}]"
-    elif prop.get("enum"):
-        variants = ", ".join(quote_py(value) for value in prop["enum"])
-        scalar_type = f"Literal[{variants}]"
-    else:
-        scalar_type = TYPE_MAP.get(prop.get("type"), "Any")
-
-    if prop.get("nullable"):
-        return f"{scalar_type} | None"
-    return scalar_type
+    return map_node_to_python(prop)
 
 
 def map_parameter_to_python(parameter: dict[str, Any]) -> str:
-    if parameter.get("ref"):
-        return parameter["ref"].rsplit("/", 1)[-1]
-
-    if parameter.get("type") == "array":
-        return f"list[{map_array_items_to_python(parameter)}]"
-
-    if parameter.get("enum"):
-        variants = ", ".join(quote_py(value) for value in parameter["enum"])
-        return f"Literal[{variants}]"
-
-    return TYPE_MAP.get(parameter.get("type"), "Any")
+    return map_node_to_python(parameter)
 
 
 def map_array_items_to_python(node: dict[str, Any]) -> str:
-    if node.get("items_ref"):
-        return node["items_ref"].rsplit("/", 1)[-1]
+    return map_node_to_python(node.get("items") or {"type": node.get("items_type"), "ref": node.get("items_ref")})
 
-    return TYPE_MAP.get(node.get("items_type"), "Any")
+
+def map_node_to_python(node: dict[str, Any] | None) -> str:
+    if not isinstance(node, dict):
+        return "Any"
+
+    kind = node.get("kind")
+    if kind == "ref":
+        scalar_type = node["ref"].rsplit("/", 1)[-1]
+    elif kind == "array":
+        scalar_type = f"list[{map_node_to_python(node.get('items'))}]"
+    elif kind == "enum":
+        variants = ", ".join(quote_py(value) for value in node.get("enum") or [])
+        scalar_type = f"Literal[{variants}]"
+    elif kind == "union":
+        scalar_type = " | ".join(map_node_to_python(variant) for variant in node.get("variants") or []) or "Any"
+    elif kind == "map":
+        scalar_type = f"dict[str, {map_node_to_python(node.get('additional_properties'))}]"
+    elif kind == "raw":
+        scalar_type = "dict[str, Any]"
+    elif kind == "object":
+        scalar_type = "dict[str, Any]"
+    else:
+        scalar_type = TYPE_MAP.get(node.get("type"), "Any")
+
+    if node.get("nullable"):
+        return f"{scalar_type} | None"
+    return scalar_type
 
 
 def map_scalar_type(schema: dict[str, Any]) -> str:

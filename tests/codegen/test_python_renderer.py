@@ -38,7 +38,34 @@ class PythonRendererTests(unittest.TestCase):
         self.assertIn("quote(str(request[\"path\"][\"message_id\"])", output)
         self.assertIn("path=f'/chats/{quote(str(request[\"path\"][\"chat_link\"]), safe=\"\")}'", output)
         self.assertIn("sender: NotRequired[User | None]", output)
-        self.assertIn("photos: NotRequired[Any | None]", output)
+        self.assertIn("photos: NotRequired[PhotoTokenMap | None]", output)
+        self.assertIn("PhotoTokenMap: TypeAlias = dict[str, str]", output)
+
+    def test_render_python_client_supports_union_and_map_types(self) -> None:
+        module = load_module()
+        ir = {
+            "schemas": [
+                {
+                    "name": "AttachmentVariant",
+                    "kind": "union",
+                    "variants": [
+                        {"kind": "ref", "ref": "#/components/schemas/ImageAttachment", "nullable": False},
+                        {"kind": "ref", "ref": "#/components/schemas/FileAttachment", "nullable": False},
+                    ],
+                },
+                {
+                    "name": "StringMap",
+                    "kind": "map",
+                    "additional_properties": {"kind": "scalar", "type": "string", "nullable": False},
+                },
+            ],
+            "operations": [],
+        }
+
+        output = module.render_python_client(ir)
+
+        self.assertIn("AttachmentVariant: TypeAlias = ImageAttachment | FileAttachment", output)
+        self.assertIn("StringMap: TypeAlias = dict[str, str]", output)
 
 
 if __name__ == "__main__":

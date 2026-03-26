@@ -106,33 +106,122 @@ def normalize_operation(path_name: str, method: str, operation: dict[str, Any]) 
 
 
 def normalize_schema(name: str, schema: dict[str, Any]) -> dict[str, Any]:
-    properties = schema.get("properties") or {}
-    required = sorted(schema.get("required") or [])
+    normalized = normalize_schema_node(schema)
+    normalized["name"] = name
+    return normalized
 
-    normalized_properties = []
-    for prop_name, prop_schema in sorted(properties.items()):
-        prop = prop_schema or {}
-        normalized_properties.append(
-            {
-                "name": prop_name,
-                "type": prop.get("type"),
-                "format": prop.get("format"),
-                "ref": prop.get("$ref"),
-                "enum": prop.get("enum"),
-                "items_type": ((prop.get("items") or {}).get("type")),
-                "items_ref": ((prop.get("items") or {}).get("$ref")),
-                "nullable": bool(prop.get("nullable", False)),
-                "required": prop_name in required,
-            }
-        )
 
-    return {
-        "name": name,
-        "type": schema.get("type"),
-        "enum": schema.get("enum"),
-        "required": required,
-        "properties": normalized_properties,
+def normalize_schema_node(
+    schema: dict[str, Any] | None,
+    *,
+    prop_name: str | None = None,
+    required_names: set[str] | None = None,
+) -> dict[str, Any]:
+    node = schema or {}
+    required_names = required_names or set()
+
+    normalized: dict[str, Any] = {
+        "type": node.get("type"),
+        "format": node.get("format"),
+        "ref": node.get("$ref"),
+        "enum": node.get("enum"),
+        "nullable": bool(node.get("nullable", False)),
+        "kind": derive_node_kind(node),
+        "required": prop_name in required_names if prop_name is not None else False,
+        "required_fields": [],
+        "items_type": None,
+        "items_ref": None,
+        "items": None,
+        "variants": [],
+        "discriminator": None,
+        "additional_properties": None,
+        "raw_object": False,
+        "properties": [],
     }
+
+    if prop_name is not None:
+        normalized["name"] = prop_name
+
+    if normalized["kind"] == "array":
+        items_node = normalize_schema_node(node.get("items") or {})
+        normalized["items"] = items_node
+        normalized["items_type"] = items_node.get("type")
+        normalized["items_ref"] = items_node.get("ref")
+        return normalized
+
+    if normalized["kind"] == "union":
+        normalized["variants"] = [normalize_schema_node(variant) for variant in node.get("oneOf") or []]
+        discriminator = node.get("discriminator") or {}
+        normalized["discriminator"] = {
+            "property_name": discriminator.get("propertyName"),
+            "mapping": discriminator.get("mapping") or {},
+        }
+        return normalized
+
+    if normalized["kind"] == "map":
+        additional_properties = node.get("additionalProperties")
+        if additional_properties is True:
+            normalized["additional_properties"] = {
+                "kind": "raw",
+                "type": "object",
+                "format": None,
+                "ref": None,
+                "enum": None,
+                "nullable": False,
+                "required": False,
+                "required_fields": [],
+                "items_type": None,
+                "items_ref": None,
+                "items": None,
+                "variants": [],
+                "discriminator": None,
+                "additional_properties": None,
+                "raw_object": True,
+                "properties": [],
+                "required": [],
+            }
+        else:
+            normalized["additional_properties"] = normalize_schema_node(additional_properties or {})
+        return normalized
+
+    if normalized["kind"] == "object":
+        properties = node.get("properties") or {}
+        required = sorted(node.get("required") or [])
+        normalized["required_fields"] = required
+        normalized["properties"] = [
+            normalize_schema_node(prop_schema, prop_name=prop_name, required_names=set(required))
+            for prop_name, prop_schema in sorted(properties.items())
+        ]
+        return normalized
+
+    if normalized["kind"] == "raw":
+        normalized["raw_object"] = True
+
+    return normalized
+
+
+def derive_node_kind(node: dict[str, Any]) -> str:
+    if node.get("$ref"):
+        return "ref"
+
+    if node.get("oneOf"):
+        return "union"
+
+    if node.get("enum"):
+        return "enum"
+
+    node_type = node.get("type")
+    if node_type == "array":
+        return "array"
+
+    if node_type == "object":
+        if node.get("properties"):
+            return "object"
+        if "additionalProperties" in node:
+            return "map"
+        return "raw"
+
+    return "scalar"
 
 
 def derive_service_name(tags: list[str], path_name: str) -> str:
@@ -166,20 +255,11 @@ def normalize_parameters(parameters: list[dict[str, Any]]) -> list[dict[str, Any
         if not isinstance(parameter, dict):
             continue
 
-        schema = parameter.get("schema") or {}
-        normalized.append(
-            {
-                "name": parameter.get("name"),
-                "in": parameter.get("in"),
-                "required": bool(parameter.get("required", False)),
-                "type": schema.get("type"),
-                "format": schema.get("format"),
-                "ref": schema.get("$ref"),
-                "enum": schema.get("enum"),
-                "items_type": ((schema.get("items") or {}).get("type")),
-                "items_ref": ((schema.get("items") or {}).get("$ref")),
-            }
-        )
+        normalized_parameter = normalize_schema_node(parameter.get("schema") or {})
+        normalized_parameter["name"] = parameter.get("name")
+        normalized_parameter["in"] = parameter.get("in")
+        normalized_parameter["required"] = bool(parameter.get("required", False))
+        normalized.append(normalized_parameter)
 
     return sorted(normalized, key=lambda item: (item["in"] or "", item["name"] or ""))
 

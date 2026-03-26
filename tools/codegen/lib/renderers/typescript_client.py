@@ -60,9 +60,23 @@ def render_typescript_client(ir: dict[str, Any]) -> str:
 
 
 def render_schema(schema: dict[str, Any]) -> list[str]:
-    if schema.get("type") == "string" and schema.get("enum"):
+    kind = schema.get("kind")
+
+    if kind == "enum":
         variants = " | ".join(quote(value) for value in schema["enum"])
         return [f"export type {schema['name']} = {variants};"]
+
+    if kind == "union":
+        return [f"export type {schema['name']} = {' | '.join(map_node_to_ts(variant) for variant in schema.get('variants', []))};"]
+
+    if kind == "map":
+        return [f"export type {schema['name']} = Record<string, {map_node_to_ts(schema.get('additional_properties'))}>;"]
+
+    if kind == "raw":
+        return [f"export type {schema['name']} = Record<string, unknown>;"]
+
+    if kind != "object":
+        return [f"export type {schema['name']} = {map_node_to_ts(schema)};"]
 
     lines = [f"export interface {schema['name']} {{"]
 
@@ -129,38 +143,42 @@ def resolve_response_type(operation: dict[str, Any], ir: dict[str, Any]) -> str 
 
 
 def map_property_to_ts(prop: dict[str, Any]) -> str:
-    if prop.get("ref"):
-        ts_type = prop["ref"].rsplit("/", 1)[-1]
-    elif prop.get("type") == "array":
-        ts_type = f"{map_array_items_to_ts(prop)}[]"
-    elif prop.get("enum"):
-        ts_type = " | ".join(quote(value) for value in prop["enum"])
-    else:
-        ts_type = TYPE_MAP.get(prop.get("type"), "unknown")
-
-    if prop.get("nullable"):
-        return f"{ts_type} | null"
-    return ts_type
+    return map_node_to_ts(prop)
 
 
 def map_parameter_to_ts(parameter: dict[str, Any]) -> str:
-    if parameter.get("ref"):
-        return parameter["ref"].rsplit("/", 1)[-1]
-
-    if parameter.get("type") == "array":
-        return f"{map_array_items_to_ts(parameter)}[]"
-
-    if parameter.get("enum"):
-        return " | ".join(quote(value) for value in parameter["enum"])
-
-    return TYPE_MAP.get(parameter.get("type"), "unknown")
+    return map_node_to_ts(parameter)
 
 
 def map_array_items_to_ts(node: dict[str, Any]) -> str:
-    if node.get("items_ref"):
-        return node["items_ref"].rsplit("/", 1)[-1]
+    return map_node_to_ts(node.get("items") or {"type": node.get("items_type"), "ref": node.get("items_ref")})
 
-    return TYPE_MAP.get(node.get("items_type"), "unknown")
+
+def map_node_to_ts(node: dict[str, Any] | None) -> str:
+    if not isinstance(node, dict):
+        return "unknown"
+
+    kind = node.get("kind")
+    if kind == "ref":
+        ts_type = node["ref"].rsplit("/", 1)[-1]
+    elif kind == "array":
+        ts_type = f"{map_node_to_ts(node.get('items'))}[]"
+    elif kind == "enum":
+        ts_type = " | ".join(quote(value) for value in node.get("enum") or [])
+    elif kind == "union":
+        ts_type = " | ".join(map_node_to_ts(variant) for variant in node.get("variants") or []) or "unknown"
+    elif kind == "map":
+        ts_type = f"Record<string, {map_node_to_ts(node.get('additional_properties'))}>"
+    elif kind == "raw":
+        ts_type = "Record<string, unknown>"
+    elif kind == "object":
+        ts_type = "Record<string, unknown>"
+    else:
+        ts_type = TYPE_MAP.get(node.get("type"), "unknown")
+
+    if node.get("nullable"):
+        return f"{ts_type} | null"
+    return ts_type
 
 
 def render_operation_request_interface(operation: dict[str, Any]) -> list[str]:

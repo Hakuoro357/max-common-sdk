@@ -27,7 +27,7 @@ class Attachment(TypedDict, total=False):
     image_url: NotRequired[str | None]
     latitude: NotRequired[float]
     longitude: NotRequired[float]
-    payload: NotRequired[Any]
+    payload: NotRequired[dict[str, Any]]
     size: NotRequired[int]
     tam_info: NotRequired[User | None]
     thumbnail: NotRequired[str | None]
@@ -36,7 +36,7 @@ class Attachment(TypedDict, total=False):
     width: NotRequired[int]
 
 class AttachmentRequest(TypedDict, total=False):
-    buttons: NotRequired[Any]
+    buttons: NotRequired[dict[str, Any]]
     code: NotRequired[str]
     contact_id: NotRequired[int | None]
     description: NotRequired[str | None]
@@ -45,8 +45,8 @@ class AttachmentRequest(TypedDict, total=False):
     image_url: NotRequired[str | None]
     latitude: NotRequired[float]
     longitude: NotRequired[float]
-    payload: NotRequired[Any]
-    photos: NotRequired[Any | None]
+    payload: NotRequired[dict[str, Any]]
+    photos: NotRequired[PhotoTokenMap | None]
     size: NotRequired[int]
     title: NotRequired[str | None]
     type: NotRequired[str]
@@ -79,16 +79,16 @@ class Chat(TypedDict, total=False):
     chat_id: int
     chat_message_id: NotRequired[str | None]
     description: NotRequired[str | None]
-    dialog_with_user: NotRequired[Any | None]
+    dialog_with_user: NotRequired[dict[str, Any] | None]
     icon: NotRequired[ChatIcon]
     is_public: bool
     last_event_time: int
     link: NotRequired[str | None]
     messages_count: NotRequired[int | None]
     owner_id: NotRequired[int | None]
-    participants: NotRequired[Any | None]
+    participants: NotRequired[ChatParticipantsMap | None]
     participants_count: int
-    pinned_message: NotRequired[Any | None]
+    pinned_message: NotRequired[dict[str, Any] | None]
     status: ChatStatus
     title: NotRequired[str | None]
     type: ChatType
@@ -110,6 +110,8 @@ class ChatMember(TypedDict, total=False):
     permissions: NotRequired[list[ChatPermissions] | None]
     user_id: int
     username: NotRequired[str | None]
+
+ChatParticipantsMap: TypeAlias = dict[str, int]
 
 ChatPermissions: TypeAlias = Literal['read_all_messages', 'add_remove_members', 'add_admins', 'change_chat_info', 'pin_message', 'write']
 
@@ -214,9 +216,11 @@ class MessageStat(TypedDict, total=False):
     views: int
 
 class PhotoAttachmentRequestPayload(TypedDict, total=False):
-    photos: NotRequired[Any | None]
+    photos: NotRequired[PhotoTokenMap | None]
     token: NotRequired[str | None]
     url: NotRequired[str | None]
+
+PhotoTokenMap: TypeAlias = dict[str, str]
 
 class PinMessageRequest(TypedDict, total=False):
     message_id: str
@@ -247,7 +251,7 @@ class Update(TypedDict, total=False):
     chat: NotRequired[Chat]
     chat_id: NotRequired[int]
     data: NotRequired[str | None]
-    input: NotRequired[Any]
+    input: NotRequired[dict[str, Any]]
     inviter_id: NotRequired[int | None]
     is_channel: NotRequired[bool]
     message: NotRequired[Message]

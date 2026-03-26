@@ -40,7 +40,34 @@ class TypeScriptRendererTests(unittest.TestCase):
         self.assertIn("request.path.message_id", output)
         self.assertIn("`/chats/${encodeURIComponent(String(request.path.chat_link))}`", output)
         self.assertIn("sender?: User | null;", output)
-        self.assertIn("photos?: unknown | null;", output)
+        self.assertIn("photos?: PhotoTokenMap | null;", output)
+        self.assertIn("export type PhotoTokenMap = Record<string, string>;", output)
+
+    def test_render_typescript_client_supports_union_and_map_types(self) -> None:
+        module = load_module()
+        ir = {
+            "schemas": [
+                {
+                    "name": "AttachmentVariant",
+                    "kind": "union",
+                    "variants": [
+                        {"kind": "ref", "ref": "#/components/schemas/ImageAttachment", "nullable": False},
+                        {"kind": "ref", "ref": "#/components/schemas/FileAttachment", "nullable": False},
+                    ],
+                },
+                {
+                    "name": "StringMap",
+                    "kind": "map",
+                    "additional_properties": {"kind": "scalar", "type": "string", "nullable": False},
+                },
+            ],
+            "operations": [],
+        }
+
+        output = module.render_typescript_client(ir)
+
+        self.assertIn("export type AttachmentVariant = ImageAttachment | FileAttachment;", output)
+        self.assertIn("export type StringMap = Record<string, string>;", output)
 
 
 if __name__ == "__main__":

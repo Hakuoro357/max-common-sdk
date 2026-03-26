@@ -25,7 +25,7 @@ export interface Attachment {
   image_url?: string | null;
   latitude?: number;
   longitude?: number;
-  payload?: unknown;
+  payload?: Record<string, unknown>;
   size?: number;
   tam_info?: User | null;
   thumbnail?: string | null;
@@ -35,7 +35,7 @@ export interface Attachment {
 }
 
 export interface AttachmentRequest {
-  buttons?: unknown;
+  buttons?: Record<string, unknown>;
   code?: string;
   contact_id?: number | null;
   description?: string | null;
@@ -44,8 +44,8 @@ export interface AttachmentRequest {
   image_url?: string | null;
   latitude?: number;
   longitude?: number;
-  payload?: unknown;
-  photos?: unknown | null;
+  payload?: Record<string, unknown>;
+  photos?: PhotoTokenMap | null;
   size?: number;
   title?: string | null;
   type?: string;
@@ -82,16 +82,16 @@ export interface Chat {
   chat_id: number;
   chat_message_id?: string | null;
   description?: string | null;
-  dialog_with_user?: unknown | null;
+  dialog_with_user?: Record<string, unknown> | null;
   icon?: ChatIcon;
   is_public: boolean;
   last_event_time: number;
   link?: string | null;
   messages_count?: number | null;
   owner_id?: number | null;
-  participants?: unknown | null;
+  participants?: ChatParticipantsMap | null;
   participants_count: number;
-  pinned_message?: unknown | null;
+  pinned_message?: Record<string, unknown> | null;
   status: ChatStatus;
   title?: string | null;
   type: ChatType;
@@ -116,6 +116,8 @@ export interface ChatMember {
   user_id: number;
   username?: string | null;
 }
+
+export type ChatParticipantsMap = Record<string, number>;
 
 export type ChatPermissions = 'read_all_messages' | 'add_remove_members' | 'add_admins' | 'change_chat_info' | 'pin_message' | 'write';
 
@@ -239,10 +241,12 @@ export interface MessageStat {
 }
 
 export interface PhotoAttachmentRequestPayload {
-  photos?: unknown | null;
+  photos?: PhotoTokenMap | null;
   token?: string | null;
   url?: string | null;
 }
+
+export type PhotoTokenMap = Record<string, string>;
 
 export interface PinMessageRequest {
   message_id: string;
@@ -278,7 +282,7 @@ export interface Update {
   chat?: Chat;
   chat_id?: number;
   data?: string | null;
-  input?: unknown;
+  input?: Record<string, unknown>;
   inviter_id?: number | null;
   is_channel?: boolean;
   message?: Message;

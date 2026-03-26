@@ -846,8 +846,13 @@ components:
           type: string
           nullable: true
         photos:
-          type: object
+          $ref: '#/components/schemas/PhotoTokenMap'
           nullable: true
+
+    PhotoTokenMap:
+      type: object
+      additionalProperties:
+        type: string
 
     Chat:
       type: object
@@ -886,7 +891,7 @@ components:
           type: string
           nullable: true
         participants:
-          type: object
+          $ref: '#/components/schemas/ChatParticipantsMap'
           nullable: true
         dialog_with_user:
           type: object
@@ -894,6 +899,11 @@ components:
         pinned_message:
           type: object
           nullable: true
+
+    ChatParticipantsMap:
+      type: object
+      additionalProperties:
+        type: integer
 
     ChatPermissions:
       type: string
@@ -1096,7 +1106,7 @@ components:
         code:
           type: string
         photos:
-          type: object
+          $ref: '#/components/schemas/PhotoTokenMap'
           nullable: true
 
     Attachment:

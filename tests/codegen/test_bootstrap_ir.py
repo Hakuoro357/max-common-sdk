@@ -183,6 +183,47 @@ class BootstrapIrTests(unittest.TestCase):
         self.assertEqual(operation["path"], "/chats/by-link/{chat_link}")
         self.assertEqual(operation["wire_path"], "/chats/{chat_link}")
 
+    def test_normalize_openapi_keeps_union_map_and_discriminator(self) -> None:
+        module = load_module()
+        raw_spec = {
+            "openapi": "3.0.3",
+            "info": {"title": "Test API", "version": "1.0.0"},
+            "components": {
+                "schemas": {
+                    "StringMap": {
+                        "type": "object",
+                        "additionalProperties": {"type": "string"},
+                    },
+                    "Attachment": {
+                        "oneOf": [
+                            {"$ref": "#/components/schemas/ImageAttachment"},
+                            {"$ref": "#/components/schemas/FileAttachment"},
+                        ],
+                        "discriminator": {
+                            "propertyName": "type",
+                            "mapping": {
+                                "image": "#/components/schemas/ImageAttachment",
+                                "file": "#/components/schemas/FileAttachment",
+                            },
+                        },
+                    },
+                }
+            },
+        }
+
+        normalized = module.normalize_openapi(raw_spec)
+        string_map = next(schema for schema in normalized["schemas"] if schema["name"] == "StringMap")
+        attachment = next(schema for schema in normalized["schemas"] if schema["name"] == "Attachment")
+
+        self.assertEqual(string_map["kind"], "map")
+        self.assertEqual(string_map["additional_properties"]["kind"], "scalar")
+        self.assertEqual(string_map["additional_properties"]["type"], "string")
+        self.assertEqual(attachment["kind"], "union")
+        self.assertEqual(len(attachment["variants"]), 2)
+        self.assertEqual(attachment["variants"][0]["kind"], "ref")
+        self.assertEqual(attachment["discriminator"]["property_name"], "type")
+        self.assertIn("image", attachment["discriminator"]["mapping"])
+
 
 if __name__ == "__main__":
     unittest.main()
