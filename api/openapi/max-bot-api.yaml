@@ -1467,6 +1467,9 @@ components:
         views:
           type: integer
 
+    UserLocale:
+      type: string
+
     CallbackInfo:
       type: object
       required: [timestamp, callback_id, user]
@@ -1592,42 +1595,232 @@ components:
         message:
           $ref: '#/components/schemas/Message'
 
-    Update:
+    ConstructedMessage:
       type: object
-      required: [update_type, timestamp]
+      required: [timestamp, body]
+      properties:
+        sender:
+          $ref: '#/components/schemas/User'
+          nullable: true
+        timestamp:
+          type: integer
+        link:
+          $ref: '#/components/schemas/LinkedMessage'
+          nullable: true
+        body:
+          $ref: '#/components/schemas/MessageBody'
+
+    Update:
+      oneOf:
+        - $ref: '#/components/schemas/MessageCallbackUpdate'
+        - $ref: '#/components/schemas/MessageCreatedUpdate'
+        - $ref: '#/components/schemas/MessageRemovedUpdate'
+        - $ref: '#/components/schemas/MessageEditedUpdate'
+        - $ref: '#/components/schemas/BotAddedUpdate'
+        - $ref: '#/components/schemas/BotRemovedUpdate'
+        - $ref: '#/components/schemas/UserAddedUpdate'
+        - $ref: '#/components/schemas/UserRemovedUpdate'
+        - $ref: '#/components/schemas/BotStartedUpdate'
+        - $ref: '#/components/schemas/ChatTitleChangedUpdate'
+        - $ref: '#/components/schemas/MessageConstructionRequestUpdate'
+        - $ref: '#/components/schemas/MessageConstructedUpdate'
+        - $ref: '#/components/schemas/MessageChatCreatedUpdate'
+      discriminator:
+        propertyName: update_type
+        mapping:
+          message_callback: '#/components/schemas/MessageCallbackUpdate'
+          message_created: '#/components/schemas/MessageCreatedUpdate'
+          message_removed: '#/components/schemas/MessageRemovedUpdate'
+          message_edited: '#/components/schemas/MessageEditedUpdate'
+          bot_added: '#/components/schemas/BotAddedUpdate'
+          bot_removed: '#/components/schemas/BotRemovedUpdate'
+          user_added: '#/components/schemas/UserAddedUpdate'
+          user_removed: '#/components/schemas/UserRemovedUpdate'
+          bot_started: '#/components/schemas/BotStartedUpdate'
+          chat_title_changed: '#/components/schemas/ChatTitleChangedUpdate'
+          message_construction_request: '#/components/schemas/MessageConstructionRequestUpdate'
+          message_constructed: '#/components/schemas/MessageConstructedUpdate'
+          message_chat_created: '#/components/schemas/MessageChatCreatedUpdate'
+
+    MessageCallbackUpdate:
+      type: object
+      required: [update_type, timestamp, callback]
       properties:
         update_type:
           type: string
+          enum: [message_callback]
         timestamp:
           type: integer
         callback:
           $ref: '#/components/schemas/CallbackInfo'
         message:
           $ref: '#/components/schemas/Message'
+          nullable: true
+        user_locale:
+          $ref: '#/components/schemas/UserLocale'
+          nullable: true
+
+    MessageCreatedUpdate:
+      type: object
+      required: [update_type, timestamp, message]
+      properties:
+        update_type:
+          type: string
+          enum: [message_created]
+        timestamp:
+          type: integer
+        message:
+          $ref: '#/components/schemas/Message'
+        user_locale:
+          $ref: '#/components/schemas/UserLocale'
+          nullable: true
+
+    MessageRemovedUpdate:
+      type: object
+      required: [update_type, timestamp, message_id, chat_id, user_id]
+      properties:
+        update_type:
+          type: string
+          enum: [message_removed]
+        timestamp:
+          type: integer
         message_id:
           type: string
         chat_id:
           type: integer
         user_id:
           type: integer
+
+    MessageEditedUpdate:
+      type: object
+      required: [update_type, timestamp, message]
+      properties:
+        update_type:
+          type: string
+          enum: [message_edited]
+        timestamp:
+          type: integer
+        message:
+          $ref: '#/components/schemas/Message'
+
+    BotAddedUpdate:
+      type: object
+      required: [update_type, timestamp, chat_id, user, is_channel]
+      properties:
+        update_type:
+          type: string
+          enum: [bot_added]
+        timestamp:
+          type: integer
+        chat_id:
+          type: integer
         user:
           $ref: '#/components/schemas/User'
-        user_locale:
+        is_channel:
+          type: boolean
+
+    BotRemovedUpdate:
+      type: object
+      required: [update_type, timestamp, chat_id, user, is_channel]
+      properties:
+        update_type:
           type: string
-          nullable: true
+          enum: [bot_removed]
+        timestamp:
+          type: integer
+        chat_id:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+        is_channel:
+          type: boolean
+
+    UserAddedUpdate:
+      type: object
+      required: [update_type, timestamp, chat_id, user, is_channel]
+      properties:
+        update_type:
+          type: string
+          enum: [user_added]
+        timestamp:
+          type: integer
+        chat_id:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
         inviter_id:
           type: integer
           nullable: true
+        is_channel:
+          type: boolean
+
+    UserRemovedUpdate:
+      type: object
+      required: [update_type, timestamp, chat_id, user, is_channel]
+      properties:
+        update_type:
+          type: string
+          enum: [user_removed]
+        timestamp:
+          type: integer
+        chat_id:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
         admin_id:
           type: integer
           nullable: true
         is_channel:
           type: boolean
+
+    BotStartedUpdate:
+      type: object
+      required: [update_type, timestamp, chat_id, user]
+      properties:
+        update_type:
+          type: string
+          enum: [bot_started]
+        timestamp:
+          type: integer
+        chat_id:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
         payload:
           type: string
           nullable: true
+        user_locale:
+          $ref: '#/components/schemas/UserLocale'
+
+    ChatTitleChangedUpdate:
+      type: object
+      required: [update_type, timestamp, chat_id, user, title]
+      properties:
+        update_type:
+          type: string
+          enum: [chat_title_changed]
+        timestamp:
+          type: integer
+        chat_id:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
         title:
           type: string
+
+    MessageConstructionRequestUpdate:
+      type: object
+      required: [update_type, timestamp, user, session_id, input]
+      properties:
+        update_type:
+          type: string
+          enum: [message_construction_request]
+        timestamp:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+        user_locale:
+          $ref: '#/components/schemas/UserLocale'
         session_id:
           type: string
         data:
@@ -1635,8 +1828,36 @@ components:
           nullable: true
         input:
           type: object
+
+    MessageConstructedUpdate:
+      type: object
+      required: [update_type, timestamp, user, session_id, message]
+      properties:
+        update_type:
+          type: string
+          enum: [message_constructed]
+        timestamp:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+        session_id:
+          type: string
+        message:
+          $ref: '#/components/schemas/ConstructedMessage'
+
+    MessageChatCreatedUpdate:
+      type: object
+      required: [update_type, timestamp, chat, message_id]
+      properties:
+        update_type:
+          type: string
+          enum: [message_chat_created]
+        timestamp:
+          type: integer
         chat:
           $ref: '#/components/schemas/Chat'
+        message_id:
+          type: string
         start_payload:
           type: string
           nullable: true

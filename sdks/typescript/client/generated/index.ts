@@ -31,6 +31,14 @@ export interface AudioAttachmentRequest {
   type: 'audio';
 }
 
+export interface BotAddedUpdate {
+  chat_id: number;
+  is_channel: boolean;
+  timestamp: number;
+  update_type: 'bot_added';
+  user: User;
+}
+
 export interface BotCommand {
   description?: string | null;
   name: string;
@@ -46,6 +54,23 @@ export interface BotInfo {
   name: string;
   user_id: number;
   username?: string | null;
+}
+
+export interface BotRemovedUpdate {
+  chat_id: number;
+  is_channel: boolean;
+  timestamp: number;
+  update_type: 'bot_removed';
+  user: User;
+}
+
+export interface BotStartedUpdate {
+  chat_id: number;
+  payload?: string | null;
+  timestamp: number;
+  update_type: 'bot_started';
+  user: User;
+  user_locale?: UserLocale;
 }
 
 export interface CallbackInfo {
@@ -100,7 +125,22 @@ export type ChatPermissions = 'read_all_messages' | 'add_remove_members' | 'add_
 
 export type ChatStatus = 'active' | 'removed' | 'left' | 'closed' | 'suspended';
 
+export interface ChatTitleChangedUpdate {
+  chat_id: number;
+  timestamp: number;
+  title: string;
+  update_type: 'chat_title_changed';
+  user: User;
+}
+
 export type ChatType = 'dialog' | 'chat' | 'channel';
+
+export interface ConstructedMessage {
+  body: MessageBody;
+  link?: LinkedMessage | null;
+  sender?: User | null;
+  timestamp: number;
+}
 
 export interface ContactAttachment {
   payload: ContactAttachmentPayload;
@@ -290,6 +330,53 @@ export interface MessageBody {
   text?: string | null;
 }
 
+export interface MessageCallbackUpdate {
+  callback: CallbackInfo;
+  message?: Message | null;
+  timestamp: number;
+  update_type: 'message_callback';
+  user_locale?: UserLocale | null;
+}
+
+export interface MessageChatCreatedUpdate {
+  chat: Chat;
+  message_id: string;
+  start_payload?: string | null;
+  timestamp: number;
+  update_type: 'message_chat_created';
+}
+
+export interface MessageConstructedUpdate {
+  message: ConstructedMessage;
+  session_id: string;
+  timestamp: number;
+  update_type: 'message_constructed';
+  user: User;
+}
+
+export interface MessageConstructionRequestUpdate {
+  data?: string | null;
+  input: Record<string, unknown>;
+  session_id: string;
+  timestamp: number;
+  update_type: 'message_construction_request';
+  user: User;
+  user_locale?: UserLocale;
+}
+
+export interface MessageCreatedUpdate {
+  message: Message;
+  timestamp: number;
+  update_type: 'message_created';
+  user_locale?: UserLocale | null;
+}
+
+export interface MessageEditedUpdate {
+  message: Message;
+  timestamp: number;
+  update_type: 'message_edited';
+}
+
 export interface MessageLinkReference {
   mid: string;
   type: MessageLinkType;
@@ -300,6 +387,14 @@ export type MessageLinkType = 'forward' | 'reply';
 export interface MessageRecipient {
   chat_id?: number | null;
   chat_type: string;
+}
+
+export interface MessageRemovedUpdate {
+  chat_id: number;
+  message_id: string;
+  timestamp: number;
+  update_type: 'message_removed';
+  user_id: number;
 }
 
 export interface MessageStat {
@@ -381,27 +476,7 @@ export interface StickerAttachmentRequestPayload {
   code: string;
 }
 
-export interface Update {
-  admin_id?: number | null;
-  callback?: CallbackInfo;
-  chat?: Chat;
-  chat_id?: number;
-  data?: string | null;
-  input?: Record<string, unknown>;
-  inviter_id?: number | null;
-  is_channel?: boolean;
-  message?: Message;
-  message_id?: string;
-  payload?: string | null;
-  session_id?: string;
-  start_payload?: string | null;
-  timestamp: number;
-  title?: string;
-  update_type: string;
-  user?: User;
-  user_id?: number;
-  user_locale?: string | null;
-}
+export type Update = MessageCallbackUpdate | MessageCreatedUpdate | MessageRemovedUpdate | MessageEditedUpdate | BotAddedUpdate | BotRemovedUpdate | UserAddedUpdate | UserRemovedUpdate | BotStartedUpdate | ChatTitleChangedUpdate | MessageConstructionRequestUpdate | MessageConstructedUpdate | MessageChatCreatedUpdate;
 
 export type UploadType = 'image' | 'video' | 'audio' | 'file';
 
@@ -414,6 +489,26 @@ export interface User {
   name: string;
   user_id: number;
   username?: string | null;
+}
+
+export interface UserAddedUpdate {
+  chat_id: number;
+  inviter_id?: number | null;
+  is_channel: boolean;
+  timestamp: number;
+  update_type: 'user_added';
+  user: User;
+}
+
+export type UserLocale = string;
+
+export interface UserRemovedUpdate {
+  admin_id?: number | null;
+  chat_id: number;
+  is_channel: boolean;
+  timestamp: number;
+  update_type: 'user_removed';
+  user: User;
 }
 
 export interface VideoAttachment {

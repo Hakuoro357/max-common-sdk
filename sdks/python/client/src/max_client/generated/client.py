@@ -20,6 +20,8 @@ SenderAction: TypeAlias = Literal['typing_on', 'sending_photo', 'sending_video',
 
 UploadType: TypeAlias = Literal['image', 'video', 'audio', 'file']
 
+UserLocale: TypeAlias = str
+
 class ActionResponse(TypedDict, total=False):
     message: NotRequired[str | None]
     success: bool
@@ -39,6 +41,13 @@ class AudioAttachmentRequest(TypedDict, total=False):
     payload: MediaAttachmentRequestPayload
     type: Literal['audio']
 
+class BotAddedUpdate(TypedDict, total=False):
+    chat_id: int
+    is_channel: bool
+    timestamp: int
+    update_type: Literal['bot_added']
+    user: User
+
 class BotCommand(TypedDict, total=False):
     description: NotRequired[str | None]
     name: str
@@ -53,6 +62,21 @@ class BotInfo(TypedDict, total=False):
     name: str
     user_id: int
     username: NotRequired[str | None]
+
+class BotRemovedUpdate(TypedDict, total=False):
+    chat_id: int
+    is_channel: bool
+    timestamp: int
+    update_type: Literal['bot_removed']
+    user: User
+
+class BotStartedUpdate(TypedDict, total=False):
+    chat_id: int
+    payload: NotRequired[str | None]
+    timestamp: int
+    update_type: Literal['bot_started']
+    user: User
+    user_locale: NotRequired[UserLocale]
 
 class CallbackInfo(TypedDict, total=False):
     callback_id: str
@@ -95,6 +119,19 @@ class ChatMember(TypedDict, total=False):
     permissions: NotRequired[list[ChatPermissions] | None]
     user_id: int
     username: NotRequired[str | None]
+
+class ChatTitleChangedUpdate(TypedDict, total=False):
+    chat_id: int
+    timestamp: int
+    title: str
+    update_type: Literal['chat_title_changed']
+    user: User
+
+class ConstructedMessage(TypedDict, total=False):
+    body: MessageBody
+    link: NotRequired[LinkedMessage | None]
+    sender: NotRequired[User | None]
+    timestamp: int
 
 class ContactAttachment(TypedDict, total=False):
     payload: ContactAttachmentPayload
@@ -251,6 +288,47 @@ class MessageBody(TypedDict, total=False):
     seq: int
     text: NotRequired[str | None]
 
+class MessageCallbackUpdate(TypedDict, total=False):
+    callback: CallbackInfo
+    message: NotRequired[Message | None]
+    timestamp: int
+    update_type: Literal['message_callback']
+    user_locale: NotRequired[UserLocale | None]
+
+class MessageChatCreatedUpdate(TypedDict, total=False):
+    chat: Chat
+    message_id: str
+    start_payload: NotRequired[str | None]
+    timestamp: int
+    update_type: Literal['message_chat_created']
+
+class MessageConstructedUpdate(TypedDict, total=False):
+    message: ConstructedMessage
+    session_id: str
+    timestamp: int
+    update_type: Literal['message_constructed']
+    user: User
+
+class MessageConstructionRequestUpdate(TypedDict, total=False):
+    data: NotRequired[str | None]
+    input: dict[str, Any]
+    session_id: str
+    timestamp: int
+    update_type: Literal['message_construction_request']
+    user: User
+    user_locale: NotRequired[UserLocale]
+
+class MessageCreatedUpdate(TypedDict, total=False):
+    message: Message
+    timestamp: int
+    update_type: Literal['message_created']
+    user_locale: NotRequired[UserLocale | None]
+
+class MessageEditedUpdate(TypedDict, total=False):
+    message: Message
+    timestamp: int
+    update_type: Literal['message_edited']
+
 class MessageLinkReference(TypedDict, total=False):
     mid: str
     type: MessageLinkType
@@ -258,6 +336,13 @@ class MessageLinkReference(TypedDict, total=False):
 class MessageRecipient(TypedDict, total=False):
     chat_id: NotRequired[int | None]
     chat_type: str
+
+class MessageRemovedUpdate(TypedDict, total=False):
+    chat_id: int
+    message_id: str
+    timestamp: int
+    update_type: Literal['message_removed']
+    user_id: int
 
 class MessageStat(TypedDict, total=False):
     views: int
@@ -320,27 +405,6 @@ class StickerAttachmentRequest(TypedDict, total=False):
 class StickerAttachmentRequestPayload(TypedDict, total=False):
     code: str
 
-class Update(TypedDict, total=False):
-    admin_id: NotRequired[int | None]
-    callback: NotRequired[CallbackInfo]
-    chat: NotRequired[Chat]
-    chat_id: NotRequired[int]
-    data: NotRequired[str | None]
-    input: NotRequired[dict[str, Any]]
-    inviter_id: NotRequired[int | None]
-    is_channel: NotRequired[bool]
-    message: NotRequired[Message]
-    message_id: NotRequired[str]
-    payload: NotRequired[str | None]
-    session_id: NotRequired[str]
-    start_payload: NotRequired[str | None]
-    timestamp: int
-    title: NotRequired[str]
-    update_type: str
-    user: NotRequired[User]
-    user_id: NotRequired[int]
-    user_locale: NotRequired[str | None]
-
 class User(TypedDict, total=False):
     avatar_url: NotRequired[str]
     description: NotRequired[str | None]
@@ -350,6 +414,22 @@ class User(TypedDict, total=False):
     name: str
     user_id: int
     username: NotRequired[str | None]
+
+class UserAddedUpdate(TypedDict, total=False):
+    chat_id: int
+    inviter_id: NotRequired[int | None]
+    is_channel: bool
+    timestamp: int
+    update_type: Literal['user_added']
+    user: User
+
+class UserRemovedUpdate(TypedDict, total=False):
+    admin_id: NotRequired[int | None]
+    chat_id: int
+    is_channel: bool
+    timestamp: int
+    update_type: Literal['user_removed']
+    user: User
 
 class VideoAttachment(TypedDict, total=False):
     duration: NotRequired[int | None]
@@ -370,6 +450,8 @@ PhotoTokenMap: TypeAlias = dict[str, str]
 Attachment: TypeAlias = ImageAttachment | VideoAttachment | AudioAttachment | FileAttachment | StickerAttachment | ContactAttachment | InlineKeyboardAttachment | ShareAttachment | LocationAttachment
 
 AttachmentRequest: TypeAlias = ImageAttachmentRequest | VideoAttachmentRequest | AudioAttachmentRequest | FileAttachmentRequest | StickerAttachmentRequest | ContactAttachmentRequest | InlineKeyboardAttachmentRequest | ShareAttachmentRequest | LocationAttachmentRequest
+
+Update: TypeAlias = MessageCallbackUpdate | MessageCreatedUpdate | MessageRemovedUpdate | MessageEditedUpdate | BotAddedUpdate | BotRemovedUpdate | UserAddedUpdate | UserRemovedUpdate | BotStartedUpdate | ChatTitleChangedUpdate | MessageConstructionRequestUpdate | MessageConstructedUpdate | MessageChatCreatedUpdate
 
 class AnswerOnCallbackParamsQuery(TypedDict, total=False):
     callback_id: str

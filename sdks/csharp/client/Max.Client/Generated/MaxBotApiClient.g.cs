@@ -56,6 +56,24 @@ public sealed class AudioAttachmentRequest
     public string Type { get; init; }
 }
 
+public sealed class BotAddedUpdate
+{
+    [JsonPropertyName("chat_id")]
+    public int ChatId { get; init; }
+
+    [JsonPropertyName("is_channel")]
+    public bool IsChannel { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user")]
+    public User User { get; init; }
+}
+
 public sealed class BotCommand
 {
     [JsonPropertyName("description")]
@@ -93,6 +111,45 @@ public sealed class BotInfo
 
     [JsonPropertyName("username")]
     public string? Username { get; init; }
+}
+
+public sealed class BotRemovedUpdate
+{
+    [JsonPropertyName("chat_id")]
+    public int ChatId { get; init; }
+
+    [JsonPropertyName("is_channel")]
+    public bool IsChannel { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user")]
+    public User User { get; init; }
+}
+
+public sealed class BotStartedUpdate
+{
+    [JsonPropertyName("chat_id")]
+    public int ChatId { get; init; }
+
+    [JsonPropertyName("payload")]
+    public string? Payload { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user")]
+    public User User { get; init; }
+
+    [JsonPropertyName("user_locale")]
+    public UserLocale? UserLocale { get; init; }
 }
 
 public sealed class CallbackInfo
@@ -232,11 +289,44 @@ public enum ChatStatus
     Suspended,
 }
 
+public sealed class ChatTitleChangedUpdate
+{
+    [JsonPropertyName("chat_id")]
+    public int ChatId { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("title")]
+    public string Title { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user")]
+    public User User { get; init; }
+}
+
 public enum ChatType
 {
     Dialog,
     Chat,
     Channel,
+}
+
+public sealed class ConstructedMessage
+{
+    [JsonPropertyName("body")]
+    public MessageBody Body { get; init; }
+
+    [JsonPropertyName("link")]
+    public LinkedMessage? Link { get; init; }
+
+    [JsonPropertyName("sender")]
+    public User? Sender { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
 }
 
 public sealed class ContactAttachment
@@ -605,6 +695,111 @@ public sealed class MessageBody
     public string? Text { get; init; }
 }
 
+public sealed class MessageCallbackUpdate
+{
+    [JsonPropertyName("callback")]
+    public CallbackInfo Callback { get; init; }
+
+    [JsonPropertyName("message")]
+    public Message? Message { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user_locale")]
+    public UserLocale? UserLocale { get; init; }
+}
+
+public sealed class MessageChatCreatedUpdate
+{
+    [JsonPropertyName("chat")]
+    public Chat Chat { get; init; }
+
+    [JsonPropertyName("message_id")]
+    public string MessageId { get; init; }
+
+    [JsonPropertyName("start_payload")]
+    public string? StartPayload { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+}
+
+public sealed class MessageConstructedUpdate
+{
+    [JsonPropertyName("message")]
+    public ConstructedMessage Message { get; init; }
+
+    [JsonPropertyName("session_id")]
+    public string SessionId { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user")]
+    public User User { get; init; }
+}
+
+public sealed class MessageConstructionRequestUpdate
+{
+    [JsonPropertyName("data")]
+    public string? Data { get; init; }
+
+    [JsonPropertyName("input")]
+    public Dictionary<string, object?> Input { get; init; }
+
+    [JsonPropertyName("session_id")]
+    public string SessionId { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user")]
+    public User User { get; init; }
+
+    [JsonPropertyName("user_locale")]
+    public UserLocale? UserLocale { get; init; }
+}
+
+public sealed class MessageCreatedUpdate
+{
+    [JsonPropertyName("message")]
+    public Message Message { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user_locale")]
+    public UserLocale? UserLocale { get; init; }
+}
+
+public sealed class MessageEditedUpdate
+{
+    [JsonPropertyName("message")]
+    public Message Message { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+}
+
 public sealed class MessageLinkReference
 {
     [JsonPropertyName("mid")]
@@ -627,6 +822,24 @@ public sealed class MessageRecipient
 
     [JsonPropertyName("chat_type")]
     public string ChatType { get; init; }
+}
+
+public sealed class MessageRemovedUpdate
+{
+    [JsonPropertyName("chat_id")]
+    public int ChatId { get; init; }
+
+    [JsonPropertyName("message_id")]
+    public string MessageId { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user_id")]
+    public int UserId { get; init; }
 }
 
 public sealed class MessageStat
@@ -784,65 +997,7 @@ public sealed class StickerAttachmentRequestPayload
     public string Code { get; init; }
 }
 
-public sealed class Update
-{
-    [JsonPropertyName("admin_id")]
-    public int? AdminId { get; init; }
-
-    [JsonPropertyName("callback")]
-    public CallbackInfo? Callback { get; init; }
-
-    [JsonPropertyName("chat")]
-    public Chat? Chat { get; init; }
-
-    [JsonPropertyName("chat_id")]
-    public int? ChatId { get; init; }
-
-    [JsonPropertyName("data")]
-    public string? Data { get; init; }
-
-    [JsonPropertyName("input")]
-    public Dictionary<string, object?>? Input { get; init; }
-
-    [JsonPropertyName("inviter_id")]
-    public int? InviterId { get; init; }
-
-    [JsonPropertyName("is_channel")]
-    public bool? IsChannel { get; init; }
-
-    [JsonPropertyName("message")]
-    public Message? Message { get; init; }
-
-    [JsonPropertyName("message_id")]
-    public string? MessageId { get; init; }
-
-    [JsonPropertyName("payload")]
-    public string? Payload { get; init; }
-
-    [JsonPropertyName("session_id")]
-    public string? SessionId { get; init; }
-
-    [JsonPropertyName("start_payload")]
-    public string? StartPayload { get; init; }
-
-    [JsonPropertyName("timestamp")]
-    public int Timestamp { get; init; }
-
-    [JsonPropertyName("title")]
-    public string? Title { get; init; }
-
-    [JsonPropertyName("update_type")]
-    public string UpdateType { get; init; }
-
-    [JsonPropertyName("user")]
-    public User? User { get; init; }
-
-    [JsonPropertyName("user_id")]
-    public int? UserId { get; init; }
-
-    [JsonPropertyName("user_locale")]
-    public string? UserLocale { get; init; }
-}
+public sealed class Update { }
 
 public enum UploadType
 {
@@ -877,6 +1032,50 @@ public sealed class User
 
     [JsonPropertyName("username")]
     public string? Username { get; init; }
+}
+
+public sealed class UserAddedUpdate
+{
+    [JsonPropertyName("chat_id")]
+    public int ChatId { get; init; }
+
+    [JsonPropertyName("inviter_id")]
+    public int? InviterId { get; init; }
+
+    [JsonPropertyName("is_channel")]
+    public bool IsChannel { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user")]
+    public User User { get; init; }
+}
+
+public sealed class UserLocale { }
+
+public sealed class UserRemovedUpdate
+{
+    [JsonPropertyName("admin_id")]
+    public int? AdminId { get; init; }
+
+    [JsonPropertyName("chat_id")]
+    public int ChatId { get; init; }
+
+    [JsonPropertyName("is_channel")]
+    public bool IsChannel { get; init; }
+
+    [JsonPropertyName("timestamp")]
+    public int Timestamp { get; init; }
+
+    [JsonPropertyName("update_type")]
+    public string UpdateType { get; init; }
+
+    [JsonPropertyName("user")]
+    public User User { get; init; }
 }
 
 public sealed class VideoAttachment

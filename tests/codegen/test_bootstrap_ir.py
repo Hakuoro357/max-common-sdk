@@ -67,6 +67,10 @@ class BootstrapIrTests(unittest.TestCase):
         self.assertEqual(attachment_request["discriminator"]["property_name"], "type")
         self.assertEqual(attachment["kind"], "union")
         self.assertEqual(len(attachment["variants"]), 9)
+        update = next(schema for schema in ir["schemas"] if schema["name"] == "Update")
+        self.assertEqual(update["kind"], "union")
+        self.assertEqual(len(update["variants"]), 13)
+        self.assertEqual(update["discriminator"]["property_name"], "update_type")
 
     def test_normalize_openapi_sorts_and_derives_defaults(self) -> None:
         module = load_module()
