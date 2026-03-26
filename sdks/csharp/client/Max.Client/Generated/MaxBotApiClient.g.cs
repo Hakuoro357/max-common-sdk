@@ -176,6 +176,21 @@ public sealed class BotStartedUpdate : Update
     public UserLocale? UserLocale { get; init; }
 }
 
+public sealed class CallbackButton : InlineKeyboardButton
+{
+    [JsonPropertyName("intent")]
+    public KeyboardButtonIntent? Intent { get; init; }
+
+    [JsonPropertyName("payload")]
+    public string Payload { get; init; }
+
+    [JsonPropertyName("text")]
+    public string Text { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
 public sealed class CallbackInfo
 {
     [JsonPropertyName("callback_id")]
@@ -572,6 +587,10 @@ public sealed class ImageAttachmentRequest : AttachmentRequest
     public string Type { get; init; }
 }
 
+public sealed class InlineKeyboard : List<InlineKeyboardRow>
+{
+}
+
 public sealed class InlineKeyboardAttachment : Attachment
 {
     [JsonPropertyName("payload")]
@@ -584,7 +603,7 @@ public sealed class InlineKeyboardAttachment : Attachment
 public sealed class InlineKeyboardAttachmentPayload
 {
     [JsonPropertyName("buttons")]
-    public Dictionary<string, object?>? Buttons { get; init; }
+    public InlineKeyboard? Buttons { get; init; }
 }
 
 public sealed class InlineKeyboardAttachmentRequest : AttachmentRequest
@@ -599,7 +618,41 @@ public sealed class InlineKeyboardAttachmentRequest : AttachmentRequest
 public sealed class InlineKeyboardAttachmentRequestPayload
 {
     [JsonPropertyName("buttons")]
-    public Dictionary<string, object?>? Buttons { get; init; }
+    public InlineKeyboard? Buttons { get; init; }
+}
+
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(CallbackButton), typeDiscriminator: "callback")]
+[JsonDerivedType(typeof(LinkButton), typeDiscriminator: "link")]
+[JsonDerivedType(typeof(RequestContactButton), typeDiscriminator: "request_contact")]
+[JsonDerivedType(typeof(RequestGeoLocationButton), typeDiscriminator: "request_geo_location")]
+[JsonDerivedType(typeof(OpenAppButton), typeDiscriminator: "open_app")]
+[JsonDerivedType(typeof(MessageButton), typeDiscriminator: "message")]
+public abstract class InlineKeyboardButton
+{
+}
+
+public sealed class InlineKeyboardRow : List<InlineKeyboardButton>
+{
+}
+
+public enum KeyboardButtonIntent
+{
+    Default,
+    Positive,
+    Negative,
+}
+
+public sealed class LinkButton : InlineKeyboardButton
+{
+    [JsonPropertyName("text")]
+    public string Text { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+
+    [JsonPropertyName("url")]
+    public string Url { get; init; }
 }
 
 public sealed class LinkedMessage
@@ -650,13 +703,27 @@ public sealed class MarkupElement
     public int Length { get; init; }
 
     [JsonPropertyName("type")]
-    public string Type { get; init; }
+    public MarkupElementType Type { get; init; }
 
     [JsonPropertyName("user_id")]
     public int? UserId { get; init; }
 
     [JsonPropertyName("user_link")]
     public string? UserLink { get; init; }
+}
+
+public enum MarkupElementType
+{
+    Strong,
+    Bold,
+    Emphasized,
+    Italic,
+    Strikethrough,
+    Underline,
+    Monospaced,
+    Code,
+    Link,
+    Mention,
 }
 
 public sealed class MediaAttachmentRequestPayload
@@ -717,6 +784,15 @@ public sealed class MessageBody
 
     [JsonPropertyName("text")]
     public string? Text { get; init; }
+}
+
+public sealed class MessageButton : InlineKeyboardButton
+{
+    [JsonPropertyName("text")]
+    public string Text { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
 }
 
 public sealed class MessageCallbackUpdate : Update
@@ -872,6 +948,24 @@ public sealed class MessageStat
     public int Views { get; init; }
 }
 
+public sealed class OpenAppButton : InlineKeyboardButton
+{
+    [JsonPropertyName("contact_id")]
+    public int? ContactId { get; init; }
+
+    [JsonPropertyName("payload")]
+    public string? Payload { get; init; }
+
+    [JsonPropertyName("text")]
+    public string Text { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+
+    [JsonPropertyName("web_app")]
+    public string? WebApp { get; init; }
+}
+
 public sealed class PhotoAttachmentRequestPayload
 {
     [JsonPropertyName("photos")]
@@ -904,6 +998,27 @@ public sealed class RemoveChatMemberRequest
 
     [JsonPropertyName("user_id")]
     public int UserId { get; init; }
+}
+
+public sealed class RequestContactButton : InlineKeyboardButton
+{
+    [JsonPropertyName("text")]
+    public string Text { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
+}
+
+public sealed class RequestGeoLocationButton : InlineKeyboardButton
+{
+    [JsonPropertyName("quick")]
+    public bool? Quick { get; init; }
+
+    [JsonPropertyName("text")]
+    public string Text { get; init; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; init; }
 }
 
 public sealed class SendActionRequest

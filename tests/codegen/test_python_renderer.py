@@ -44,6 +44,12 @@ class PythonRendererTests(unittest.TestCase):
         self.assertIn("ImageAttachmentRequest | VideoAttachmentRequest", output)
         self.assertIn("Update: TypeAlias =", output)
         self.assertIn("MessageCallbackUpdate | MessageCreatedUpdate", output)
+        self.assertIn("InlineKeyboard: TypeAlias = list[InlineKeyboardRow]", output)
+        self.assertIn("InlineKeyboardRow: TypeAlias = list[InlineKeyboardButton]", output)
+        self.assertIn("InlineKeyboardButton: TypeAlias =", output)
+        self.assertIn("CallbackButton | LinkButton | RequestContactButton", output)
+        self.assertIn("MarkupElementType: TypeAlias = Literal[", output)
+        self.assertIn("'mention'", output)
 
     def test_render_python_client_supports_union_and_map_types(self) -> None:
         module = load_module()

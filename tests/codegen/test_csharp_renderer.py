@@ -45,6 +45,13 @@ class CSharpRendererTests(unittest.TestCase):
         self.assertIn('[JsonPolymorphic(TypeDiscriminatorPropertyName = "update_type")]', output)
         self.assertIn("public abstract class Update", output)
         self.assertIn("public sealed class MessageCreatedUpdate : Update", output)
+        self.assertIn("public sealed class InlineKeyboard : List<InlineKeyboardRow>", output)
+        self.assertIn("public sealed class InlineKeyboardRow : List<InlineKeyboardButton>", output)
+        self.assertIn('[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]', output)
+        self.assertIn('[JsonDerivedType(typeof(CallbackButton), typeDiscriminator: "callback")]', output)
+        self.assertIn("public abstract class InlineKeyboardButton", output)
+        self.assertIn("public sealed class CallbackButton : InlineKeyboardButton", output)
+        self.assertIn("public enum MarkupElementType", output)
 
 
 if __name__ == "__main__":

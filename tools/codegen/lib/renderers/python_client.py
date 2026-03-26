@@ -32,7 +32,7 @@ def render_python_client(ir: dict[str, Any]) -> str:
         "",
     ]
 
-    for schema in sorted(ir.get("schemas", []), key=schema_render_order):
+    for schema in order_schemas_for_python(ir.get("schemas", [])):
         lines.extend(render_schema(schema))
         lines.append("")
 
@@ -111,6 +111,65 @@ def schema_render_order(schema: dict[str, Any]) -> tuple[int, str]:
         "union": 5,
     }
     return (priorities.get(kind, 99), schema.get("name", ""))
+
+
+def order_schemas_for_python(schemas: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    concrete_schemas = [schema for schema in schemas if schema.get("kind") in {"enum", "scalar", "raw", "object"}]
+    alias_schemas = [schema for schema in schemas if schema.get("kind") not in {"enum", "scalar", "raw", "object"}]
+    alias_names = {schema["name"] for schema in alias_schemas}
+    ordered_aliases = topological_sort_alias_schemas(alias_schemas, alias_names)
+    return sorted(concrete_schemas, key=schema_render_order) + ordered_aliases
+
+
+def topological_sort_alias_schemas(schemas: list[dict[str, Any]], alias_names: set[str]) -> list[dict[str, Any]]:
+    schema_by_name = {schema["name"]: schema for schema in schemas}
+    dependencies = {
+        schema["name"]: sorted(collect_alias_dependencies(schema, alias_names))
+        for schema in schemas
+    }
+
+    ordered: list[dict[str, Any]] = []
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(name: str) -> None:
+        if name in visited or name in visiting:
+            return
+
+        visiting.add(name)
+        for dependency in dependencies.get(name, []):
+            visit(dependency)
+        visiting.remove(name)
+        visited.add(name)
+        ordered.append(schema_by_name[name])
+
+    for schema in sorted(schemas, key=schema_render_order):
+        visit(schema["name"])
+
+    return ordered
+
+
+def collect_alias_dependencies(schema: dict[str, Any], alias_names: set[str]) -> set[str]:
+    dependencies: set[str] = set()
+
+    def walk(node: dict[str, Any] | None) -> None:
+        if not isinstance(node, dict):
+            return
+
+        if node.get("kind") == "ref" and node.get("ref"):
+            dependency = node["ref"].rsplit("/", 1)[-1]
+            if dependency in alias_names and dependency != schema["name"]:
+                dependencies.add(dependency)
+
+        walk(node.get("items"))
+        walk(node.get("additional_properties"))
+        for variant in node.get("variants") or []:
+            walk(variant)
+        for prop in node.get("properties") or []:
+            walk(prop)
+
+    walk(schema)
+    return dependencies
 
 
 def render_operation_request_typed_dict(operation: dict[str, Any]) -> list[str]:

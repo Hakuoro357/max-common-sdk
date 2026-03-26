@@ -73,6 +73,13 @@ export interface BotStartedUpdate {
   user_locale?: UserLocale;
 }
 
+export interface CallbackButton {
+  intent?: KeyboardButtonIntent | null;
+  payload: string;
+  text: string;
+  type: 'callback';
+}
+
 export interface CallbackInfo {
   callback_id: string;
   payload?: string | null;
@@ -257,13 +264,15 @@ export interface ImageAttachmentRequest {
   type: 'image';
 }
 
+export type InlineKeyboard = InlineKeyboardRow[];
+
 export interface InlineKeyboardAttachment {
   payload: InlineKeyboardAttachmentPayload;
   type: 'inline_keyboard';
 }
 
 export interface InlineKeyboardAttachmentPayload {
-  buttons?: Record<string, unknown>;
+  buttons?: InlineKeyboard;
 }
 
 export interface InlineKeyboardAttachmentRequest {
@@ -272,7 +281,19 @@ export interface InlineKeyboardAttachmentRequest {
 }
 
 export interface InlineKeyboardAttachmentRequestPayload {
-  buttons?: Record<string, unknown>;
+  buttons?: InlineKeyboard;
+}
+
+export type InlineKeyboardButton = CallbackButton | LinkButton | RequestContactButton | RequestGeoLocationButton | OpenAppButton | MessageButton;
+
+export type InlineKeyboardRow = InlineKeyboardButton[];
+
+export type KeyboardButtonIntent = 'default' | 'positive' | 'negative';
+
+export interface LinkButton {
+  text: string;
+  type: 'link';
+  url: string;
 }
 
 export interface LinkedMessage {
@@ -297,10 +318,12 @@ export interface LocationAttachmentRequest {
 export interface MarkupElement {
   from: number;
   length: number;
-  type: string;
+  type: MarkupElementType;
   user_id?: number | null;
   user_link?: string | null;
 }
+
+export type MarkupElementType = 'strong' | 'bold' | 'emphasized' | 'italic' | 'strikethrough' | 'underline' | 'monospaced' | 'code' | 'link' | 'mention';
 
 export interface MediaAttachmentRequestPayload {
   token?: string | null;
@@ -328,6 +351,11 @@ export interface MessageBody {
   mid: string;
   seq: number;
   text?: string | null;
+}
+
+export interface MessageButton {
+  text: string;
+  type: 'message';
 }
 
 export interface MessageCallbackUpdate {
@@ -401,6 +429,14 @@ export interface MessageStat {
   views: number;
 }
 
+export interface OpenAppButton {
+  contact_id?: number | null;
+  payload?: string | null;
+  text: string;
+  type: 'open_app';
+  web_app?: string | null;
+}
+
 export interface PhotoAttachmentRequestPayload {
   photos?: PhotoTokenMap | null;
   token?: string | null;
@@ -417,6 +453,17 @@ export interface PinMessageRequest {
 export interface RemoveChatMemberRequest {
   block?: boolean;
   user_id: number;
+}
+
+export interface RequestContactButton {
+  text: string;
+  type: 'request_contact';
+}
+
+export interface RequestGeoLocationButton {
+  quick?: boolean | null;
+  text: string;
+  type: 'request_geo_location';
 }
 
 export interface SendActionRequest {

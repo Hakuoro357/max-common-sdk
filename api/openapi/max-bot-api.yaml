@@ -1210,11 +1210,122 @@ components:
           type: string
           nullable: true
 
+    KeyboardButtonIntent:
+      type: string
+      enum: [default, positive, negative]
+
+    InlineKeyboardButton:
+      oneOf:
+        - $ref: '#/components/schemas/CallbackButton'
+        - $ref: '#/components/schemas/LinkButton'
+        - $ref: '#/components/schemas/RequestContactButton'
+        - $ref: '#/components/schemas/RequestGeoLocationButton'
+        - $ref: '#/components/schemas/OpenAppButton'
+        - $ref: '#/components/schemas/MessageButton'
+      discriminator:
+        propertyName: type
+        mapping:
+          callback: '#/components/schemas/CallbackButton'
+          link: '#/components/schemas/LinkButton'
+          request_contact: '#/components/schemas/RequestContactButton'
+          request_geo_location: '#/components/schemas/RequestGeoLocationButton'
+          open_app: '#/components/schemas/OpenAppButton'
+          message: '#/components/schemas/MessageButton'
+
+    InlineKeyboardRow:
+      type: array
+      items:
+        $ref: '#/components/schemas/InlineKeyboardButton'
+
+    InlineKeyboard:
+      type: array
+      items:
+        $ref: '#/components/schemas/InlineKeyboardRow'
+
+    CallbackButton:
+      type: object
+      required: [type, text, payload]
+      properties:
+        type:
+          type: string
+          enum: [callback]
+        text:
+          type: string
+        payload:
+          type: string
+        intent:
+          $ref: '#/components/schemas/KeyboardButtonIntent'
+          nullable: true
+
+    LinkButton:
+      type: object
+      required: [type, text, url]
+      properties:
+        type:
+          type: string
+          enum: [link]
+        text:
+          type: string
+        url:
+          type: string
+
+    RequestContactButton:
+      type: object
+      required: [type, text]
+      properties:
+        type:
+          type: string
+          enum: [request_contact]
+        text:
+          type: string
+
+    RequestGeoLocationButton:
+      type: object
+      required: [type, text]
+      properties:
+        type:
+          type: string
+          enum: [request_geo_location]
+        text:
+          type: string
+        quick:
+          type: boolean
+          nullable: true
+
+    OpenAppButton:
+      type: object
+      required: [type, text]
+      properties:
+        type:
+          type: string
+          enum: [open_app]
+        text:
+          type: string
+        web_app:
+          type: string
+          nullable: true
+        payload:
+          type: string
+          nullable: true
+        contact_id:
+          type: integer
+          nullable: true
+
+    MessageButton:
+      type: object
+      required: [type, text]
+      properties:
+        type:
+          type: string
+          enum: [message]
+        text:
+          type: string
+
     InlineKeyboardAttachmentRequestPayload:
       type: object
       properties:
         buttons:
-          type: object
+          $ref: '#/components/schemas/InlineKeyboard'
 
     ShareAttachmentRequestPayload:
       type: object
@@ -1373,7 +1484,7 @@ components:
       type: object
       properties:
         buttons:
-          type: object
+          $ref: '#/components/schemas/InlineKeyboard'
 
     InlineKeyboardAttachment:
       type: object
@@ -1420,12 +1531,16 @@ components:
       type: string
       enum: [forward, reply]
 
+    MarkupElementType:
+      type: string
+      enum: [strong, bold, emphasized, italic, strikethrough, underline, monospaced, code, link, mention]
+
     MarkupElement:
       type: object
       required: [type, from, length]
       properties:
         type:
-          type: string
+          $ref: '#/components/schemas/MarkupElementType'
         from:
           type: integer
         length:

@@ -14,6 +14,10 @@ ChatStatus: TypeAlias = Literal['active', 'removed', 'left', 'closed', 'suspende
 
 ChatType: TypeAlias = Literal['dialog', 'chat', 'channel']
 
+KeyboardButtonIntent: TypeAlias = Literal['default', 'positive', 'negative']
+
+MarkupElementType: TypeAlias = Literal['strong', 'bold', 'emphasized', 'italic', 'strikethrough', 'underline', 'monospaced', 'code', 'link', 'mention']
+
 MessageLinkType: TypeAlias = Literal['forward', 'reply']
 
 SenderAction: TypeAlias = Literal['typing_on', 'sending_photo', 'sending_video', 'sending_audio', 'sending_file', 'mark_seen']
@@ -77,6 +81,12 @@ class BotStartedUpdate(TypedDict, total=False):
     update_type: Literal['bot_started']
     user: User
     user_locale: NotRequired[UserLocale]
+
+class CallbackButton(TypedDict, total=False):
+    intent: NotRequired[KeyboardButtonIntent | None]
+    payload: str
+    text: str
+    type: Literal['callback']
 
 class CallbackInfo(TypedDict, total=False):
     callback_id: str
@@ -232,14 +242,19 @@ class InlineKeyboardAttachment(TypedDict, total=False):
     type: Literal['inline_keyboard']
 
 class InlineKeyboardAttachmentPayload(TypedDict, total=False):
-    buttons: NotRequired[dict[str, Any]]
+    buttons: NotRequired[InlineKeyboard]
 
 class InlineKeyboardAttachmentRequest(TypedDict, total=False):
     payload: InlineKeyboardAttachmentRequestPayload
     type: Literal['inline_keyboard']
 
 class InlineKeyboardAttachmentRequestPayload(TypedDict, total=False):
-    buttons: NotRequired[dict[str, Any]]
+    buttons: NotRequired[InlineKeyboard]
+
+class LinkButton(TypedDict, total=False):
+    text: str
+    type: Literal['link']
+    url: str
 
 class LinkedMessage(TypedDict, total=False):
     chat_id: NotRequired[int]
@@ -260,7 +275,7 @@ class LocationAttachmentRequest(TypedDict, total=False):
 class MarkupElement(TypedDict, total=False):
     from_: int
     length: int
-    type: str
+    type: MarkupElementType
     user_id: NotRequired[int | None]
     user_link: NotRequired[str | None]
 
@@ -287,6 +302,10 @@ class MessageBody(TypedDict, total=False):
     mid: str
     seq: int
     text: NotRequired[str | None]
+
+class MessageButton(TypedDict, total=False):
+    text: str
+    type: Literal['message']
 
 class MessageCallbackUpdate(TypedDict, total=False):
     callback: CallbackInfo
@@ -347,6 +366,13 @@ class MessageRemovedUpdate(TypedDict, total=False):
 class MessageStat(TypedDict, total=False):
     views: int
 
+class OpenAppButton(TypedDict, total=False):
+    contact_id: NotRequired[int | None]
+    payload: NotRequired[str | None]
+    text: str
+    type: Literal['open_app']
+    web_app: NotRequired[str | None]
+
 class PhotoAttachmentRequestPayload(TypedDict, total=False):
     photos: NotRequired[PhotoTokenMap | None]
     token: NotRequired[str | None]
@@ -359,6 +385,15 @@ class PinMessageRequest(TypedDict, total=False):
 class RemoveChatMemberRequest(TypedDict, total=False):
     block: NotRequired[bool]
     user_id: int
+
+class RequestContactButton(TypedDict, total=False):
+    text: str
+    type: Literal['request_contact']
+
+class RequestGeoLocationButton(TypedDict, total=False):
+    quick: NotRequired[bool | None]
+    text: str
+    type: Literal['request_geo_location']
 
 class SendActionRequest(TypedDict, total=False):
     action: SenderAction
@@ -451,7 +486,13 @@ Attachment: TypeAlias = ImageAttachment | VideoAttachment | AudioAttachment | Fi
 
 AttachmentRequest: TypeAlias = ImageAttachmentRequest | VideoAttachmentRequest | AudioAttachmentRequest | FileAttachmentRequest | StickerAttachmentRequest | ContactAttachmentRequest | InlineKeyboardAttachmentRequest | ShareAttachmentRequest | LocationAttachmentRequest
 
+InlineKeyboardButton: TypeAlias = CallbackButton | LinkButton | RequestContactButton | RequestGeoLocationButton | OpenAppButton | MessageButton
+
 Update: TypeAlias = MessageCallbackUpdate | MessageCreatedUpdate | MessageRemovedUpdate | MessageEditedUpdate | BotAddedUpdate | BotRemovedUpdate | UserAddedUpdate | UserRemovedUpdate | BotStartedUpdate | ChatTitleChangedUpdate | MessageConstructionRequestUpdate | MessageConstructedUpdate | MessageChatCreatedUpdate
+
+InlineKeyboardRow: TypeAlias = list[InlineKeyboardButton]
+
+InlineKeyboard: TypeAlias = list[InlineKeyboardRow]
 
 class AnswerOnCallbackParamsQuery(TypedDict, total=False):
     callback_id: str

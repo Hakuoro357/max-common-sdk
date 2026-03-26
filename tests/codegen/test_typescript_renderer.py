@@ -46,6 +46,12 @@ class TypeScriptRendererTests(unittest.TestCase):
         self.assertIn("ImageAttachmentRequest | VideoAttachmentRequest", output)
         self.assertIn("export type Update =", output)
         self.assertIn("MessageCallbackUpdate | MessageCreatedUpdate", output)
+        self.assertIn("export type InlineKeyboard = InlineKeyboardRow[];", output)
+        self.assertIn("export type InlineKeyboardRow = InlineKeyboardButton[];", output)
+        self.assertIn("export type InlineKeyboardButton =", output)
+        self.assertIn("CallbackButton | LinkButton | RequestContactButton", output)
+        self.assertIn("export type MarkupElementType =", output)
+        self.assertIn("'mention'", output)
 
     def test_render_typescript_client_supports_union_and_map_types(self) -> None:
         module = load_module()

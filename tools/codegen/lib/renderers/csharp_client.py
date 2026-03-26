@@ -90,6 +90,13 @@ def render_schema(schema: dict[str, Any], union_metadata: dict[str, Any]) -> lis
             "}",
         ]
 
+    if kind == "array":
+        return [
+            f"public sealed class {schema['name']} : List<{map_array_item_to_csharp(schema)}>",
+            "{",
+            "}",
+        ]
+
     if kind == "union":
         lines: list[str] = []
         discriminator = schema.get("discriminator") or {}
