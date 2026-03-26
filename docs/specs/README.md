@@ -13,6 +13,8 @@
 - [openapi-schema-fidelity-plan.md](C:\pro\max\docs\specs\openapi-schema-fidelity-plan.md) — план доведения схем до более точного соответствия реальным типам MAX
 - [openapi-markup-fidelity-plan.md](C:\pro\max\docs\specs\openapi-markup-fidelity-plan.md) — план точной типизации markup и inline keyboard без выхода за текущие возможности `IR`
 - [openapi-remaining-raw-plan.md](C:\pro\max\docs\specs\openapi-remaining-raw-plan.md) — план добивки оставшихся raw-object мест после этапа keyboard/markup
+- [message-construction-input-research.md](C:\pro\max\docs\specs\message-construction-input-research.md) — исследование по полю `MessageConstructionRequestUpdate.input` и решение пока не типизировать его жёстко
+- [milestone-current-state.md](C:\pro\max\docs\specs\milestone-current-state.md) — текущая стабильная точка SDK-платформы и список осознанных исключений
 - [ir-next-phase.md](C:\pro\max\docs\specs\ir-next-phase.md) — следующий этап развития `IR` под `oneOf`, discriminator и map-типы
 - [release-model.md](C:\pro\max\docs\specs\release-model.md) — модель релизов, версионирования и compatibility gates
 - [codegen-architecture.md](C:\pro\max\docs\specs\codegen-architecture.md) — архитектура code generation pipeline для SDK
@@ -28,8 +30,10 @@
 5. [openapi-schema-fidelity-plan.md](C:\pro\max\docs\specs\openapi-schema-fidelity-plan.md)
 6. [openapi-markup-fidelity-plan.md](C:\pro\max\docs\specs\openapi-markup-fidelity-plan.md)
 7. [openapi-remaining-raw-plan.md](C:\pro\max\docs\specs\openapi-remaining-raw-plan.md)
-8. [ir-next-phase.md](C:\pro\max\docs\specs\ir-next-phase.md)
-9. [codegen-architecture.md](C:\pro\max\docs\specs\codegen-architecture.md)
-10. [release-model.md](C:\pro\max\docs\specs\release-model.md)
-11. [support-matrix.md](C:\pro\max\docs\specs\support-matrix.md)
-12. [roadmap.md](C:\pro\max\docs\specs\roadmap.md)
+8. [message-construction-input-research.md](C:\pro\max\docs\specs\message-construction-input-research.md)
+9. [milestone-current-state.md](C:\pro\max\docs\specs\milestone-current-state.md)
+10. [ir-next-phase.md](C:\pro\max\docs\specs\ir-next-phase.md)
+11. [codegen-architecture.md](C:\pro\max\docs\specs\codegen-architecture.md)
+12. [release-model.md](C:\pro\max\docs\specs\release-model.md)
+13. [support-matrix.md](C:\pro\max\docs\specs\support-matrix.md)
+14. [roadmap.md](C:\pro\max\docs\specs\roadmap.md)
